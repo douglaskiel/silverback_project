@@ -30,6 +30,7 @@ module.exports.passwordReset = function(req, res) {
 	var isVerified;
 	var currentDate = Date.now();
 	var selected;
+	var password = req.body.user_password;
 	db.query('SELECT * FROM recovery WHERE user_id =' + req.body.user_id)
 		.spread(function(result, metadata) {
 			for (var i in result) {
@@ -40,7 +41,7 @@ module.exports.passwordReset = function(req, res) {
 				}
 			}
 			if (selected) {
-				if (checker.check(req.body.user_password)) {
+				if (checker.check(password)) {
 				var newPassword = bcrypt.hashSync(req.body.enter, salt);
 				db.query("UPDATE users SET user_password='" + newPassword + "' WHERE id=" + req.body.user_id)
 					.spread(function(result, metadata) {
@@ -50,7 +51,7 @@ module.exports.passwordReset = function(req, res) {
 							});
 					});
 				} else {
-					checker.check(req.body.user_password);
+					checker.check(password);
 					var passError = checker.errors;
 					var errorArry = [];
 					for (var i = 0; i < passError.length; i++) {
