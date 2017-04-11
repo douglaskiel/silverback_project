@@ -34,7 +34,6 @@ module.exports.passwordReset = function(req, res) {
 	var userID = req.body.user_id;
 	db.query('SELECT * FROM recovery WHERE user_id =' + userID)
 		.spread(function(result, metadata) {
-			console.log(result.length);
 			for (var i in result) {
 				isVerified = bcrypt.compareSync(tokenCheck, result[i].token);
 				timeDiffrence = (currentDate - result[i].date) / 3600000;
@@ -43,6 +42,7 @@ module.exports.passwordReset = function(req, res) {
 				}
 			}
 			if (selected) {
+				console.log(checker.check(password));
 				if (checker.check(password)) {
 				var newPassword = bcrypt.hashSync(req.body.enter, salt);
 				db.query("UPDATE users SET user_password='" + newPassword + "' WHERE id=" + userID)
