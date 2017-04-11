@@ -31,8 +31,10 @@ module.exports.passwordReset = function(req, res) {
 	var currentDate = Date.now();
 	var selected;
 	var password = req.body.user_password;
-	db.query('SELECT * FROM recovery WHERE user_id =' + req.body.user_id)
+	var userID = req.body.user_id;
+	db.query('SELECT * FROM recovery WHERE user_id =' + userID)
 		.spread(function(result, metadata) {
+			console.log(checker.check(password));
 			for (var i in result) {
 				isVerified = bcrypt.compareSync(tokenCheck, result[i].token);
 				timeDiffrence = (currentDate - result[i].date) / 3600000;
@@ -43,9 +45,9 @@ module.exports.passwordReset = function(req, res) {
 			if (selected) {
 				if (checker.check(password)) {
 				var newPassword = bcrypt.hashSync(req.body.enter, salt);
-				db.query("UPDATE users SET user_password='" + newPassword + "' WHERE id=" + req.body.user_id)
+				db.query("UPDATE users SET user_password='" + newPassword + "' WHERE id=" + userID)
 					.spread(function(result, metadata) {
-						db.query('DELETE FROM recovery WHERE user_id =' + req.body.user_id)
+						db.query('DELETE FROM recovery WHERE user_id =' + userID)
 							.spread(function(result, metadata) {
 								res.status(200).send('Account password changed, All requests have been closed.');
 							});
