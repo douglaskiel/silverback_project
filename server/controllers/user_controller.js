@@ -34,7 +34,7 @@ module.exports.passwordReset = function(req, res) {
 	var userID = req.body.user_id;
 	db.query('SELECT * FROM recovery WHERE user_id =' + userID)
 		.spread(function(result, metadata) {
-			console.log(result);
+			console.log(result.length);
 			for (var i in result) {
 				isVerified = bcrypt.compareSync(tokenCheck, result[i].token);
 				timeDiffrence = (currentDate - result[i].date) / 3600000;
