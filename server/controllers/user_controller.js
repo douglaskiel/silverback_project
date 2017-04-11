@@ -54,7 +54,7 @@ module.exports.passwordReset = function(req, res) {
 					checker.check(password);
 					var passError = checker.errors;
 					var errorArry = [];
-					for (var i = 0; i < passError.length; i++) {
+					for (i = 0; i < passError.length; i++) {
 						errorString = passError[i].toString();
 						errorArry.push(errorString);
 					}
