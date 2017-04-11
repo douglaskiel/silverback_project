@@ -1,0 +1,70 @@
+<div class="row" ng-if="isLoggedin()">
+	<div class="col-sm-3">
+		<div class="card">
+			<a href="#!/company" class="link-unstyled">
+				<div class="image">
+					<img src="/src/images/nav_images/clients.jpg" class="img img-responsive full-width vertical-center">
+				</div>
+				<h4><b>Clients</b></h4>
+				<p>Manage Clients</p>
+			</a>
+		</div>
+	</div>
+	<div class="col-sm-3">
+		<div class="card">
+			<a href="#!/invoice" class="link-unstyled">
+				<div class="image">
+					<img src="/src/images/nav_images/invoice.jpg" alt="Avatar" class="img img-responsive full-width vertical-center">
+				</div>
+				<h4><b>Invoices</b></h4>
+				<p>Manage Invoices</p>
+			</a>
+		</div>
+	</div>
+	<div class="col-sm-3">
+		<div class="card">
+			<a href="#!/invoice_configuration" class="link-unstyled">
+				<div class="image">
+					<img src="/src/images/nav_images/configuration.JPG" alt="Avatar" class="img img-responsive full-width vertical-center">
+				</div>
+				<h4><b>Invoices Configuration</b></h4>
+				<p>Manage Settings for Invoices</p>
+			</a>
+		</div>
+	</div>
+	<div class="col-sm-3" ng-if="isAdmin()">
+		<div class="card">
+			<a href="#!/manage_users" class="link-unstyled">
+				<div class="image">
+					<img src="/src/images/nav_images/users.jpg" alt="Avatar" class="img img-responsive full-width vertical-center">
+				</div>
+				<h4><b>Users</b></h4>
+				<p>Manage Users</p>
+			</a>
+		</div>
+	</div>
+</div>
+<div class="row" ng-if="!isLoggedin()">
+	<div class="col-sm-3">
+		<div class="card">
+			<a href="#!/login" class="link-unstyled">
+				<div class="image">
+					<img src="/src/images/nav_images/users.jpg" alt="Avatar" class="img img-responsive full-width vertical-center">
+				</div>
+				<h4><b>Login</b></h4>
+				<p>Login to access the System</p>
+			</a>
+		</div>
+	</div>
+	<div class="col-sm-3">
+		<div class="card">
+			<a href="#!/register" class="link-unstyled">
+				<div class="image">
+					<img src="/src/images/nav_images/users.jpg" alt="Avatar" class="img img-responsive full-width vertical-center">
+				</div>
+				<h4><b>Register</b></h4>
+				<p>Create a new account</p>
+			</a>
+		</div>
+	</div>
+</div>

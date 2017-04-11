@@ -1,0 +1,121 @@
+<div class="row" ng-init="!hiddenZip; approvedUser();">
+	<p><a href="#!/invoice_configuration"> Back to Invoice Configuration </a></p>
+	<div class="col-sm-4"> 
+	<table class="table table-condensed">
+		<label>Search</label>
+		<tr>
+			<th>
+				<select ng-model="search.carrier_id" placeholder="Search by Carrier" ng-options="carrier.carrier_id as carrier.carrier_name for carrier in allCarriers" class="form-control">
+					<option value="" disabled>Select a Carrier</option>
+				</select>
+			</th>
+			
+			<th>
+				<input type="text" class="form-control" name="search" placeholder="Search by AMC" ng-model="search.absolute_minimum_charge">
+			</th>
+		</tr>
+		<tr>
+			<th>
+				<input type="text" class="form-control" name="search" placeholder="Search by by Zip" ng-model="search.zip_code">
+			</th>
+			<th>
+				<input type="text" class="form-control" name="search" placeholder="Search by by State" ng-model="search.states">
+			</th>
+		</tr>
+	</table>
+	</div>
+	<div class="col-sm-8" ng-if="approved"> 
+	<table class="table table-condensed" >
+		<label>Mass Update</label>
+		<tr>
+			<th> Carrier </th>
+			<th> Region </th>
+			<th> AMC </th>
+			<th> Discount </th>
+			<th> Accelerated Charge </th>
+			<th> </th>
+		</tr>
+		<tr>
+			<td><select ng-model="updateInfo.carrier_id" class="form-control" ng-options="c.carrier_id as c.carrier_name for c in allCarriers" required>
+				<option value=""> Select a Carrier</option>
+			</select></td>
+			<td> <select class="form-control" ng-model="updateInfo.state_region_id" ng-options="r.state_region_id as r.region for r in updateRegions | orderBy : 'region' track by r.state_region_id" required>
+				<option value=""> Select a Region </option>
+			</select> </td>
+			<td> <input type="number" class="form-control" min="0" max="999" step="0.01" placeholder="AMC" ng-model="updateInfo.absolute_minimum_charge"> </td>
+			<td> <input type="number" class="form-control" placeholder="Discount" ng-model="updateInfo.discount" min="0" max="99" step="0.0001"> </td>
+			<td> <input type="number" class="form-control" min="0" max="99" step="0.0001" ng-model="updateInfo.accelerated_charge" placeholder="Accelerated Charge"></td>
+			<td> <button ng-click="massUpdate(updateInfo)" class="btn"> Submit</button> </td>
+		</tr>
+	</table>
+	</div>
+	<table class="table table-striped">
+		<tr>
+			<th> Carrier </th>
+			<th> Discount </th>
+			<th> AMC </th>
+			<th> States </th>
+			<th> Region </th>
+			<th> Zip Code</th>
+			<th> Accelerated Charge</th>
+			<th> <span ng-if="approved"> Edit </span> </th>
+			<th ng-if="approved"> Delete </th>
+		</tr>
+		<tr ng-if="approved">
+			<td><select ng-model="newOperationalArea.carrier_id" class="form-control" ng-options="c.carrier_id as c.carrier_name for c in allCarriers"></select></td>
+			<td> <input type="number" class="form-control" placeholder="Discount" ng-model="newOperationalArea.discount" min="0" max="99" step="0.0001" required> </td>
+			<td> <input type="number" class="form-control" min="0" max="999" step="0.01" placeholder="AMC" ng-model="newOperationalArea.absolute_minimum_charge" required> </td>
+			<td> <select class="form-control" ng-change="update_list(newOperationalArea.state_id)" ng-model="newOperationalArea.state_id" ng-options="s.state_id as s.states for s in allStates | orderBy : 'states' track by s.state_id"></select> </td>
+			<td> <select ng-if="newOperationalArea.state_id" class="form-control" ng-model="newOperationalArea.state_region_id" ng-options="r.state_region_id as r.region for r in selectedRegion | orderBy : 'region' track by r.state_region_id"></select> </td>
+			<td> <input type="text" class="form-control" placeholder="Zip Codes" ng-model="newOperationalArea.zip_code" minlength="5" maxlength="6" required> </td>
+			<td> <input type="number" class="form-control" min="0" max="99" step="0.0001" ng-model="newOperationalArea.accelerated_charge" placeholder="Accelerated Charge"></td>
+			<td> </td>
+			<td><button class="btn" ng-click="submitOperationalArea(newOperationalArea)" > ADD AREA </button></td>
+		</tr>
+		<tr ng-repeat="operation in allOperations | orderBy:propertyName:reverse | filter:search | limitTo:limit">
+			<td>
+				<span ng-if="!edit">{{operation.carrier_name}}</span>
+				<span ng-if="edit">
+					<select ng-model="operation.carrier_id" class="form-control" ng-options="c.carrier_id as c.carrier_name for c in allCarriers">
+					</select>
+				</span>
+			</td>
+			<td>
+				<span ng-if="!edit">%{{operation.discount*100}}</span>
+				<span ng-if="edit"><input type="text" class="form-control" placeholder="Discount" ng-model="operation.discount" required></span>
+			</td>
+			<td>
+				<span ng-if="!edit">{{operation.absolute_minimum_charge | currency }}</span>
+				<span ng-if="edit"><input type="number" class="form-control" step="0.01" placeholder="AMC" ng-model="operation.absolute_minimum_charge" required></span>
+			</td>
+			<td>
+				<span ng-if="!edit">{{operation.states}}</span>
+				<span ng-if="edit"> <select class="form-control" ng-init="update_list(operation.state_id)" ng-change="update_list(operation.state_id)" ng-model="operation.state_id" ng-options="s.state_id as s.states for s in allStates | orderBy: 'states'"></select></span>
+			</td>
+			<td>
+				<span ng-if="!edit"> {{operation.region}}</span>
+				<span ng-if="edit"> <select ng-if="operation.state_id" class="form-control" ng-model="operation.state_region_id" ng-options="r.state_region_id as r.region for r in selectedRegion | orderBy: 'region'"></select></span>
+			</td>
+			<td>
+				<span ng-if="!edit">{{operation.zip_code}}</span>
+				<span ng-if="edit"><input type="text" class="form-control" placeholder="Zip Code" ng-model="operation.zip_code"></span>
+			</td>
+			<td>
+				<span ng-if="!edit"> %{{operation.accelerated_charge*100}} </span>
+				<span ng-if="edit"> <input type="number" class="form-control" min="0" max="99" step="0.0001" ng-model="operation.accelerated_charge" placeholder="Accelerated Charge"> </span>
+			</td>
+			<td>
+				<a href="" ng-click="edit = !edit"><i ng-if="approved" class="fa fa-pencil-square-o" aria-hidden="true" ></i></a>
+			</td>
+			<td ng-if="approved">
+				<span ng-if="!edit"><a href="" ng-click="deleteOperationalArea(operation.operation_id)"><i class="fa fa-trash" aria-hidden="true" ></i></a></span>
+				<span ng-if="edit"> <button ng-click="submitOperationalArea(operation)" class="btn" > Save Area </button></span>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<button ng-click="increaseLimit()" class="btn"> Add 100 more results</button>
+			</td>
+		</tr>
+	</table>
+</div>

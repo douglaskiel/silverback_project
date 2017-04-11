@@ -1,0 +1,59 @@
+<div>
+	<table class="table table-striped">
+		<tr>
+			<th> First Name </th>
+			<th> Last Name </th>
+			<th> Username </th>
+			<th> Email </th>
+			<th> Login Attempts </th>
+			<th> Role </th>
+			<th> Edit </th>
+			<th> Delete </th>
+		</tr>
+		<tr>
+			<th colspan="8"> Registered Users</th>
+		</tr>
+		<tr ng-repeat="user in allUsers">
+			<td> {{user.first_name}} </td>
+			<td> {{user.last_name}} </td>
+			<td> {{user.username}} </td>
+			<td> {{user.email}} </td>
+			<td>
+				<span ng-if="!edit"> {{user.login_attempts}} </span>
+				<span ng-if="edit">
+					<input type="number" class="form-control" min='0' max="10" step="1" ng-model="user.login_attempts">
+				</span>
+			</td>
+			<td>
+				<span ng-if="!edit"> {{user.role}} </span>
+				<span ng-if="edit"><select class="form-control" ng-model="user.role" ng-options="role as role for role in roles"></select></span>
+			</td>
+			<td>
+				<a href="" ng-click="edit = !edit"><i class="fa fa-pencil-square-o" aria-hidden="true" ></i></a>
+			</td>
+			<td>
+				<span ng-if="!edit"><a href="" ng-click="deleteUser(user)"><i class="fa fa-trash" aria-hidden="true" ></i></a></span>
+				<span ng-if="edit"> <button ng-click="submitUser(user)" class="btn" > Save User </button></span>
+			</td>
+		</tr>
+		<tr>
+			<th colspan="6"> Unapproved Users</th>
+			<th> Approve User </th>
+			<th></th>
+		</tr>
+		<tr ng-repeat="unuser in allUnapprovedUsers">
+			<td> {{unuser.first_name}} </td>
+			<td> {{unuser.last_name}} </td>
+			<td> {{unuser.username}} </td>
+			<td> {{unuser.email}} </td>
+			<td> </td>
+			<td><select class="form-control" ng-model="unuser.role" ng-options="role as role for role in roles"></select></td>
+			<td>
+				<button class="form-control" type="btn" ng-click="approveUser(unuser)">Approve</button>
+			</td>
+			<td>
+				<a href="" ng-click="deleteUnapprovedUser(unuser.unapproved_user_id)"><i class="fa fa-trash" aria-hidden="true" ></i></a>
+			</td>
+		</tr>
+	</table>
+</div>

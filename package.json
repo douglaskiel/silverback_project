@@ -1,0 +1,37 @@
+{
+  "name": "initialserver",
+  "version": "0.8.2",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node ./server/server.js",
+    "postinstall": "bower install"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "angular-sanitize": "^1.6.1",
+    "bcryptjs": "^2.4.0",
+    "body-parser": "^1.16.0",
+    "bower": "^1.8.0",
+    "express": "^4.14.0",
+    "fs": "0.0.1-security",
+    "grunt": "~0.4.4",
+    "grunt-contrib-cssmin": "latest",
+    "grunt-contrib-jshint": "latest",
+    "grunt-contrib-less": "latest",
+    "grunt-contrib-uglify": "latest",
+    "grunt-contrib-watch": "latest",
+    "grunt-express-server": "^0.5.3",
+    "jshint-stylish": "latest",
+    "jsonwebtoken": "^7.2.1",
+    "jszip": "^3.1.3",
+    "net": "^1.0.2",
+    "node-env-file": "^0.1.8",
+    "nodemailer": "^3.1.7",
+    "password-checker": "^0.2.4",
+    "pg": "^6.1.2",
+    "pg-hstore": "^2.3.2",
+    "sequelize": "^3.29.0"
+  }
+}

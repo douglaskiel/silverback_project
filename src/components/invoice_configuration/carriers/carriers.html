@@ -1,0 +1,27 @@
+<div class="row table-responsive" data-ng-init="approvedUser();">
+	<p><a href="#!/invoice_configuration"> Back to Invoice Configuration </a></p>
+	<table class="table table-striped">
+		<tr>
+			<th> Carrier</th>
+			<th> <span ng-if="approved"> Edit </span> </th>
+			<th ng-if="approved"> Delete </th>
+		</tr>
+		<tr ng-if="approved">
+			<td> <input type="text" class="form-control" placeholder="Carrier Name" ng-model="newCarrier.carrier_name" name="" required> </td>
+			<td> <button ng-click="submitCarrier(newCarrier)" > ADD CARRIER </button></td>
+		</tr>
+		<tr ng-repeat="carrier in allCarriers">
+			<td>
+				<span ng-show="!edit" ng-bind-html="carrier.carrier_name"> </span>
+				<span ng-show="edit"> <input class="form-control" type="text" ng-model="carrier.carrier_name" maxlength="40" placeholder="Carrier Name" required/> </span>
+			</td>
+			<td>
+				<a href="" ng-click="edit = !edit"><i ng-if="approved" class="fa fa-pencil-square-o" aria-hidden="true" ></i></a>
+			</td>
+			<td ng-if="approved">
+				<span ng-if="!edit"><a href="" ng-click="deleteCarrier(carrier.carrier_id)"><i class="fa fa-trash" aria-hidden="true" ></i></a></span>
+				<span ng-if="edit"> <button ng-click="submitCarrier(carrier)" > Save Carrier </button> </span>
+			</td>
+		</tr>
+	</table>
+</div>

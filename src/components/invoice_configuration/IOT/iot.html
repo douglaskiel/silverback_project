@@ -1,0 +1,39 @@
+<div class="row table-responsive" data-ng-init="approvedUser();">
+	<p><a href="#!/invoice_configuration"> Back to Invoice Configuration </a></p>
+	<table class="table table-striped">
+			<tr>
+			<th> Delivery Type</th>
+			<th> Discount </th>
+			<th> FSC Benchmark </th>
+			<th> <span ng-if="approved"> Edit </span></th>
+			<th ng-if="approved"> Delete </th>
+		</tr>
+		<tr ng-if="approved">
+			<td> <input type="text" class="form-control" placeholder="Deleivery Type" ng-model="newIOT.delivery_type" name="" required> </td>
+			<td> <input type="number" class="form-control" placeholder="Discount" ng-model="newIOT.discount" name="" required> </td>
+			<td> <input type="number" class="form-control" placeholder="Benchmark" ng-model="newIOT.fsc_factor" name="" required> </td>
+			<td> <button ng-click="submitIOT(newIOT)" > ADD IOT </button></td>
+		</tr>
+		<tr ng-repeat="iot in allIOT" ng-init="!edit">
+			<td>
+				<span ng-if="!edit" ng-bind-html="iot.delivery_type"></span>
+				<span ng-if="edit"><input class="form-control" type="text" placeholder="Deleivery Type" ng-model="iot.delivery_type" name="" required></span>
+			</td>
+			<td>
+				<span ng-if="!edit">%{{iot.discount*100 | number:2}}</span>
+				<span ng-if="edit"><input class="form-control" type="number" placeholder="Discount" ng-model="iot.discount" name="" required> </span>
+			</td>
+			<td>
+				<span ng-if="!edit">%{{iot.fsc_factor*100| number:2}}</span>
+				<span ng-if="edit"><input class="form-control" type="number" placeholder="Benchmark" ng-model="iot.fsc_factor" name="" required></span>
+			</td>
+			<td>
+				<a href="" ng-click="edit = !edit"><i ng-if="approved" class="fa fa-pencil-square-o" aria-hidden="true" ></i></a>
+			</td>
+			<td ng-if="approved">
+				<span ng-if="!edit"><a href="" ng-click="deleteIOT(iot.iot_id)"><i class="fa fa-trash" aria-hidden="true" ></i></a></span>
+				<span ng-if="edit"> <button ng-click="submitIOT(iot)" > Save IOT </button> </span>
+			</td>
+		</tr>
+	</table>
+</div>

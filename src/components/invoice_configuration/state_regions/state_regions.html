@@ -1,0 +1,63 @@
+<div class="row" data-ng-init="approvedUser();">
+	<p><a href="#!/invoice_configuration"> Back to Invoice Configuration </a></p>
+	<div class="col-sm-6">
+		<table class="table table-striped">
+			<tr>
+				<th> State </th>
+				<th> <span ng-if="approved"> Edit </span> </th>
+				<th ng-if="approved"> Delete </th>
+			</tr>
+			<tr ng-if="approved">
+				<td> <input type="text" minlength="0" maxlength="2" ng-model="newState.states" class="form-control"> </td>
+				<td> </td>
+				<td> <button type="button" class="btn" ng-click="submitState(newState)"> Save</button> </td>
+			</tr>
+			<tr ng-repeat="state in allStates | orderBy: 'states'">
+				<td>
+					<span ng-if="!edit"> {{state.states}} </span>
+					<span ng-if="edit"> <input type="text" ng-model="state.states" class="form-control"> </span>
+				</td>
+				<td>
+					<a href="" ng-click="edit = !edit"><i ng-if="approved" class="fa fa-pencil-square-o" aria-hidden="true" ></i></a>
+				</td>
+				<td ng-if="approved">
+					<span ng-if="!edit"><a href="" ng-click="deleteState(state.state_id)"><i class="fa fa-trash" aria-hidden="true" ></i></a></span>
+					<span ng-if="edit"> <button ng-click="submitState(state)" class="btn" > Save Area </button></span>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div class="col-sm-6">
+		<table class="table table-striped">
+			<tr>
+				<th> State </th>
+				<th> Region </th>
+				<th> <span ng-if="approved"> Edit </span> </th>
+				<th ng-if="approved"> Delete </th>
+			</tr>
+			<tr ng-if="approved">
+				<td> <select ng-model="newRegion.state_id" class="form-control" ng-options="state.state_id as state.states for state in allStates | orderBy: 'states'"> </select></td>
+				<td> <input type="text" ng-model="newRegion.region" class="form-control"> </td>
+				<td> </td>
+				<td> <button type="button" class="btn" ng-click="submitRegion(newRegion)"> Save</button> </td>
+			</tr>
+			<tr ng-repeat="region in allRegions | orderBy: 'states'">
+				<td>
+					<span ng-if="!edit"> {{region.states}} </span>
+					<span ng-if="edit"> <select ng-model="region.state_id" class="form-control" ng-options="state.state_id as state.states for state in allStates | orderBy: 'states' "></select> </span>
+				</td>
+				<td>
+					<span ng-if="!edit"> {{region.region}} </span>
+					<span ng-if="edit"> <input type="text" ng-model="region.region" class="form-control"> </span>
+				</td>
+				<td>
+					<a href="" ng-click="edit = !edit"><i ng-if="approved" class="fa fa-pencil-square-o" aria-hidden="true" ></i></a>
+				</td>
+				<td ng-if="approved">
+					<span ng-if="!edit"><a href="" ng-click="deleteRegion(region.state_region_id)"><i class="fa fa-trash" aria-hidden="true" ></i></a></span>
+					<span ng-if="edit"> <button ng-click="submitRegion(region)" class="btn" > Save Area </button></span>
+				</td>
+			</tr>
+		</table>
+	</div>
+</div>

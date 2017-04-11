@@ -1,0 +1,137 @@
+<div class="row">
+	<h2> Invoice <span ng-bind-html='specificInvoice[0].invoice_number'> </span> <span ng-if="specificInvoice[0].accelerated_service"> - Accelerated </span></h2>
+	<a ui-sref="form-invoice({invoiceID:{{params.invoiceID}}})" > Edit </a>
+	<div class="table-responsive row">
+		<div class="col-sm-6">
+			<table class="table">
+				<tr>
+					<th> Sender </th>
+				</tr>
+				<tr>
+					<td ng-bind-html='specificInvoice[0].sender_name'></td>
+				</tr>
+				<tr>
+					<td ng-bind-html='specificInvoice[0].sender_address_1'></td>
+				</tr>
+				<tr ng-hide="!specificInvoice[0].sender_address_2">
+					<td ng-bind-html='specificInvoice[0].sender_address_2'></td>
+				</tr>
+				<tr>
+					<td><span ng-bind-html='specificInvoice[0].sender_city'> </span> <span ng-bind-html='specificInvoice[0].sender_state'> </span>, <span ng-bind-html='specificInvoice[0].sender_zip'> </span><span ng-show="specificInvoice[0].sender_zip_4">-<span ng-bind-html='specificInvoice[0].sender_zip_4'> </span></span> </td>
+				</tr>
+				<tr>
+					<td ng-bind-html='specificInvoice[0].sender_country'> </td>
+				</tr>
+			</table>
+		</div>
+		<div class="col-sm-6">
+			<table class="table">
+				<tr>
+					<th> Receiver </th>
+				</tr>
+				<tr>
+					<td ng-bind-html='specificInvoice[0].receiver_name'></td>
+				</tr>
+				<tr>
+					<td ng-bind-html='specificInvoice[0].receiver_address_1'></td>
+				</tr>
+				<tr ng-hide="!specificInvoice[0].receiver_address_2">
+					<td ng-bind-html='specificInvoice[0].receiver_address_2'></td>
+				</tr>
+				<tr>
+					<td><span ng-bind-html='specificInvoice[0].receiver_city'></span> <span ng-bind-html='specificInvoice[0].receiver_state'></span>, <span ng-bind-html='specificInvoice[0].receiver_zip'></span><span ng-show="specificInvoice[0].receiver_zip_4">-<span ng-bind-html='specificInvoice[0].receiver_zip_4'></span></span> </td>
+				</tr>
+				<tr>
+					<td ng-bind-html='specificInvoice[0].receiver_country'> </td>
+				</tr>
+			</table>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-4">
+			<h4> <b>Carrier Name:</b> <span ng-bind-html='specificInvoice[0].carrier_name'> </span></h4>
+		</div>
+		<div class="col-md-4">
+			<h4> <b>AMC:</b> <span ng-bind-html='specificInvoice[0].absolute_min_charge'> </span></h4>
+		</div>
+		<div class="col-md-4">
+			<h4> <b>Carrier Discount:</b> %<span ng-bind-html='specificInvoice[0].carrier_discount'> </span></h4>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-4">
+			<h4> <b>Gross Charge:</b> <span ng-bind-html='specificInvoice[0].gross_charge | currency'> </span></h4>
+		</div>
+		<div class="col-md-4">
+			<h4> <b>Rated Charge:</b> <span ng-bind-html='specificInvoice[0].rated_sum | currency'> </span></h4>
+		</div>
+		<div class="col-md-4">
+			<h4> <b>Total Rated Charge:</b> <span ng-bind-html='specificInvoice[0].rated_total_charge | currency'> </span></h4>
+		</div>
+
+	</div>
+	<div class="row">
+		<div class="col-md-4">
+			<h4> <b>Delivery Type:</b> <span ng-bind-html='specificInvoice[0].delivery_type'></span></h4>
+		</div>
+		<div class="col-md-4">
+			<h4> <b>Transportation Type:</b> <span ng-bind-html='specificInvoice[0].transportation_mode'> </span> </h4>
+		</div>
+		<div class="col-md-4">
+			<h4> <b>Package Type:</b> <span ng-bind-html='specificInvoice[0].package_type'></span> </h4>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-4">
+			<h4> <b>Ship Date:</b> <span ng-bind-html="specificInvoice[0].ship_date | date:'yyyy-MM-dd'"> </span></h4>
+		</div>
+		<div class="col-md-4">
+			<h4> <b>Delivery Date:</b> <span ng-bind-html="specificInvoice[0].delivery_date | date:'yyyy-MM-dd'"></span></h4>
+		</div>
+		<div class="col-md-4">
+			<h4> <b>Process Date:</b> <span ng-bind-html="specificInvoice[0].process_date | date:'yyyy-MM-dd'"></span> </h4>
+		</div>
+	</div>
+	
+	<div class="row">
+		<div class="col-md-4">
+			<h4> <b>Fuel Surcharge Date:</b> <span ng-bind-html="specificInvoice[0].fuel_date | date:'yyyy-MM-dd'"> </span></h4>
+		</div>
+		<div class="col-md-4">
+			<h4> <b>Fuel Surcharge:</b> $<span ng-bind-html="specificInvoice[0].fuel_rate"></span></h4>
+		</div>
+	</div>
+	<h3>Items Shipped</h3>
+	<h4> <b>Billed Weight:</b> <span ng-bind-html="specificInvoice[0].billed_weight"></span> </h4>
+	<table class="table table-striped">
+		<tr>
+			<th>Class</th>
+			<th>Weight</th>
+			<th>Rate</th>
+			<th>Charge</th>
+		</tr>
+		<tr ng-repeat="invoice in specificInvoice">
+			<td>{{invoice.classification}}</td>
+			<td>{{invoice.weight}}</td>
+			<td>{{invoice.rate}}</td>
+			<td>{{invoice.charge}}</td>
+		</tr>
+	</table>
+	<h3>Associated Charges</h3>
+	<h4> <b>Total Associated Cost:</b> <span ng-bind-html="specificInvoice[0].total_associated_costs | currency"></span> </h4>
+	<h4> <b>Total Benchmark Cost:</b> <span ng-bind-html="specificInvoice[0].total_benchmark | currency"></span> </h4>
+	<table class="table table-striped">
+		<tr>
+			<th>Actual Cost</th>
+			<th>Benchmark Cost</th>
+			<th>Cost Code</th>
+		</tr>
+		<tr ng-repeat="charge in associatedCosts">
+			<td>{{charge.actual_cost | currency}}</td>
+			<td>{{charge.benchmark_cost | currency}}</td>
+			<td>{{charge.cost_code}}</td>
+		</tr>
+	</table>
+	
+	<button type="btn" class="btn" ng-click="deleteInvoice(specificInvoice[0].invoice_id)"> Delete Invoice </button>
+</div>

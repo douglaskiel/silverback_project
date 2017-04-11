@@ -1,0 +1,61 @@
+<div class="row" data-ng-init="approvedUser();">
+	<p><a href="#!/invoice_configuration"> Back to Invoice Configuration </a></p>
+	<div class="table-responsive">
+		<table class="table table-condensed">
+			<tr>
+				<td>
+					<label> Search Fuel Rates </label>
+					<input type="text" class="form-control" name="search" placeholder="Search Fuel Rates" ng-model="search.fuel_rate">
+				</td>
+				<td>
+					<label> Search Fuel Dates </label>
+					<input type="text" class="form-control" name="search" placeholder="Search Dates" ng-model="search.fuel_date">
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div class="table-responsive">
+		<table class="table table-striped">
+			<tr>
+				<th> Date</th>
+				<th> Fuel Rate </th>
+				<th> Benchmark FSC </th>
+				<th> Silverback FSC </th>
+				<th> <span ng-if="approved"> Edit </span> </th>
+				<th ng-if="approved"> Delete </th>
+			</tr>
+			<tr ng-if="approved">
+				<td> <input type="date" class="form-control" placeholder="Fuel Date" ng-model="newFuelRate.fuel_date" required> </td>
+				<td> <input type="number" class="form-control" step="0.001" placeholder="Fuel Rates" ng-model="newFuelRate.fuel_rate" required> </td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td> <button class="btn" type="button" ng-click="submitFuelRate(newFuelRate)" > ADD FUEL RATE </button></td>
+			</tr>
+			<tr ng-repeat="fuelRate in allFuelRates | orderBy: '-fuel_date' | filter: search | limitTo:limit" ng-init="!edit">
+				<td>
+					<span ng-if="!edit">{{fuelRate.fuel_date | date : "yyyy/MM/dd"}}</span>
+					<span ng-if="edit"><input type="date" class="form-control" ng-model="fuelRate.fuel_date" required></span>
+				</td>
+				<td>
+					<span ng-if="!edit">${{fuelRate.fuel_rate}}</span>
+					<span ng-if="edit"><input type="text" placeholder="Fuel Rate" class="form-control" ng-model="fuelRate.fuel_rate" required> </span>
+				</td>
+				<td> <span ng-bind-html="fuelRate.benchmark_fuel_surcharge*100 |number: 2"> </span>%</td>
+				<td> <span ng-bind-html="fuelRate.fuel_surcharge*100 |number: 2"> </span>%</td>
+				<td ng-init="edit = false">
+					<a href="" ng-click="edit = !edit"><i ng-if="approved" class="fa fa-pencil-square-o" aria-hidden="true" ></i></a>
+				</td>
+				<td ng-if="approved">
+					<span ng-if="!edit"><a href="" ng-click="deleteFuelRate(fuelRate.fuel_rate_id)"><i class="fa fa-trash" aria-hidden="true" ></i></a></span>
+					<span ng-if="edit"> <button ng-click="submitFuelRate(fuelRate)" > Save Rate </button> </span>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<button ng-click="increaseLimit()"> Add 100 more results</button>
+				</td>
+			</tr>
+		</table>
+	</div>
+</div>

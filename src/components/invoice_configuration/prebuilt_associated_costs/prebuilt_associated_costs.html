@@ -1,0 +1,42 @@
+<div class="row" data-ng-init="approvedUser();">
+	<p><a href="#!/invoice_configuration"> Back to Invoice Configuration </a></p>
+	<div class="table-responsive">
+		<table class="table table-striped">
+			<tr>
+				<th> Accessorial Charge </th>
+				<th> Benchmark Charge </th>
+				<th> Cost Code</th>
+				<th> <span ng-if="approved"> Edit </span></th>
+				<th ng-if="approved"> Delete </th>
+			</tr>
+			<tr ng-if="approved">
+				<td> <input type="text" class="form-control" placeholder="Accessorial Charge" ng-model="newAccessorialCharge.description" required> </td>
+				<td> <input type="number" class="form-control" step="0.01" placeholder="Benchmark Charge" ng-model="newAccessorialCharge.benchmark_cost" required> </td>
+				<td> <input type="text" class="form-control" placeholder="Cost Code" ng-model="newAccessorialCharge.cost_code" required> </td>
+				<td> </td>
+				<td> <button ng-click="submitAccessorialCharge(newAccessorialCharge)" > Add Charge </button> </td>
+			</tr>
+			<tr ng-repeat="cost in allAccessorial">
+				<td>
+				<span ng-if="!edit" ng-bind-html="cost.description"></span>
+				<span ng-if="edit"><input class="form-control" type="text" placeholder="Accessorial Charge" ng-model="cost.description" name="" required></span>
+				</td>
+				<td>
+				<span ng-if="!edit" ng-bind-html="cost.benchmark_cost | currency"></span>
+				<span ng-if="edit"><input class="form-control" type="number" step="0.01" placeholder="Benchmark Charge" ng-model="cost.benchmark_cost" name="" required></span>
+				</td>
+				<td>
+				<span ng-if="!edit" ng-bind-html="cost.cost_code"></span>
+				<span ng-if="edit"><input class="form-control" type="text" placeholder="Cost Code" ng-model="cost.cost_code" name="" required></span>
+				</td>
+				<td>
+					<a href="" ng-click="edit = !edit"><i ng-if="approved" class="fa fa-pencil-square-o" aria-hidden="true" ></i></a>
+				</td>
+				<td ng-if="approved">
+					<span ng-if="!edit"><a href="" ng-click="deleteAccessorialCharge(cost.prebuilt_cost_id)"><i class="fa fa-trash" aria-hidden="true" ></i></a></span>
+					<span ng-if="edit"> <button ng-click="submitAccessorialCharge(cost)" > Save Charge </button> </span>
+				</td>
+			</tr>
+		</table>
+	</div>
+</div>

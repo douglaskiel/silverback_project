@@ -1,0 +1,48 @@
+<div class="row">
+	<h2> Invoices </h2>
+	<a ui-sref="form-invoice"> New Invoice </a>
+	<div class="table-responsive">
+		<table class="table table-condensed">
+			<tr>
+				<td>
+					<label> Start Date: </label>
+					<input type="date" class="form-control" name="from" ng-model="from">
+				</td>
+				<td>
+					<label> End Date: </label>
+					<input type="date" class="form-control" name="to" ng-model="to">
+				</td>
+				<td>
+					<label> Search by Invoice Number:</label>
+					<input class="form-control" ng-model="searchText.invoice_number" type="text" placeholder="Invoice Number"></label>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div class="row">
+		<table class="table table-striped table-hover">
+			<tr>
+				<th class="col-sm-1"> Add To Calculation </th>
+				<th class="col-sm-1"> Carrier Name </th>
+				<th class="col-sm-2"> Client Name </th>
+				<th class="col-sm-1"> Invoice Number </th>
+				<th class="col-sm-2"> Sender Name </th>
+				<th class="col-sm-2"> Receiver Name </th>
+				<th class="col-sm-1"> Process Date </th>
+				<th class="col-sm-1"> Full View </th>
+			</tr>
+			<tr ng-repeat="invoice in visibleInvoices = (allInvoices | dateRange : 'process_date' : from : to | filter:searchText | orderBy: '-process_date')">
+				<td> <input type="checkbox" ng-model="invoice.selected"> </td>
+				<td ng-bind-html="invoice.carrier_name"> </td>
+				<td ng-bind-html="invoice.client_name"> </td>
+				<td ng-bind-html="invoice.invoice_number"></td>
+				<td ng-bind-html="invoice.sender_name"></td>
+				<td ng-bind-html="invoice.receiver_name"></td>
+				<td ng-bind-html="invoice.process_date | date:'yyyy-MM-dd'"></td>
+				<td><a ui-sref="view-invoice({invoiceID:{{invoice.invoice_id}}})"> Open </a></td>
+			</tr>
+		</table>
+	</div>
+	<input type="button" ng-click="selectedAll()" ng-model="selectAll" value="Select All">
+	<input type="button" ng-click="exportToSavings(visibleInvoices)" value="Calculate Savings">
+</div>

@@ -1,0 +1,18 @@
+<div class="row text-center">
+	<div>
+	<form ng-submit="createUser(newUser)" class="col-sm-4 col-sm-offset-4">
+		<h3> Enter your First Name </h3>
+		<input class="form-control" type="text" ng-model="newUser.first_name" maxlength="40" required/>
+		<h3> Enter your Last Name </h3>
+		<input class="form-control" type="text" ng-model="newUser.last_name" maxlength="40" required/>
+		<h3> Enter a Username </h3>
+		<input class="form-control" type="text" ng-model="newUser.username" maxlength="40" required/>
+		<h3> Enter your Email address </h3>
+		<input class="form-control" type="email" ng-model="newUser.email" required/>
+		<h3> Enter a password </h3>
+		<input class="form-control" type="password" ng-model="newUser.user_password" required/> <br>
+		<input class="btn" type="submit" id="submit" value="Submit">
+	</form> <br>
+	</div>
+	<div id="password_Error" ng-model="userError"> </div>
+</div>

@@ -1,0 +1,12 @@
+<div class="row text-center">
+	<div>
+		<form ng-submit="logUserIn(existingUser)" class="col-sm-4 col-sm-offset-4">
+			<h3> Username or Email </h3>
+			<input class="form-control" type="text" ng-model="existingUser.loginName" maxlength="40" required/>
+			<h3> Enter a password </h3>
+			<input class="form-control" type="password" ng-model="existingUser.password" required/> <p> <a href="" ng-click="passwordRecovery()"> Forgot Your Password? </a> </p>
+			<input class="btn" type="submit" id="submit" value="Login">
+		</form> <br>
+	</div>
+	<div id="login_error" ng-model="userError"> </div>
+</div>

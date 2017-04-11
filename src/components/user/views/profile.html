@@ -1,0 +1,47 @@
+<div class="row" ng-if="!edit" ng-init="edit = false">
+	<div class="col-sm-6">
+	<h2> {{user.first_name}} {{user.last_name}} </h2>
+		<h3> Username: {{user.username}} </h3>
+		<h3> Email: {{user.email}} </h3>
+	</div>
+</div>
+<div class="row" ng-if="edit">
+	<div class="col-sm-3">
+		<label>First Name</label>
+		<input type="text" class="form-control" ng-model="user.first_name">
+		<label>Username</label>
+		<input type="text" class="form-control" ng-model="user.username">
+		<label>Email Address</label>
+		<input type="email" class="form-control" ng-model="user.email">
+	</div>
+	<div class="col-sm-3">
+		<label>Last Name</label>
+		<input type="text" class="form-control" ng-model="user.last_name">
+	</div>
+</div>
+<div class="row">
+	<div class="col-sm-3">
+		<h4> Last Login: {{user.last_login_attempt | date:'MM/dd/yyyy hh:mm'}} </h4>
+		<h4> Role: {{user.role}} </h4>
+		<button type="button" class="btn" ng-show="!edit" ng-click="edit = !edit"> Edit Profile</button>
+		<button type="button" class="btn" ng-show="edit" ng-click="submitProfile(user)"> Submit Profile</button>
+		<br><br>
+	</div>
+</div>
+<div class="row">
+	<div class="col-sm-4">
+		<input ng-if="password" type="password" class="form-control" ng-model="user.old_password" placeholder="Enter Current Password">
+		<input ng-if="password" type="password" class="form-control" ng-model="user.new_password" placeholder="Enter New Password">
+		<input ng-if="password" type="password" class="form-control" ng-model="user.confirm_password" placeholder="Confirm new Password">
+		<button type="button" class="btn" ng-init="!password" ng-click="password = !password">Change Password</button>
+		<button type="button" class="btn" ng-if="password" ng-click="changePassword(user)">Submit Password</button> <br><br>
+	</div>
+</div>
+<div class="row">
+	<div class="col-sm-3">
+		<a href="" ng-click="deleteProfile(user.id)"> Delete Account </a>
+	</div>
+</div>
+<div class="row">
+<div id="password_Error"> </div>
+</div>

@@ -1,0 +1,221 @@
+<form ng-submit="submitInvoice(invoice, shippingClasses, accessorialCharges)">
+	<div class="row">
+		<div class="col-sm-2">
+			<label>Invoice Number:</label>
+			<input type="text" ng-model="invoice.invoice_number" class="form-control" maxlength="16" placeholder="Invoice Number" required>
+		</div>
+		<div ng-repeat="client in allCompanies" class="col-sm-1">
+			<button type="button" class="btn btn-sm btn-push" ng-click="autoFillClient(client.client_id)">{{client.client_name}}</button>
+		</div>
+	</div>
+	<div class="table-responsive row">
+		<div class="col-sm-6">
+			<table class="table">
+				<tr>
+					<th> Sender</th>
+				</tr>
+				<tr>
+					<td><input class="form-control" type="text" placeholder="Sender Name" ng-model="invoice.sender_name" maxlength="50" required></td>
+				</tr>
+				<tr>
+					<td><input class="form-control" type="text" placeholder="Sender Address 1" ng-model="invoice.sender_address_1" maxlength="255"  required></td>
+				</tr>
+				<tr>
+					<td><input class="form-control" type="text" placeholder="Sender Address 2" maxlength="255"  ng-model="invoice.sender_address_2"></td>
+				</tr>
+				<tr>
+					<td><input class="form-control" type="text" placeholder="Sender City" maxlength="50" ng-model="invoice.sender_city" required></td>
+				</tr>
+				<tr>
+					<td><input class="form-control" type="text" placeholder="Sender State" ng-model="invoice.sender_state" minlength="2" maxlength="2" ng-change="carrierCheck()" required></td>
+				</tr>
+				<tr>
+					<td><input class="form-control" type="text" placeholder="Sender Zip" ng-change="carrierCheck()" ng-model="invoice.sender_zip" minlength="5" maxlength="6" required></td>
+				</tr>
+				<tr>
+					<td><input class="form-control" type="text" placeholder="Sender Zip +4" ng-model="invoice.sender_zip_4" minlength="4" maxlength="4"></td>
+				</tr>
+				<tr>
+					<td><input class="form-control" type="text" placeholder="Sender Country" maxlength="24" ng-model="invoice.sender_country" required></td>
+				</tr>
+			</table>
+		</div>
+		<div class="col-sm-6">
+			<table class="table">
+				<tr>
+					<th> Receiver </th>
+				</tr>
+				<tr>
+					<td><input class="form-control" type="text" placeholder="Receiver Name" maxlength="50" ng-model="invoice.receiver_name" required></td>
+				</tr>
+				<tr>
+					<td> <input class="form-control" type="text" placeholder="Receiver Address 1" maxlength="255" ng-model="invoice.receiver_address_1" required></td>
+				</tr>
+				<tr>
+					<td><input class="form-control" type="text" placeholder="Receiver Address 2" maxlength="255"  ng-model="invoice.receiver_address_2"></td>
+				</tr>
+				<tr>
+					<td><input class="form-control" type="text" placeholder="Receiver City" maxlength="50" ng-model="invoice.receiver_city" required></td>
+				</tr>
+				<tr>
+					<td><input class="form-control" type="text" placeholder="Receiver State" ng-model="invoice.receiver_state" minlength="2" maxlength="2" ng-change="carrierCheck()" required></td>
+				</tr>
+				<tr>
+					<td><input class="form-control" type="text" placeholder="Receiver Zip" ng-change="carrierCheck()" ng-model="invoice.receiver_zip" minlength="5" maxlength="6" required></td>
+				</tr>
+				<tr>
+					<td><input class="form-control" type="text" placeholder="Receiver Zip +4" ng-model="invoice.receiver_zip_4" minlength="4" maxlength="4"></td>
+				</tr>
+				<tr>
+					<td><input class="form-control" type="text" placeholder="Receiver Country" maxlength="24" ng-model="invoice.receiver_country" required></td>
+				</tr>
+			</table>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-3">
+			<label>Client:</label>
+			<select ng-model="invoice.client_id" class="form-control" required ng-options="company.client_id as company.client_name for company in allCompanies">
+			</select>
+		</div>
+		<div class="col-sm-3">
+			<label>Carrier:</label>
+			<select ng-model="invoice.carrier_id" ng-change="carrierCheck()" class="form-control" required ng-options = "carrier.carrier_id as carrier.carrier_name for carrier in allCarriers">
+			</select>
+		</div>
+		<div class="col-sm-3">
+			<label>AMC:</label>
+			<input class="form-control" type="number" placeholder="AMC" max="99999" step=".005" min="0" ng-model="invoice.absolute_min_charge" required>
+		</div>
+		<div class="col-sm-3">
+			<label>Discount:</label>
+			<input class="form-control" type="number" placeholder="Discount" max="99999" step=".0001" min="0" ng-model="invoice.carrier_discount" required>
+		</div>
+	</div><br>
+	<div class="row">
+		<div class="col-sm-3">
+			<label>Gross Charge:</label>
+			<input class="form-control" type="number" placeholder="Gross Charge" max="99999" step=".005" min="0" ng-model="invoice.gross_charge" required>
+		</div>
+		<div class="col-sm-3">
+			<label>Rated Charge:</label>
+			<p class="form-control-static"> {{invoice.rated_sum | currency}} </p>
+		</div>
+		<div class="col-sm-3">
+			<label>Total Rated Charge:</label>
+			<p class="form-control-static"> {{invoice.rated_total_charge | currency}} </p>
+		</div>
+		<div class="col-sm-1"  ng-if="invoice.accelerated_charge">
+			<label>Accelerated:</label>
+			<input type="checkbox" ng-model="invoice.accelerated_service">
+		</div>
+		
+	</div><br>
+	<div class="row">
+		<div class="col-sm-3">
+			<label> Delivery Type:</label>
+			<select ng-model="invoice.iot_id" class="form-control" required ng-options="iot.iot_id as iot.delivery_type for iot in allIOT">
+			</select>
+		</div>
+		<div class="col-sm-3">
+			<label>Transportation Type:</label>
+			<input class="form-control" type="text" placeholder="Transportation Type" maxlength="32" ng-init="invoice.transportation_mode ='LTL'" ng-model="invoice.transportation_mode" required>
+		</div>
+		<div class="col-sm-3">
+			<label>Package Type:</label>
+			<input class="form-control" type="text" placeholder="Package Type" maxlength="32" ng-model="invoice.package_type" ng-init="invoice.package_type ='SKID'" required>
+		</div>
+	</div><br>
+	<div class="row">
+		<div class="col-sm-5">
+			<label>Fuel Surcharge Date:</label>
+			<p>{{invoice.fuel_date| date: "yyyy/MM/dd"}} <span> <input type="checkbox" ng-model="invoice.wrongDate"> Wrong Date </span></p>
+			<select ng-if="invoice.wrongDate" ng-model="invoice.fuel_rate_id" class="form-control" ng-options = "fuel_rate.fuel_rate_id as fuel_rate.fuel_rate + ' - ' + fuel_rate.fuel_date for fuel_rate in allFuelRates | orderBy:'-fuel_date'" >
+			</select>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-4">
+			<label>Ship Date:</label>
+			<input class="form-control" type="date" ng-model="invoice.ship_date" ng-change="autoFuelSurcharge(invoice.ship_date)" required>
+		</div>
+		<div class="col-sm-4">
+			<label>Delivery Date:</label>
+			<input class="form-control" type="date" ng-model="invoice.delivery_date" required>
+		</div>
+		<div class="col-sm-4">
+			<label>Process Date:</label>
+			<input class="form-control" type="date" ng-model="invoice.process_date" ng-init="initProcessDate(invoice.process_date)" required>
+		</div>
+	</div><br>
+	<label>Items Shipped</label>
+	<table class="table table-striped table-bordered">
+		<thead>
+			<tr>
+				<th class="col-sm-1"><button type="button" class="btn" ng-click="addRowItem(shippingClasses)"> Add Item</button></th>
+				<th class="col-sm-4">Class</th>
+				<th class="col-sm-4">Weight</th>
+				<th class="col-sm-1">Rate</th>
+				<th class="col-sm-1">Charge</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-repeat="shippingClass in shippingClasses">
+				<td class="col-sm-1">
+					<input type="checkbox" ng-if='params.invoiceID === ""' ng-model="shippingClass.selected"/>
+					<button ng-if="shippingClass.item_id" type="button" class="btn" ng-click="deleteShippingClass(shippingClass)" ng-if='params.invoiceID !== ""'> Delete </button>
+				</td>
+				<td class="col-sm-4">
+					<select class="form-control" ng-model="shippingClass.classification" ng-dropdown required ng-options="classOption for classOption in classOptions" required>
+					</select>
+				</td>
+				<td class="col-sm-4">
+					<input type="number" min="0" max="99999" step="1" class="form-control" ng-model="shippingClass.weight" required/>
+				</td>
+				<td class="col-sm-1">
+					<p> {{shippingClass.rate | currency}} </p>
+				</td>
+				<td class="col-sm-1">
+					<p> {{shippingClass.charge | currency}} </p>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+	<label> Associated Costs:</label>
+	<table class="table table-striped table-bordered">
+		<thead>
+			<tr>
+				<th class="col-sm-1"><button type="button" class="btn" ng-click="addRowCharge(accessorialCharges)"> Add Charge</button> </th>
+				<th class="col-sm-2">Actual Charge</th>
+				<th class="col-sm-2">Benchmark Charge</th>
+				<th class="col-sm-2">Cost Code</th>
+				<th class="col-sm-2">Select From Prexisting</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-repeat="accessorialCharge in accessorialCharges">
+				<td class="col-sm-1">
+					<input type="checkbox" ng-if='params.invoiceID === ""' ng-model="accessorialCharge.selected"/>
+					<button ng-if='params.invoiceID !== ""' ng-if="accessorialCharge.cost_id" type="button" class="btn" ng-click="deleteAccessorialCharge(accessorialCharge)"> Delete </button>
+				</td>
+				<td class="col-sm-2">
+					<input type="number" min="0" max="99999" step=".005" class="form-control" ng-model="accessorialCharge.actual_cost" required/>
+				</td>
+				<td class="col-sm-2">
+					<input type="number" min="0" max="99999" step=".005" class="form-control" ng-model="accessorialCharge.benchmark_cost" required/>
+				</td>
+				<td class="col-sm-2">
+					<input type="text" class="form-control" ng-model="accessorialCharge.cost_code" required/>
+				</td>
+				<td class="col-sm-3">
+				<select class="form-control" ng-model="accessorialCharge.prebuilt_cost_id" ng-options = "charge.prebuilt_cost_id as charge.cost_code + ' - ' + (charge.benchmark_cost | currency) + ' - ' + charge.description for charge in allPrebuiltAccessorial" ng-change="changeCharge($index, accessorialCharge)"></select>
+			</td>
+		</tr>
+	</tbody>
+</table>
+<div ng-if="(accessorialCharges.length || shippingClasses.length) && params.invoiceID === ''">
+</div>
+</div>
+<button type="submit" class="btn" value="Submit"> Save Invoice </button>
+
+</form>

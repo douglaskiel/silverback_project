@@ -1,0 +1,27 @@
+{
+  "name": "initialserver",
+  "description": "",
+  "main": "server.js",
+  "license": "ISC",
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "^1.6.2",
+    "angular-ui-router": "ui-router#^0.4.2",
+    "jquery": "^3.1.1",
+    "angular-sanitize": "^1.6.2",
+    "moment": "^2.17.1",
+    "angular-filter": "^0.5.15",
+    "file-saver": "^1.3.3",
+    "requirejs": "^2.3.3"
+  },
+  "resolutions": {
+    "angular": "^1.6.2"
+  }
+}

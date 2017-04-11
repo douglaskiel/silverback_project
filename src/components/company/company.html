@@ -1,0 +1,101 @@
+<div class = "row" data-ng-init="approvedUser();">
+	<h3> Clients </h3>
+	<div ng-repeat="company in allCompanies">
+		<div class="clearfix" ng-if="$index % 3 == 0"></div>
+		<div class="col-xs-12 col-md-4">
+			<h3 ng-bind-html="company.client_name"></h3>
+			<p ng-bind-html="company.client_address_1"></p>
+			<p ng-bind-html="company.client_address_2"></p>
+			<p>{{company.client_zip}}
+				<span ng-if="company.client_zip_4">- {{company.client_zip_4}} </span> <span ng-bind-html="company.client_city"> </span>,  {{company.client_state}}
+			</p>
+			<p>{{company.client_country}}</p>
+			<a href="" ng-click="edit = !edit"><i class="fa fa-pencil-square-o" aria-hidden="true" ng-if="approved"></i></a>
+			<a href="" ng-click="deleteCompany(company.client_id)"><i class="fa fa-trash" aria-hidden="true" ng-if="approved"></i></a>
+			<form ng-if="edit" ng-submit="submitCompany(company)" class="form-horizontal">
+				<div class="table-responsive">
+					<table class="table table-condensed">
+						<h4> Comapny Name </h4>
+						<tr>
+							<td><input class="form-control" type="text" ng-model="company.client_name" maxlength="40" placeholder="Company Name" required/></td>
+						</tr>
+						
+						<tr>
+							<th><h4> Address </h4></th>
+						</tr>
+						<tr>
+							<td><input class="form-control" type="text" ng-model="company.client_address_1" placeholder="Address Line 1" required/> </td>
+						</tr>
+						<tr>
+							<td><input class="form-control" type="text" ng-model="company.client_address_2" placeholder="Address Line 2" /></td>
+						</tr>
+						<tr>
+							<td><input class="form-control" type="text" ng-model="company.client_zip" placeholder="Zip Code" maxlength="6" minlength="5" required></td>
+						</tr>
+						<tr>
+							<td><input class="form-control" type="text" ng-model="company.client_zip_4" placeholder="Zip Code +4" maxlength="4" minlength="4"> </td>
+						</tr>
+						<tr>
+							<td><input class="form-control" type="text" ng-model="company.client_city" placeholder="City"></td>
+						</tr>
+						<tr>
+							<td><input class="form-control" type="text" ng-model="company.client_state" placeholder="State / Province" minlength="2" maxlength="2"></td>
+						</tr>
+						<tr>
+							<td><input class="form-control" type="text" ng-model="company.client_country" placeholder="Country" required></td>
+						</tr>
+						<tr>
+							<td><input class="form-control" type="submit" id="submit" value="Update {{company.client_name}}"></td>
+						</tr>
+					</table>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+<br>
+<div class="row" ng-init="hidden=false">
+	<button class="btn" button="button" ng-click="hidden = !hidden">
+	Add New Company
+	</button>
+</div>
+<div class="row" ng-if="hidden && approved">
+	<form ng-submit="submitCompany(newCompany)" class="form-horizontal">
+		<div class="table-responsive col-md-4">
+			<table class="table table-condensed">
+				<h4> Comapny Name </h4>
+				<tr>
+					<td><input type="text" class="form-control" ng-model="newCompany.client_name" maxlength="40" placeholder="Company Name" required/></td>
+				</tr>
+				
+				<tr>
+					<th><h4> Address </h4></th>
+				</tr>
+				<tr>
+					<td><input type="text" class="form-control" ng-model="newCompany.client_address_1" placeholder="Address Line 1" required/> </td>
+				</tr>
+				<tr>
+					<td><input type="text" class="form-control" ng-model="newCompany.client_address_2"  ng-value="" value="" placeholder="Address Line 2" /></td>
+				</tr>
+				<tr>
+					<td><input type="text" class="form-control" ng-model="newCompany.client_zip" placeholder="Zip Code" maxlength="6" minlength="5" required></td>
+				</tr>
+				<tr>
+					<td><input type="text" class="form-control" ng-model="newCompany.client_zip_4" ng-value="" value="" placeholder="Zip Code +4" maxlength="4" minlength="4"></td>
+				</tr>
+				<tr>
+					<td><input type="text" class="form-control" ng-model="newCompany.client_city" placeholder="City"></td>
+				</tr>
+				<tr>
+					<td><input type="text" class="form-control" ng-model="newCompany.client_state" placeholder="State / Province" minlength="2" maxlength="2"></td>
+				</tr>
+				<tr>
+					<td><input type="text" class="form-control" ng-model="newCompany.client_country" placeholder="Country" required></td>
+				</tr>
+				<tr>
+					<td><input type="submit" class="btn" id="submit" value="Add Company"></td>
+				</tr>
+			</table>
+		</div>
+	</form>
+</div>
