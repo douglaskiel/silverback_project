@@ -60,9 +60,11 @@ app.post('/api/user/login', userController.login);
 app.post('/api/user/password_request', userController.passwordRequest);
 app.post('/api/user/reset_password', userController.passwordReset);
 
+var PORT = process.env.PORT || 3000;
+
 db.sync()
 	.then(function() {
-		app.listen(3000, function() {
-			console.log("It's working! It's working!");
+		app.listen(PORT, function() {
+			console.log("It's working! It's working! " + PORT);
 		});
 	});
