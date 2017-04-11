@@ -55,12 +55,13 @@ module.exports.passwordReset = function(req, res) {
 				} else {
 					checker.check(password);
 					var passError = checker.errors;
-					var errorArry = [];
-					for (i = 0; i < passError.length; i++) {
-						errorString = passError[i].toString();
-						errorArry.push(errorString);
-					}
-					res.status(500).send(errorArry);
+					console.log(passError);
+					// var errorArry = [];
+					// for (i = 0; i < passError.length; i++) {
+					// 	errorString = passError[i].toString();
+					// 	errorArry.push(errorString);
+					// }
+					// res.status(500).send(errorArry);
 				}
 			} else {
 				res.status(500).send('Unable to update password.');
