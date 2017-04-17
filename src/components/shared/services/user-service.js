@@ -24,7 +24,8 @@
 
 			date_parse = function(newDate) {
 				newDate = newDate.toString();
-				newDate = moment(newDate).format('LL');
+				newDate = moment(newDate);
+				console.log(newDate);
 			};
 
 			padding_right = function(s, c, n) {
