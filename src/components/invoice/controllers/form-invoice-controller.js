@@ -38,8 +38,11 @@
 						$scope.specificInvoice = response.data.data;
 						for (var i = 0; i < $scope.specificInvoice.length; i++) {
 							date_parse($scope.specificInvoice[i].process_date);
+							$scope.specificInvoice[i].process_date = new Date($scope.specificInvoice[i].process_date);
 							date_parse($scope.specificInvoice[i].ship_date);
+							$scope.specificInvoice[i].ship_date = new Date($scope.specificInvoice[i].ship_date);
 							date_parse($scope.specificInvoice[i].delivery_date);
+							$scope.specificInvoice[i].delivery_date = new Date($scope.specificInvoice[i].delivery_date);
 							$scope.specificInvoice[i].billed_weight = parseFloat($scope.specificInvoice[i].billed_weight);
 							$scope.specificInvoice[i].total_associated_costs = parseFloat($scope.specificInvoice[i].total_associated_costs);
 							$scope.specificInvoice[i].classification = parseFloat($scope.specificInvoice[i].classification);

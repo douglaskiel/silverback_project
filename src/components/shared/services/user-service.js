@@ -22,11 +22,11 @@
 				}
 			}
 
-			date_parse = function(date) {
-				date = date.toString();
-				date = date.slice(0, 10);
-				date = date.replace(/-/g, "/");
-				date = new Date(date);
+			date_parse = function(newDate) {
+				newDate = newDate.toString();
+				newDate = newDate.slice(0, 10);
+				newDate = newDate.replace(/-/g, "/");
+				newDate = new Date(newDate);
 			};
 
 			padding_right = function(s, c, n) {
