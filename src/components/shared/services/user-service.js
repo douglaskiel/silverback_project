@@ -24,7 +24,9 @@
 
 			date_parse = function(newDate) {
 				newDate = newDate.toString();
-				newDate = moment.utc(newDate);
+				newDate = moment(newDate);
+				day = newDate.day();
+				console.log(day);
 				console.log(newDate);
 			};
 
