@@ -74,7 +74,7 @@
 				.then(function(response) {
 					$scope.allFuelRates = response.data.data;
 					for (var i = 0; i < $scope.allFuelRates.length; i++) {
-						console.log($scope.allFuelRates[i].fuel_date);
+						$scope.allFuelRates[i].fuel_date = new Date.getUTCDate($scope.allFuelRates[i].fuel_date);
 					}
 
 				}, function(err) {
