@@ -23,10 +23,9 @@
 			}
 
 			date_parse = function(newDate) {
+				var localFormat = 'YYYY-MM-DD[T]HH:mm:ss';
 				newDate = newDate.toString();
-				newDate = moment(newDate);
-				day = newDate.day();
-				console.log(day);
+				newDate = moment(newDate).format(localFormat);
 				console.log(newDate);
 			};
 
