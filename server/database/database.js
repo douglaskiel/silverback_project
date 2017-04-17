@@ -3,14 +3,16 @@ var assert = require('assert');
 console.log(process.env);
 var Sequelize = require('sequelize');
 
-// var connection = new Sequelize(process.env.DB, process.env.DBUser, process.env.DBPass, {
-// 	dialect: 'postgres',
-// 	dialectOptions: {
-// 		// ssl: {
-// 		// 	require: true
-// 		// }
-// 	}
-// });
+if (process.env.HEROKU_POSTGRESQL_CYAN_URL) {
+	var connection = new Sequelize(process.env.HEROKU_POSTGRESQL_CYAN_URL);
+} else if (process.env.DATABASE_URL) {
+	var connection = new Sequelize(process.env.DATABASE_URL);
+} else {
+	var connection = new Sequelize(process.env.DB, process.env.DBUser, process.env.DBPass, {
+		dialect: 'postgres'
+	});
+}
 
-var connection = new Sequelize(process.env.HEROKU_POSTGRESQL_CYAN_URL);
+
+
 module.exports = connection;
