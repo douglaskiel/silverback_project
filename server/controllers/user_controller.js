@@ -43,7 +43,7 @@ module.exports.passwordReset = function(req, res) {
 			}
 			if (selected) {
 				console.log(checker.check(password));
-				if (checker.check(password)) {
+				//if (checker.check(password)) {
 				var newPassword = bcrypt.hashSync(req.body.enter, salt);
 				db.query("UPDATE users SET user_password='" + newPassword + "' WHERE id=" + userID)
 					.spread(function(result, metadata) {
@@ -52,17 +52,17 @@ module.exports.passwordReset = function(req, res) {
 								res.status(200).send('Account password changed, All requests have been closed.');
 							});
 					});
-				} else {
-					checker.check(password);
-					var passError = checker.errors;
-					console.log(passError);
-					// var errorArry = [];
-					// for (i = 0; i < passError.length; i++) {
-					// 	errorString = passError[i].toString();
-					// 	errorArry.push(errorString);
-					// }
-					// res.status(500).send(errorArry);
-				}
+				// } else {
+				// 	checker.check(password);
+				// 	var passError = checker.errors;
+				// 	console.log(passError);
+				// 	// var errorArry = [];
+				// 	// for (i = 0; i < passError.length; i++) {
+				// 	// 	errorString = passError[i].toString();
+				// 	// 	errorArry.push(errorString);
+				// 	// }
+				// 	// res.status(500).send(errorArry);
+				// }
 			} else {
 				res.status(500).send('Unable to update password.');
 			}
