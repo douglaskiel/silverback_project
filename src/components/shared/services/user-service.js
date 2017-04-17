@@ -27,7 +27,6 @@
 				newDate = moment.utc(newDate).format();
 				newDate = newDate.slice(0, 10);
 				newDate = newDate.replace(/-/g, "/");
-				console.log(newDate);
 				return newDate;
 			};
 
