@@ -37,9 +37,9 @@
 					.then(function(response) {
 						$scope.specificInvoice = response.data.data;
 						for (var i = 0; i < $scope.specificInvoice.length; i++) {
-							$scope.specificInvoice[i].process_date = new Date($scope.specificInvoice[i].process_date);
-							$scope.specificInvoice[i].ship_date = new Date($scope.specificInvoice[i].ship_date);
-							$scope.specificInvoice[i].delivery_date = new Date($scope.specificInvoice[i].delivery_date);
+							date_parse($scope.specificInvoice[i].process_date);
+							date_parse($scope.specificInvoice[i].ship_date);
+							date_parse($scope.specificInvoice[i].delivery_date);
 							$scope.specificInvoice[i].billed_weight = parseFloat($scope.specificInvoice[i].billed_weight);
 							$scope.specificInvoice[i].total_associated_costs = parseFloat($scope.specificInvoice[i].total_associated_costs);
 							$scope.specificInvoice[i].classification = parseFloat($scope.specificInvoice[i].classification);
@@ -590,7 +590,7 @@
 				.then(function(response) {
 					$scope.allFuelRates = response.data.data;
 					for (var i in $scope.allFuelRates) {
-						$scope.allFuelRates[i].fuel_date = new Date($scope.allFuelRates[i].fuel_date).toISOString().slice(0, 10);
+						date_parse($scope.allFuelRates[i].fuel_date);
 					}
 				}, function(err) {
 					console.log(err);

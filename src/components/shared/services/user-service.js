@@ -10,7 +10,7 @@
 			var cachedUser = localStorage.getItem('user');
 			var cachedRole;
 
-			if (localStorage.getItem('role') === '"Admin"' ||localStorage.getItem('role') === '"Editor"') {
+			if (localStorage.getItem('role') === '"Admin"' || localStorage.getItem('role') === '"Editor"') {
 				cachedRole = localStorage.getItem('role');
 			}
 
@@ -21,6 +21,14 @@
 					vm.role = JSON.parse(cachedRole);
 				}
 			}
+
+			date_parse = function(date) {
+				date = date.toString();
+				date = date.slice(0, 10);
+				date = date.replace(/-/g, "/");
+				date = new Date(date);
+			};
+
 			padding_right = function(s, c, n) {
 				if (!s || !c || s.length >= n) {
 					return s;
@@ -107,7 +115,7 @@
 					.replace(/&sol;/g, "/")
 					.replace(/&vert;/g, "|");
 			};
-			sanatizePercent = function(number){
+			sanatizePercent = function(number) {
 				var numberStore = String(number);
 				var numberIndex = numberStore.indexOf('.');
 				if (numberIndex == -1) {

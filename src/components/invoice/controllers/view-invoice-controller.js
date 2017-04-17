@@ -17,9 +17,9 @@
 				.then(function(response) {
 					$scope.specificInvoice = response.data.data;
 					for (var i = 0; i < $scope.specificInvoice.length; i++) {
-						$scope.specificInvoice[i].process_date = new Date($scope.specificInvoice[i].process_date);
-						$scope.specificInvoice[i].ship_date = new Date($scope.specificInvoice[i].ship_date);
-						$scope.specificInvoice[i].delivery_date = new Date($scope.specificInvoice[i].delivery_date);
+						date_parse($scope.specificInvoice[i].process_date);
+						date_parse($scope.specificInvoice[i].ship_date);
+						date_parse($scope.specificInvoice[i].delivery_date);
 						$scope.specificInvoice[i].carrier_discount = Math.round($scope.specificInvoice[i].carrier_discount * 100);
 						$scope.specificInvoice[i].invoice_number = undoCleanEntry($scope.specificInvoice[i].invoice_number);
 						$scope.specificInvoice[i].sender_name = undoCleanEntry($scope.specificInvoice[i].sender_name);

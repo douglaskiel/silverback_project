@@ -44,6 +44,9 @@
 				.then(function(response) {
 					$scope.allInvoices = response.data.data;
 					for (var i in $scope.allInvoices) {
+						date_parse($scope.allInvoices[i].process_date);
+						date_parse($scope.allInvoices[i].ship_date);
+						date_parse($scope.allInvoices[i].delivery_date);
 						$scope.allInvoices[i].invoice_number = undoCleanEntry($scope.allInvoices[i].invoice_number);
 						$scope.allInvoices[i].sender_name = undoCleanEntry($scope.allInvoices[i].sender_name);
 						$scope.allInvoices[i].sender_address_1 = undoCleanEntry($scope.allInvoices[i].sender_address_1);
