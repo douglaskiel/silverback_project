@@ -51,6 +51,7 @@ router.put('/test_tcp', function(req, res) {
 		return;
 	}
 
+
 	client = new net.Socket();
 
 	client.on('error', function(err) {
