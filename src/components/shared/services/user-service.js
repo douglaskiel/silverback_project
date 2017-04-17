@@ -25,7 +25,10 @@
 			date_parse = function(newDate) {
 				newDate = newDate.toString();
 				newDate = moment.utc(newDate).format();
+				newDate = newDate.slice(0, 10);
+				newDate = newDate.replace(/-/g, "/");
 				console.log(newDate);
+				return newDate;
 			};
 
 			padding_right = function(s, c, n) {
