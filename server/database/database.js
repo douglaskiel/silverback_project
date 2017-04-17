@@ -12,6 +12,5 @@ var Sequelize = require('sequelize');
 // 	}
 // });
 
-var connection = new Sequelize(process.env.DATABASE_URL);
-
+var connection = new Sequelize(process.env.HEROKU_POSTGRESQL_CYAN_URL);
 module.exports = connection;
