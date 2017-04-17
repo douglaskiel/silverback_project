@@ -23,9 +23,8 @@
 			}
 
 			date_parse = function(newDate) {
-				var localFormat = 'YYYY-MM-DD[T]HH:mm:ss';
 				newDate = newDate.toString();
-				newDate = moment(newDate).format(localFormat);
+				newDate = moment.utc(newDate).format();
 				console.log(newDate);
 			};
 
