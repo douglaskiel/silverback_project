@@ -24,9 +24,7 @@
 
 			date_parse = function(newDate) {
 				newDate = newDate.toString();
-				newDate = newDate.slice(0, 10);
-				newDate = newDate.replace(/-/g, "/");
-				newDate = new Date(newDate);
+				newDate = moment(newDate).format('LL');
 			};
 
 			padding_right = function(s, c, n) {
