@@ -590,7 +590,7 @@
 				.then(function(response) {
 					$scope.allFuelRates = response.data.data;
 					for (var i in $scope.allFuelRates) {
-						date_parse($scope.allFuelRates[i].fuel_date);
+						$scope.allFuelRates[i].fuel_date = date_parse($scope.allFuelRates[i].fuel_date);
 					}
 				}, function(err) {
 					console.log(err);

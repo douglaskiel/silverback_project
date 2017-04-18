@@ -10,7 +10,7 @@
 
 			$scope.allInvoices = [];
 			$scope.to = new Date(moment().day(5));
-			$scope.from = new Date(moment().day(4));
+			$scope.from = new Date(moment().day(1));
 			$scope.selectAll = false;
 
 			$scope.exportToSavings = function(arry) {
