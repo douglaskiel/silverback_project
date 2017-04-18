@@ -64,7 +64,7 @@
 				if ($scope.requirements === true) {
 					$('#password_Error').empty();
 					$('#login_error').empty();
-					if (user.user_password !== user.password_check) {
+					if (user.user_password === user.password_check) {
 						$http.post('/api/user/create', user)
 							.then(function(response) {
 								$('#password_Error').empty();
