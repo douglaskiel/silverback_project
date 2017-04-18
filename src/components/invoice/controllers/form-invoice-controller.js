@@ -429,6 +429,7 @@
 				fuelSurchargeDate = new Date(monday._d).toISOString().slice(0, 10);
 
 				for (var i in $scope.allFuelRates) {
+					$scope.allFuelRates[i].fuel_date = new Date($scope.allFuelRates[i].fuel_date).toISOString().slice(0, 10);
 					if ($scope.allFuelRates[i].fuel_date === fuelSurchargeDate) {
 						$scope.invoice.fuel_rate_id = $scope.allFuelRates[i].fuel_rate_id;
 						$scope.invoice.fuel_date = $scope.allFuelRates[i].fuel_date;
