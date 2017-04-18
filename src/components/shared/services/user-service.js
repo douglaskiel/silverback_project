@@ -25,6 +25,7 @@
 			date_parse = function(newDate) {
 				newDate = newDate.toString();
 				newDate = moment.utc(newDate).format();
+				newDate = moment.utc(newDate).toDate();
 				return newDate;
 			};
 
