@@ -10,7 +10,7 @@
 
 			$scope.allInvoices = [];
 			$scope.to = new Date(moment().day(5));
-			$scope.from = new Date(moment().day(4));
+			$scope.from = new Date(moment().day(1));
 			$scope.selectAll = false;
 
 			$scope.exportToSavings = function(arry) {
@@ -44,6 +44,9 @@
 				.then(function(response) {
 					$scope.allInvoices = response.data.data;
 					for (var i in $scope.allInvoices) {
+						$scope.allInvoices[i].process_date = date_parse($scope.allInvoices[i].process_date);
+						$scope.allInvoices[i].ship_date = date_parse($scope.allInvoices[i].ship_date);
+						$scope.allInvoices[i].delivery_date = date_parse($scope.allInvoices[i].delivery_date);
 						$scope.allInvoices[i].invoice_number = undoCleanEntry($scope.allInvoices[i].invoice_number);
 						$scope.allInvoices[i].sender_name = undoCleanEntry($scope.allInvoices[i].sender_name);
 						$scope.allInvoices[i].sender_address_1 = undoCleanEntry($scope.allInvoices[i].sender_address_1);

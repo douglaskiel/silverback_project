@@ -67,7 +67,7 @@
 					<td><input class="form-control" type="text" placeholder="Receiver Zip +4" ng-model="invoice.receiver_zip_4" minlength="4" maxlength="4"></td>
 				</tr>
 				<tr>
-					<td><input class="form-control" type="text" placeholder="Receiver Country" maxlength="24" ng-model="invoice.receiver_country" required></td>
+					<td><input class="form-control" type="text" placeholder="Receiver Country" maxlength="24" ng-model="invoice.receiver_country" ng-init="invoice.receiver_country ='USA'" required></td>
 				</tr>
 			</table>
 		</div>

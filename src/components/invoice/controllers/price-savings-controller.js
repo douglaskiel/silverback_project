@@ -68,9 +68,9 @@
 				$scope.totalFreightCharge = 0;
 				$scope.totalFuelCharge = 0;
 				for (var i = 0; i < $scope.savingsInvoices.length; i++) {
-					$scope.savingsInvoices[i].process_date = new Date($scope.savingsInvoices[i].process_date);
-					$scope.savingsInvoices[i].ship_date = new Date($scope.savingsInvoices[i].ship_date);
-					$scope.savingsInvoices[i].delivery_date = new Date($scope.savingsInvoices[i].delivery_date);
+					// $scope.savingsInvoices[i].process_date = new Date($scope.savingsInvoices[i].process_date);
+					// $scope.savingsInvoices[i].ship_date = new Date($scope.savingsInvoices[i].ship_date);
+					// $scope.savingsInvoices[i].delivery_date = new Date($scope.savingsInvoices[i].delivery_date);
 					$scope.savingsInvoices[i].carrier_discount = Math.round($scope.savingsInvoices[i].carrier_discount * 100);
 					$scope.savingsInvoices[i].discount = Math.round($scope.savingsInvoices[i].discount * 10000) / 100;
 					$scope.savingsInvoices[i].gross_charge = parseFloat($scope.savingsInvoices[i].gross_charge);

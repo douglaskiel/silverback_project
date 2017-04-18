@@ -1,18 +1,41 @@
+<div class="row">
+	<div class="col-sm-4">
+		<p ng-class="{true: 'match', false: 'no_match'}[requirements]"> Passwords must have the following: </p>
+	</div>
+</div>
+<div class="row">
+	<div class="col-sm-4">
+		<ul>
+			<li ng-class="{true: 'match', false: 'no_match'}[passLength]"> 14 Characters </li>
+			<li ng-class="{true: 'match', false:'no_match'}[upperCase]"> Capital Letter </li>
+			<li ng-class="{true: 'match', false:'no_match'}[lowerCase]"> Lower Case Letter </li>
+		</ul>
+	</div>
+	<div class="col-sm-4">
+		<ul>
+			<li ng-class="{true: 'match', false:'no_match'}[number]"> Number </li>
+			<li ng-class="{true: 'match', false:'no_match'}[special]"> Symbol </li>
+			<li ng-class="{true: 'match', false:'no_match'}[passMatch]"> Passwords Match </li>
+		</ul>
+	</div>
+</div>
 <div class="row text-center">
 	<div>
-	<form ng-submit="createUser(newUser)" class="col-sm-4 col-sm-offset-4">
-		<h3> Enter your First Name </h3>
-		<input class="form-control" type="text" ng-model="newUser.first_name" maxlength="40" required/>
-		<h3> Enter your Last Name </h3>
-		<input class="form-control" type="text" ng-model="newUser.last_name" maxlength="40" required/>
-		<h3> Enter a Username </h3>
-		<input class="form-control" type="text" ng-model="newUser.username" maxlength="40" required/>
-		<h3> Enter your Email address </h3>
-		<input class="form-control" type="email" ng-model="newUser.email" required/>
-		<h3> Enter a password </h3>
-		<input class="form-control" type="password" ng-model="newUser.user_password" required/> <br>
-		<input class="btn" type="submit" id="submit" value="Submit">
-	</form> <br>
+		<form ng-submit="createUser(newUser)" class="col-sm-4 col-sm-offset-4">
+			<h3> Enter your First Name </h3>
+			<input class="form-control" type="text" ng-model="newUser.first_name" maxlength="40" required/>
+			<h3> Enter your Last Name </h3>
+			<input class="form-control" type="text" ng-model="newUser.last_name" maxlength="40" required/>
+			<h3> Enter a Username </h3>
+			<input class="form-control" type="text" ng-model="newUser.username" maxlength="40" required/>
+			<h3> Enter your Email address </h3>
+			<input class="form-control" type="email" ng-model="newUser.email" required/>
+			<h3> Enter a Password </h3>
+			<input ng-change="formChange(newUser)" class="form-control" type="password" ng-model="newUser.user_password" required/>
+			<h3> Confirm Password </h3>
+			<input ng-change="formChange(newUser)" class="form-control" type="password" ng-model="newUser.password_check" required/> <br>
+			<input class="btn" type="submit" id="submit" value="Submit">
+		</form> <br>
 	</div>
-	<div id="password_Error" ng-model="userError"> </div>
 </div>
+<div class="row" id="password_Error" ng-model="userError"> </div>

@@ -42,9 +42,7 @@ module.exports.passwordReset = function(req, res) {
 				}
 			}
 			if (selected) {
-				//console.log(checker.check(password));
 				if (checker.check(req.body.enter)) {
-				console.log(req.body);
 				var newPassword = bcrypt.hashSync(req.body.enter, salt);
 				db.query("UPDATE users SET user_password='" + newPassword + "' WHERE id=" + userID)
 					.spread(function(result, metadata) {
