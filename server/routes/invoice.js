@@ -61,8 +61,13 @@ router.put('/test_tcp', function(req, res) {
 	});
 
 	client.on('data', function(data) {
+		var response = data.slice(-52, -50);
 		console.log('Received:' + data);
-		res.status(200).send(data);
+		if (response == '00') {
+			res.status(200).send(data);
+		} else {
+			res.status(500).send(response);
+		}
 
 	});
 	//sendData(exampleString);

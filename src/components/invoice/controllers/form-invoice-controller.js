@@ -31,6 +31,8 @@
 			$scope.returnString = '';
 			$scope.state = $state.current;
 			$scope.params = $stateParams;
+			$scope.errors = false;
+			$scope.errorsArry = [];
 
 			if ($scope.params.invoiceID !== "") {
 				$http.get('/secure-api/invoice/get_invoice?' + $scope.params.invoiceID, config)
@@ -159,6 +161,8 @@
 			};
 
 			$scope.submitInvoice = function(invoice, items, accessorialCharges) {
+				$scope.errors = false;
+				$scope.errorsArry = [];
 				var senderState = false;
 				var receiverState = false;
 				var senderZip = false;
@@ -355,6 +359,40 @@
 						callback(invoice);
 					}, function(err) {
 						console.log(err);
+						$scope.errors = true;
+						switch (err.data) {
+							case '01':
+								console.log('This tariff is not available');
+								$scope.errorsArry.push('This tariff is not available');
+								break;
+							case '02':
+								console.log('Rates are not available for this date');
+								$scope.errorsArry.push('Rates are not available for this date');
+								break;
+							case '03':
+								console.log('The origin ZIP Code was not found in this tariff');
+								$scope.errorsArry.push('The origin ZIP Code was not found in this tariff');
+								break;
+							case '04':
+								console.log('The destination ZIP Code was not found in this tariff');
+								$scope.errorsArry.push('The destination ZIP Code was not found in this tariff');
+								break;
+							case '05':
+								console.log('A rate base number was not found for this pair of ZIP Codes');
+								$scope.errorsArry.push('A rate base number was not found for this pair of ZIP Codes');
+								break;
+							case '06':
+								console.log('Tariff data is missing or corrupt');
+								$scope.errorsArry.push('Tariff data is missing or corrupt');
+								break;
+							case '99':
+								console.log('Internal system error');
+								$scope.errorsArry.push('Internal system error');
+								break;
+							default:
+								$scope.errorsArry.push('We have encountered an unknown error retreiving your shipment rating');
+								console.log('We have encountered an unknown error retreiving your shipment rating');
+						}
 					});
 			};
 
@@ -413,6 +451,18 @@
 					}
 				});
 				$scope.accessorialCharges = newDataListCharge;
+			};
+
+			$scope.fuelChange = function(fuelSurchargeID) {
+				for (var i in $scope.allFuelRates) {
+					if ($scope.allFuelRates[i].fuel_rate_id === fuelSurchargeID) {
+						$scope.invoice.fuel_rate_id = $scope.allFuelRates[i].fuel_rate_id;
+						$scope.invoice.fuel_date = $scope.allFuelRates[i].fuel_date;
+						$scope.invoice.fuel_rate = $scope.allFuelRates[i].fuel_rate;
+						$scope.invoice.fuel_surcharge = $scope.allFuelRates[i].fuel_surcharge;
+						break;
+					}
+				}
 			};
 
 			$scope.autoFuelSurcharge = function(shipDate) {
@@ -538,9 +588,7 @@
 				for (var i in $scope.shippingClasses) {
 					$scope.totalWeight += $scope.shippingClasses[i].weight;
 				}
-				console.log($scope.totalWeight);
 				$scope.totalWeight -= item.weight;
-				console.log($scope.totalWeight);
 				if (r === true) {
 					request = '/secure-api/shipping_class_invoice/delete_shipping_class_invoice?' + item.item_id + "/" + $scope.totalWeight + "|" + item.invoice_number;
 					$http.delete(request, config)
@@ -592,6 +640,7 @@
 					$scope.allFuelRates = response.data.data;
 					for (var i in $scope.allFuelRates) {
 						$scope.allFuelRates[i].fuel_date = date_parse($scope.allFuelRates[i].fuel_date);
+						$scope.allFuelRates[i].fuel_date_display = moment($scope.allFuelRates[i].fuel_date).format('YYYY/MM/DD');
 					}
 				}, function(err) {
 					console.log(err);

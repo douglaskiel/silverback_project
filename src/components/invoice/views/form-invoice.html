@@ -1,11 +1,26 @@
 <form ng-submit="submitInvoice(invoice, shippingClasses, accessorialCharges)">
 	<div class="row">
-		<div class="col-sm-2">
+		<div class="col-sm-3">
 			<label>Invoice Number:</label>
 			<input type="text" ng-model="invoice.invoice_number" class="form-control" maxlength="16" placeholder="Invoice Number" required>
 		</div>
+	</div>
+	<div class="row" ng-if="errors === true">
+		<div class="col-sm-4">
+			<h5 class="no_match"> Error! </h5>
+			<ul>
+				<li class="no_match" ng-repeat="error in errorsArry"> {{error}} </li>
+			</ul>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-6">
+			<b><h5> Select a Client </h5></b>
+		</div>
+	</div>
+	<div class="row">
 		<div ng-repeat="client in allCompanies" class="col-sm-1">
-			<button type="button" class="btn btn-sm btn-push" ng-click="autoFillClient(client.client_id)">{{client.client_name}}</button>
+			<button type="button" class="btn btn-sm" style="margin: 2px;" ng-click="autoFillClient(client.client_id)">{{client.client_name}}</button>
 		</div>
 	</div>
 	<div class="table-responsive row">
@@ -127,11 +142,10 @@
 		</div>
 	</div><br>
 	<div class="row">
-		<div class="col-sm-5">
+		<div class="col-sm-4">
 			<label>Fuel Surcharge Date:</label>
-			<p>{{invoice.fuel_date| date: "yyyy/MM/dd"}} <span> <input type="checkbox" ng-model="invoice.wrongDate"> Wrong Date </span></p>
-			<select ng-if="invoice.wrongDate" ng-model="invoice.fuel_rate_id" class="form-control" ng-options = "fuel_rate.fuel_rate_id as fuel_rate.fuel_rate + ' - ' + fuel_rate.fuel_date for fuel_rate in allFuelRates | orderBy:'-fuel_date'" >
-			</select>
+			<select ng-model="invoice.fuel_rate_id" class="form-control" ng-options = "fuel_rate.fuel_rate_id as fuel_rate.fuel_date_display + ' - ' + fuel_rate.fuel_surcharge + ' - $' + fuel_rate.fuel_rate for fuel_rate in allFuelRates | orderBy:'-fuel_date'" ng-change="fuelChange(invoice.fuel_rate_id)" >
+			</select> <br>
 		</div>
 	</div>
 	<div class="row">
@@ -217,5 +231,4 @@
 </div>
 </div>
 <button type="submit" class="btn" value="Submit"> Save Invoice </button>
-
 </form>
