@@ -26,7 +26,6 @@
 				newDate = newDate.toString();
 				newDate = moment.utc(newDate).add('12', 'hours').format();
 				newDate = moment.utc(newDate).toDate();
-				console.log(newDate);
 				return newDate;
 			};
 
