@@ -25,8 +25,6 @@
 			date_parse = function(newDate) {
 				newDate = newDate.toString();
 				newDate = moment.utc(newDate).format();
-				newDate = newDate.slice(0, 10);
-				newDate = newDate.replace(/-/g, "/");
 				return newDate;
 			};
 
