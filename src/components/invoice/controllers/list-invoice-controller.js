@@ -45,9 +45,12 @@
 				return x>= min && x <= max;
 			};
 
-			$scope.rateCheck = function(invoice){
+			$scope.rateCheck = function(invoice, index){
 				var check = (invoice.gross_charge !== invoice.rated_sum && invoice.rated_sum !== '0' && invoice.rated_sum !== 0);
-				console.log(check);
+				if(check){
+					console.log(check);
+					$("#invoice" + index).addClass('rate_error');
+				}
 				return check;
 			};
 
