@@ -29,6 +29,7 @@
 				}
 			};
 
+
 			$scope.selectedAll = function() {
 				if (!$scope.selectAll) {
 					$scope.selectAll = true;
