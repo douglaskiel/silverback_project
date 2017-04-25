@@ -31,7 +31,7 @@
 				<th class="col-sm-1"> Process Date </th>
 				<th class="col-sm-1"> Full View </th>
 			</tr>
-			<tr ng-repeat="invoice in visibleInvoices = (allInvoices | dateRange : 'process_date' : from : to | filter:searchText | orderBy: '-process_date')" ng-class="{'rate_error': rateCheck(invoice, $index)}" id="invoice{{$index}}">
+			<tr ng-repeat="invoice in visibleInvoices = (allInvoices | dateRange : 'process_date' : from : to | filter:searchText | orderBy: '-process_date')" ng-class="{'rate_error': check}" ng-init="rateCheck(invoice)" id="invoice{{$index}}">
 				<td> <input type="checkbox" ng-model="invoice.selected"> </td>
 				<td ng-bind-html="invoice.carrier_name"> </td>
 				<td ng-bind-html="invoice.client_name"> </td>
