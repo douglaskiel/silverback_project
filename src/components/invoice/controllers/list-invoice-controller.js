@@ -42,10 +42,13 @@
 			};
 
 			$scope.check = false;
-
-			$scope.rateCheck = function(invoice){
+			$scope.color = '';
+			$scope.rateCheck = function(invoice) {
 				var check = (invoice.gross_charge !== invoice.rated_sum && invoice.rated_sum !== '0' && invoice.rated_sum !== 0);
-				return check;
+				if (check) {
+					var color = "lightsalmon";
+					return color;
+				}
 			};
 
 			$http.get('/secure-api/invoice/get_invoices_once', config)
