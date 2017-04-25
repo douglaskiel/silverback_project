@@ -43,9 +43,8 @@
 
 			$scope.check = false;
 
-			$scope.rateCheck = function(invoice, index){
+			$scope.rateCheck = function(invoice){
 				var check = (invoice.gross_charge !== invoice.rated_sum && invoice.rated_sum !== '0' && invoice.rated_sum !== 0);
-				$scope.check = check;
 				return check;
 			};
 
