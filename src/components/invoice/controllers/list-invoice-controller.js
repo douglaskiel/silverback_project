@@ -46,6 +46,9 @@
 			};
 
 			$scope.rateCheck = function(invoice){
+				if(invoice.invoice_number === 56){
+					console.log(parseFloat(invoice.gross_charge) !== parseFloat(invoice.rated_sum));
+				}
 				if(parseFloat(invoice.gross_charge) !== parseFloat(invoice.rated_sum) && invoice.rated_sum !== '0' && invoice.rated_sum !== 0){
 					return true;
 				}
