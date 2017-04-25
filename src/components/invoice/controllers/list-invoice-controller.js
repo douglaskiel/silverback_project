@@ -40,6 +40,22 @@
 				});
 			};
 
+			$scope.between = function(x, min, max){
+				return x>= min && x <= max;
+			};
+
+			$scope.rateCheck = function(index, invoice){
+				console.log(invoice.gross_charge);
+				console.log(invoice.rated_sum);
+				if(invoice.gross_charge !== invoice.rated_sum && invoice.rated_sum !== '0'){
+					console.log('#invoice' + index + " is a liar");
+					$("#invoice" + index).addClass("rate_error");
+					return true;
+				} else {
+					console.log('Truth teller');
+				}
+			};
+
 			$http.get('/secure-api/invoice/get_invoices_once', config)
 				.then(function(response) {
 					$scope.allInvoices = response.data.data;

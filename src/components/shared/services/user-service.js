@@ -83,6 +83,7 @@
 					.replace(/\//g, "&sol;")
 					.replace(/\|/g, "&vert;");
 			};
+			
 			undoCleanEntry = function(text) {
 				return text
 					.replace(/&tilde;/g, "~")

@@ -37,7 +37,7 @@ function sendData(data) {
 			client.destroy();
 			client = null;
 			console.log('Connection Destroyed');
-		}, 10000);
+		}, 5000);
 	});
 }
 
