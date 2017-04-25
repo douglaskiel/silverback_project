@@ -46,8 +46,7 @@
 			};
 
 			$scope.rateCheck = function(invoice){
-				if(invoice.gross_charge !== invoice.rated_sum && (invoice.rated_sum !== '0' || invoice.rated_sum !== 0)){
-					console.log('Liar');
+				if(parseFloat(invoice.gross_charge) !== parseFloat(invoice.rated_sum) && invoice.rated_sum !== '0' && invoice.rated_sum !== 0){
 					return true;
 				}
 			};
