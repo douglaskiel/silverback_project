@@ -234,3 +234,121 @@
 	<button type="submit" class="btn" value="Submit"> Save Invoice </button>
 </form>
 </div>
+
+<div ng-if="invoice.carrier_name == 'XPO'">
+<form ng-submit="submitXPOInvoice(invoice)">
+	<div class="row">
+		<div class="col-sm-3">
+			<label>Invoice Number:</label>
+			<input type="text" ng-model="invoice.pro_number" class="form-control" maxlength="16" placeholder="Invoice Number" required>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-6">
+			<b><h5> Select a Client </h5></b>
+		</div>
+	</div>
+	<div class="row">
+		<div ng-repeat="client in allCompanies" class="col-sm-1">
+			<button type="button" class="btn btn-sm" style="margin: 2px;" ng-click="autoFillClient(client.client_id)">{{client.client_name}}</button>
+		</div>
+	</div>
+	<div class="table-responsive row">
+		<div class="col-sm-6">
+			<table class="table">
+				<tr>
+					<th> Sender</th>
+				</tr>
+				<tr>
+					<td><input class="form-control" type="text" placeholder="Sender Name" ng-model="invoice.sender_name" maxlength="50" required></td>
+				</tr>
+				<tr>
+					<td><input class="form-control" type="text" placeholder="Sender Zip" ng-change="carrierCheck()" ng-model="invoice.sender_zip" minlength="5" maxlength="6" required></td>
+				</tr>
+			</table>
+		</div>
+		<div class="col-sm-6">
+			<table class="table">
+				<tr>
+					<th> Receiver </th>
+				</tr>
+				<tr>
+					<td><input class="form-control" type="text" placeholder="Receiver Name" maxlength="50" ng-model="invoice.receiver_name" required></td>
+				</tr>
+				<tr>
+					<td><input class="form-control" type="text" placeholder="Receiver Zip" ng-change="carrierCheck()" ng-model="invoice.receiver_zip" minlength="5" maxlength="6" required></td>
+				</tr>
+			</table>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-3">
+			<label>Client:</label>
+			<select ng-model="invoice.client_id" class="form-control" required ng-options="company.client_id as company.client_name for company in allCompanies">
+			</select>
+		</div>
+		<div class="col-sm-3">
+			<label>Carrier:</label>
+			<select ng-model="invoice.carrier_id" ng-change="carrierCheck()" class="form-control" required ng-options = "carrier.carrier_id as carrier.carrier_name for carrier in allCarriers">
+			</select>
+		</div>
+		<div class="col-sm-3">
+			<label>Ship Date</label>
+			<input class="form-control" type="date" ng-model="invoice.ship_date">
+		</div>
+		<div class="col-sm-3">
+			<label>Process Date:</label>
+			<input class="form-control" type="date" ng-model="invoice.process_date" ng-init="initProcessDate(invoice.process_date)" required>
+		</div>
+	</div><br>
+	<div class="row">
+		<div class="col-sm-3">
+			<label>Base Charge:</label>
+			<input class="form-control" type="number" ng-model="invoice.base_charge" ng-change="setOldCost(invoice.base_charge)" step="0.005">
+		</div>
+		<div class="col-sm-3">
+			<label> Discount Percent: </label>
+			<input class="form-control" type="number" step="0.0001" ng-model="invoice.discount_percent" ng-change="setOldCost(invoice.base_charge)">
+		</div>
+		<div class="col-sm-3">
+			<label> Fuel Surcharge: </label>
+			<input class="form-control" type="number" step="0.0001" ng-init="invoice.fsc_percent=0.1609" ng-model="invoice.fsc_percent" ng-change="setOldCost(invoice.base_charge)">
+		</div>
+	</div><br>
+	<div class="row">
+		<div class="col-sm-3">
+			<label> Old Cost: </label>
+			{{invoice.old_cost | currency}}
+		</div>
+		<div class="col-sm-3">
+			<label> Old Fuel Surcharge: </label>
+			{{invoice.old_fsc | currency}}
+		</div>
+		<div class="col-sm-3">
+			<label> Old Total Cost: </label>
+			{{invoice.old_total_cost | currency}}
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-3">
+			<label> New Cost</label>
+			{{invoice.new_cost | currency}}
+		</div>
+		<div class="col-sm-3">
+			<label> New Fuel Surcharge</label>
+			{{invoice.new_fsc | currency}}
+		</div>
+		<div class="col-sm-3">
+			<label> New Total Cost</label>
+			{{invoice.new_total_cost | currency}}
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-3">
+			<label> Savings </label>
+			{{invoice.savings | currency}}
+		</div>
+	</div>
+	<button type="submit" class="btn" value="Submit"> Save XPO Invoice </button>
+</form>
+</div>

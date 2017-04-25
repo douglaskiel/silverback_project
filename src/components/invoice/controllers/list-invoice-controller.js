@@ -44,15 +44,9 @@
 				return x>= min && x <= max;
 			};
 
-			$scope.rateCheck = function(index, invoice){
-				console.log(invoice.gross_charge);
-				console.log(invoice.rated_sum);
+			$scope.rateCheck = function(invoice){
 				if(invoice.gross_charge !== invoice.rated_sum && invoice.rated_sum !== '0'){
-					console.log('#invoice' + index + " is a liar");
-					$("#invoice" + index).addClass("rate_error");
 					return true;
-				} else {
-					console.log('Truth teller');
 				}
 			};
 
