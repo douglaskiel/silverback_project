@@ -36,7 +36,7 @@
 						<td style="background-color: lightyellow; border-bottom: 1px solid black; vertical-align: middle;"> Access. </td>
 						<td style="background-color: lightyellow; border-bottom: 1px solid black; vertical-align: middle;"> TTL Charges </td>
 					</tr>
-					<tr ng-repeat="invoice in savingsInvoices" style="text-align: left;">
+					<tr ng-repeat="invoice in savingsInvoices | orderBy:'ship_date'" style="text-align: left;">
 						<td style="vertical-align: middle;" ng-bind-html="invoice.carrier_name"></td>
 						<td style="vertical-align: middle;" ng-bind-html="invoice.invoice_number"> </td>
 						<td style="vertical-align: middle;" ng-bind-html="invoice.receiver_name"> </td>
@@ -87,13 +87,13 @@
 						<td style="background-color: lightgreen; border-left: 1px solid black; vertical-align: middle;" ng-bind-html="invoice.benchmark_charge - invoice.savings_total_charge | currency"> </td>
 						<td style="border-left: 1px solid black; vertical-align: middle;" ng-bind-html="(invoice.benchmark_charge - invoice.savings_total_charge)/2 | currency"> </td>
 					</tr>
-					<tr ng-repeat="xpoInvoice in savingsXPOInvoices" style="text-align: left;">
+					<tr ng-repeat="xpoInvoice in savingsXPOInvoices | orderBy:'ship_date'" style="text-align: left;">
 
 						<td style="vertical-align: middle;" ng-bind-html="xpoInvoice.carrier_name"></td>
 						<td style="vertical-align: middle;" ng-bind-html="xpoInvoice.pro_number"> </td>
 						<td style="vertical-align: middle;" ng-bind-html="xpoInvoice.receiver"> </td>
 						<td style="vertical-align: middle;" ng-bind-html="xpoInvoice.receiver_zip"> </td>
-						<td style="background-color: lightblue; border-left: 1px solid black; vertical-align: middle;"> %82.9 </td>
+						<td style="background-color: lightblue; border-left: 1px solid black; vertical-align: middle;"> 82.9% </td>
 						<td style="background-color: lightblue; vertical-align: middle;" ng-bind-html="xpoInvoice.old_cost | currency">
 						</td>
 						<td style="background-color: lightblue; vertical-align: middle;" ng-bind-html="xpoInvoice.old_fsc | currency"> </td>
@@ -101,7 +101,7 @@
 						</td>
 						<td style="background-color: lightblue; vertical-align: middle;" ng-bind-html="xpoInvoice.old_total_cost | currency">
 						</td>
-						<td style="background-color: lightyellow; border-left: 1px solid black; vertical-align: middle;" ng-bind-html="xpoInvoice.discount_percent * 100"> </td>
+						<td style="background-color: lightyellow; border-left: 1px solid black; vertical-align: middle;"> <span ng-bind-html="xpoInvoice.discount_percent * 100"> </span>% </td>
 						<td style="background-color: lightyellow; vertical-align: middle;" ng-bind-html="xpoInvoice.new_cost | currency"> </td>
 						<td style="background-color: lightyellow; vertical-align: middle;" ng-bind-html="xpoInvoice.new_fsc | currency"> </td>
 						<td style="background-color: lightyellow; vertical-align: middle;" > 

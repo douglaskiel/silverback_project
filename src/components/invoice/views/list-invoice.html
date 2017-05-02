@@ -65,6 +65,13 @@
 						<span ng-show="sortType == 'process_date' && sortReverse" class="fa fa-caret-up"></span>
 					</a>
 				</th>
+				<th class="col-sm-1">
+					<a href="" ng-click="sortType = 'ship_date'; sortReverse = !sortReverse">
+						Ship Date
+						<span ng-show="sortType == 'ship_date' && !sortReverse" class="fa fa-caret-down"></span>
+						<span ng-show="sortType == 'ship_date' && sortReverse" class="fa fa-caret-up"></span>
+					</a>
+				</th>
 				<th class="col-sm-1"> Full View </th>
 			</tr>
 			<tr ng-repeat="invoice in visibleInvoices = (allInvoices | dateRange : 'process_date' : from : to | filter:searchText | orderBy:sortType:sortReverse)" ng-style="{'background-color': rateCheck(invoice)}" ng-init="rateCheck(invoice)" id="invoice{{$index}}">
@@ -75,6 +82,7 @@
 				<td ng-bind-html="invoice.sender_name"></td>
 				<td ng-bind-html="invoice.receiver_name"></td>
 				<td ng-bind-html="invoice.process_date | date:'yyyy-MM-dd'"></td>
+				<td ng-bind-html="invoice.ship_date | date:'yyyy-MM-dd'"></td>
 				<td><a ui-sref="view-invoice({invoiceID:{{invoice.invoice_id}}})"> Open </a></td>
 			</tr>
 			<tr ng-repeat="xpoInvoice in visibleXPOInvoices = (allXPOInvoices | dateRange: 'process_date' : from : to | filter:searchText | orderBy:sortType:sortReverse)">
@@ -85,6 +93,7 @@
 				<td ng-bind-html="xpoInvoice.sender"></td>
 				<td ng-bind-html="xpoInvoice.receiver"></td>
 				<td ng-bind-html="xpoInvoice.process_date | date:'yyyy-MM-dd'"></td>
+				<td ng-bind-html="xpoInvoice.ship_date | date:'yyyy-MM-dd'"></td>
 				<td> <a ui-sref="view-xpo-invoice({invoiceID:{{xpoInvoice.xpo_id}}})"> Open </a> </td>
 			</tr>
 		</table>
