@@ -1,0 +1,87 @@
+<div class="row">
+	<h2> Invoice <span ng-bind-html='xpoInvoice[0].pro_number'> </span> </h2>
+	<a ui-sref="form-xpo-invoice({xpoID:{{params.invoiceID}}})" > Edit </a>
+	<div class="table-responsive row">
+		<div class="col-sm-6">
+			<table class="table">
+				<tr>
+					<th> Sender </th>
+				</tr>
+				<tr>
+					<td ng-bind-html='xpoInvoice[0].sender'></td>
+				</tr>
+				<tr>
+					<td>
+						<span ng-bind-html='xpoInvoice[0].sender_zip'> </span>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div class="col-sm-6">
+			<table class="table">
+				<tr>
+					<th> Receiver </th>
+				</tr>
+				<tr>
+					<td ng-bind-html='xpoInvoice[0].receiver'></td>
+				</tr>
+				<tr>
+					<td>
+						<span ng-bind-html='xpoInvoice[0].receiver_zip'></span>
+					</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-4">
+			<h4> <b>Carrier Name:</b> <span ng-bind-html='xpoInvoice[0].carrier_name'> </span></h4>
+		</div>
+		<div class="col-md-4">
+			<h4> <b>Ship Date:</b> <span ng-bind-html="xpoInvoice[0].ship_date | date:'yyyy-MM-dd'"></span> </h4>
+		</div>
+		<div class="col-md-4">
+			<h4> <b>Process Date:</b><span ng-bind-html="xpoInvoice[0].process_date | date:'yyyy-MM-dd'"></span></h4>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-4">
+			<h4> <b>Gross Charge:</b> <span ng-bind-html='xpoInvoice[0].base_charge | currency'> </span></h4>
+		</div>
+		<div class="col-md-4">
+			<h4> <b>Carrier Discount:</b> %<span ng-bind-html='xpoInvoice[0].discount_percent * 100'> </span></h4>
+		</div>
+		<div class="col-md-4">
+			<h4> <b>Fuel Surcharge:</b>%<span ng-bind-html="xpoInvoice[0].fsc_percent * 100"></span></h4>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-4">
+			<h4> <b>Old Cost:</b><span ng-bind-html="xpoInvoice[0].old_cost | currency"></span></h4>
+		</div>
+		<div class="col-md-4">
+			<h4> <b>Old Fuel Surcharge:</b><span ng-bind-html="xpoInvoice[0].old_fsc | currency"></span></h4>
+		</div>
+		<div class="col-md-4">
+			<h4> <b>Old Total Charge:</b><span ng-bind-html="xpoInvoice[0].old_total_cost | currency"></span></h4>
+		</div>
+	</div>
+	
+	<div class="row">
+		<div class="col-md-4">
+			<h4> <b>New Cost:</b><span ng-bind-html="xpoInvoice[0].new_cost | currency"></span></h4>
+		</div>
+		<div class="col-md-4">
+			<h4> <b>New Fuel Surcharge:</b><span ng-bind-html="xpoInvoice[0].new_fsc | currency"></span></h4>
+		</div>
+		<div class="col-md-4">
+			<h4> <b>New Total Charge:</b><span ng-bind-html="xpoInvoice[0].new_total_cost | currency"></span></h4>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-4">
+			<h4> <b>Savings:</b><span ng-bind-html="xpoInvoice[0].savings | currency"></span></h4>
+		</div>
+	</div>
+	<button type="btn" class="btn" ng-click="deleteXPOInvoice(xpoInvoice[0].xpo_id)"> Delete Invoice </button>
+</div>

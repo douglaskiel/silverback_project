@@ -16,8 +16,8 @@
 					var blob2 = new Blob([document.getElementById('all_data').innerHTML], {
 						type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8"
 					});
-					saveAs(blob, "Savings-Report-" + $scope.savingsInvoices[0].client_name + '-' + moment().format('YYYY/DD/MM') + ".xls");
-					saveAs(blob2, "All-Data-" + $scope.savingsInvoices[0].client_name + '-' + moment().format('YYYY/DD/MM') + ".xls");
+					saveAs(blob, "Savings-Report-" + $scope.client_name + '-' + moment().format('YYYY/DD/MM') + ".xls");
+					saveAs(blob2, "All-Data-" + $scope.client_name + '-' + moment().format('YYYY/DD/MM') + ".xls");
 				}, 500);
 			};
 
@@ -46,6 +46,14 @@
 				for (var i in $scope.savingsInvoices) {
 					if ($scope.savingsInvoices[i].invoice_id === invoice.invoice_id) {
 						$scope.savingsInvoices[i] = invoice;
+						if ($scope.savingsInvoices[i].total_benchmark !== invoice.benchamrk_access && $scope.savingsInvoices[i].benchamrk_access !== null) {
+							$scope.savingsInvoices[i].benchmark_charge += (parseFloat(invoice.benchamrk_access) - parseFloat($scope.savingsInvoices[i].total_benchmark));
+							$scope.savingsInvoices[i].total_benchmark = invoice.benchamrk_access;
+						}
+						if ($scope.savingsInvoices[i].assess_charge !== invoice.total_associated_costs && $scope.savingsInvoices[i].assess_charge !== null) {
+							$scope.savingsInvoices[i].savings_total_charge += (parseFloat(invoice.assess_charge) - parseFloat($scope.savingsInvoices[i].total_associated_costs));
+							$scope.savingsInvoices[i].total_associated_costs = invoice.assess_charge;
+						}
 					}
 					$scope.totalFuelBenchmark += $scope.savingsInvoices[i].benchmark_fuel_charge;
 					$scope.totalBenchmarkAccessorial += parseFloat($scope.savingsInvoices[i].total_benchmark);
@@ -58,7 +66,7 @@
 				}
 			};
 
-			$scope.calculation = function(savingsInvoices) {
+			$scope.calculation = function() {
 				$scope.totalFuelBenchmark = 0;
 				$scope.totalBenchmarkAccessorial = 0;
 				$scope.totalBenchmarkFrieghtCharge = 0;
@@ -139,24 +147,71 @@
 					$scope.totalFreightCharge += $scope.savingsInvoices[i].savings_frieght_charge;
 					$scope.totalFuelCharge += parseFloat($scope.savingsInvoices[i].savings_fuel_surcharge);
 				}
+
+				for (i in $scope.savingsXPOInvoices) {
+					$scope.totalBenchmarkFrieghtCharge += parseFloat($scope.savingsXPOInvoices[i].old_cost);
+					$scope.totalFuelBenchmark += parseFloat($scope.savingsXPOInvoices[i].old_fsc);
+					$scope.totalBenchmarkCharge += parseFloat($scope.savingsXPOInvoices[i].old_total_cost);
+					$scope.totalFreightCharge += parseFloat($scope.savingsXPOInvoices[i].new_cost);
+					$scope.totalFuelCharge += parseFloat($scope.savingsXPOInvoices[i].new_fsc);
+					$scope.totalCharged += parseFloat($scope.savingsXPOInvoices[i].new_total_cost);
+				}
 			};
 
-			$http.get('/secure-api/invoice/get_invoices_price_savings?' + $scope.params.invoiceIDs, config)
-				.then(function(response) {
-					$scope.savingsInvoices = response.data.data;
-					for (var i in $scope.savingsInvoices) {
-						$scope.savingsInvoices[i].carrier_name = undoCleanEntry($scope.savingsInvoices[i].carrier_name);
-						$scope.savingsInvoices[i].invoice_number = undoCleanEntry($scope.savingsInvoices[i].invoice_number);
-						$scope.savingsInvoices[i].receiver_name = undoCleanEntry($scope.savingsInvoices[i].receiver_name);
-						$scope.savingsInvoices[i].receiver_zip = undoCleanEntry($scope.savingsInvoices[i].receiver_zip);
-						$scope.savingsInvoices[i].ACCSCosts = [];
-						$scope.savingsInvoices[i].shipped_Item = [];
-					}
-					$scope.calculation();
-				}, function(err) {
-					console.log(err);
-					$state.go('login');
-				});
+			if ($scope.params.invoiceIDs) {
+				$http.get('/secure-api/invoice/get_invoices_price_savings?' + $scope.params.invoiceIDs, config)
+					.then(function(response) {
+						$scope.savingsInvoices = response.data.data;
+						for (var i in $scope.savingsInvoices) {
+							$scope.savingsInvoices[i].carrier_name = undoCleanEntry($scope.savingsInvoices[i].carrier_name);
+							$scope.savingsInvoices[i].invoice_number = undoCleanEntry($scope.savingsInvoices[i].invoice_number);
+							$scope.savingsInvoices[i].receiver_name = undoCleanEntry($scope.savingsInvoices[i].receiver_name);
+							$scope.savingsInvoices[i].receiver_zip = undoCleanEntry($scope.savingsInvoices[i].receiver_zip);
+							$scope.savingsInvoices[i].process_date = date_parse($scope.savingsInvoices[i].process_date);
+							$scope.savingsInvoices[i].ship_date = date_parse($scope.savingsInvoices[i].ship_date);
+							$scope.savingsInvoices[i].delivery_date = date_parse($scope.savingsInvoices[i].delivery_date);
+							$scope.savingsInvoices[i].ACCSCosts = [];
+							$scope.savingsInvoices[i].shipped_Item = [];
+						}
+						$scope.process_date = $scope.savingsInvoices[0].process_date;
+						$scope.client_name = $scope.savingsInvoices[0].client_name;
+						if ($scope.params.xpoIDs) {
+							$http.get('/secure-api/xpo/get_xpo_invoices_price_savings?' + $scope.params.xpoIDs, config)
+								.then(function(response) {
+									$scope.savingsXPOInvoices = response.data.data;
+									for (i in $scope.savingsXPOInvoices) {
+										$scope.savingsXPOInvoices[i].ship_date = date_parse($scope.savingsXPOInvoices[i].ship_date);
+										$scope.savingsXPOInvoices[i].process_date = date_parse($scope.savingsXPOInvoices[i].process_date);
+										$scope.savingsXPOInvoices[i].invoice_number = $scope.savingsXPOInvoices[i].pro_number; 
+									}
+									$scope.calculation();
+								}, function(err) {
+									console.log(err);
+								});
+						} else {
+							$scope.calculation();
+						}
+					}, function(err) {
+						console.log(err);
+					});
+			} else {
+				$http.get('/secure-api/xpo/get_xpo_invoices_price_savings?' + $scope.params.xpoIDs, config)
+					.then(function(response) {
+						$scope.savingsXPOInvoices = response.data.data;
+						for (var i in $scope.savingsXPOInvoices) {
+							$scope.savingsXPOInvoices[i].ship_date = date_parse($scope.savingsXPOInvoices[i].ship_date);
+							$scope.savingsXPOInvoices[i].process_date = date_parse($scope.savingsXPOInvoices[i].process_date);
+							$scope.savingsXPOInvoices[i].invoice_number = $scope.savingsXPOInvoices[i].pro_number;
+						}
+						$scope.process_date = $scope.savingsXPOInvoices[0].process_date;
+						$scope.client_name = $scope.savingsXPOInvoices[0].client_name;
+						$scope.calculation();
+					}, function(err) {
+						console.log(err);
+					});
+			}
+
+
 
 			$http.get('/secure-api/accessorial_cost_invoice/get_associated_costs_invoices', config)
 				.then(function(response) {
@@ -171,7 +226,6 @@
 					}
 				}, function(err) {
 					console.log(err);
-					$state.go('login');
 				});
 
 			$http.get('/secure-api/shipping_class_invoice/get_shipping_class_invoice', config)

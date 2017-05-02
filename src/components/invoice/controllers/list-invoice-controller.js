@@ -13,16 +13,23 @@
 			$scope.from = new Date(moment().day(1));
 			$scope.selectAll = false;
 
-			$scope.exportToSavings = function(arry) {
+			$scope.exportToSavings = function(invoices, xpoInvoices) {
 				var submittedInvoices = [];
-				for (var i in arry) {
-					if (arry[i].selected) {
-						submittedInvoices.push(arry[i].invoice_id);
+				var submittedXPOInvoices =[];
+				for (var i in invoices) {
+					if (invoices[i].selected) {
+						submittedInvoices.push(invoices[i].invoice_id);
 					}
 				}
-				if (submittedInvoices.length > 0) {
+				for(i in xpoInvoices) {
+					if(xpoInvoices[i].selected){
+						submittedXPOInvoices.push(xpoInvoices[i].xpo_id);
+					}
+				}
+				if ((submittedInvoices.length + submittedXPOInvoices.length )> 0) {
 					$state.go('price-savings', {
-						invoiceIDs: submittedInvoices
+						invoiceIDs: submittedInvoices,
+						xpoIDs: submittedXPOInvoices
 					});
 				} else {
 					console.log('Please select at least 1 invoice.');
@@ -39,16 +46,22 @@
 				angular.forEach($scope.allInvoices, function(invoice) {
 					invoice.selected = $scope.selectAll;
 				});
+				angular.forEach($scope.allXPOInvoices, function(xpoInvoice){
+					xpoInvoice.selected = $scope.selectAll;
+				});
 			};
 
 			$scope.check = false;
 			$scope.color = '';
 			$scope.rateCheck = function(invoice) {
 				var check = (invoice.gross_charge !== invoice.rated_sum && invoice.rated_sum !== '0' && invoice.rated_sum !== 0);
+				var color = '';
 				if (check) {
-					var color = "lightsalmon";
-					return color;
+					color = "lightsalmon";
+				} else if (invoice.rated_sum === 0 || invoice.rated_sum === '0'){
+					color = "LightCyan";
 				}
+				return color;
 			};
 
 			$http.get('/secure-api/invoice/get_invoices_once', config)
@@ -75,6 +88,19 @@
 						$scope.allInvoices[i].receiver_zip = undoCleanEntry($scope.allInvoices[i].receiver_zip);
 						$scope.allInvoices[i].sender_zip = undoCleanEntry($scope.allInvoices[i].sender_zip);
 						$scope.allInvoices[i].sender_zip_4 = undoCleanEntry($scope.allInvoices[i].sender_zip_4);
+					}
+				}, function(err) {
+					console.log(err);
+					$state.go('login');
+				});
+			$http.get('/secure-api/xpo/get_XPO_invoices_once', config)
+				.then(function(response) {
+					$scope.allXPOInvoices = response.data.data;
+					for (var i in $scope.allXPOInvoices) {
+						$scope.allXPOInvoices[i].invoice_number = $scope.allXPOInvoices[i].pro_number;
+						$scope.allXPOInvoices[i].ship_date = date_parse($scope.allXPOInvoices[i].ship_date);
+						$scope.allXPOInvoices[i].process_date = date_parse($scope.allXPOInvoices[i].process_date);
+						console.log($scope.allXPOInvoices[i]);
 					}
 				}, function(err) {
 					console.log(err);

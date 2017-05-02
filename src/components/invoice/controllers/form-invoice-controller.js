@@ -35,7 +35,7 @@
 			$scope.errorsArry = [];
 			$scope.newRow = false;
 
-			if ($scope.params.invoiceID !== "") {
+			if ($scope.params.invoiceID) {
 				$http.get('/secure-api/invoice/get_invoice?' + $scope.params.invoiceID, config)
 					.then(function(response) {
 						$scope.specificInvoice = response.data.data;
@@ -100,7 +100,29 @@
 						console.log(err);
 						$state.go('login');
 					});
+			} else if($scope.params.xpoID) {
+				$http.get('/secure-api/xpo/get_xpo_invoice?' + $scope.params.xpoID, config)
+					.then(function(response) {
+						$scope.xpoInvoice = response.data.data;
+						$scope.xpoInvoice[0].old_cost = (Math.round(parseFloat($scope.xpoInvoice[0].old_cost) * 100)) / 100;
+						$scope.xpoInvoice[0].old_fsc = (Math.round(parseFloat($scope.xpoInvoice[0].old_fsc) * 100)) / 100;
+						$scope.xpoInvoice[0].old_total_cost = (Math.round(parseFloat($scope.xpoInvoice[0].old_total_cost) * 100)) / 100;
+						$scope.xpoInvoice[0].new_cost = (Math.round(parseFloat($scope.xpoInvoice[0].new_cost) * 100)) / 100;
+						$scope.xpoInvoice[0].new_fsc = (Math.round(parseFloat($scope.xpoInvoice[0].new_fsc) * 100)) / 100;
+						$scope.xpoInvoice[0].new_total_cost = (Math.round(parseFloat($scope.xpoInvoice[0].new_total_cost) * 100)) / 100;
+						$scope.xpoInvoice[0].discount_percent = sanatizePercent($scope.xpoInvoice[0].discount_percent);
+						$scope.xpoInvoice[0].savings = (Math.round(parseFloat($scope.xpoInvoice[0].savings) * 100) / 100);
+						$scope.xpoInvoice[0].base_charge = (Math.round(parseFloat($scope.xpoInvoice[0].base_charge) * 100) / 100);
+						$scope.xpoInvoice[0].ship_date = date_parse($scope.xpoInvoice[0].ship_date);
+						$scope.xpoInvoice[0].process_date = date_parse($scope.xpoInvoice[0].process_date);
+						console.log($scope.xpoInvoice[0]);
+						$scope.invoice = $scope.xpoInvoice[0];
+					}, function(err) {
+						console.log(err);
+						$state.go('login');
+					});
 			} else {
+
 				$scope.invoice = {};
 				var today = new Date();
 				var day = today.getDay();
@@ -111,8 +133,8 @@
 					$scope.invoice.process_date = new Date(moment().day(5));
 				}
 				$scope.shippingClasses.push({
-						
-					});
+
+				});
 				$scope.PD = {};
 			}
 
@@ -127,15 +149,37 @@
 			};
 
 			$scope.submitXPOInvoice = function(invoice) {
-				invoice.old_cost = (Math.round(parseFloat(invoice.old_cost) * 100))/100;
-				invoice.old_fsc = (Math.round(parseFloat(invoice.old_fsc) * 100))/100;
-				invoice.old_total_cost = (Math.round(parseFloat(invoice.old_total_cost) * 100))/100;
-				invoice.new_cost = (Math.round(parseFloat(invoice.new_cost) * 100))/100;
-				invoice.new_fsc = (Math.round(parseFloat(invoice.new_fsc) * 100))/100;
-				invoice.new_total_cost = (Math.round(parseFloat(invoice.new_total_cost) * 100))/100;
+				invoice.old_cost = (Math.round(parseFloat(invoice.old_cost) * 100)) / 100;
+				invoice.old_fsc = (Math.round(parseFloat(invoice.old_fsc) * 100)) / 100;
+				invoice.old_total_cost = (Math.round(parseFloat(invoice.old_total_cost) * 100)) / 100;
+				invoice.new_cost = (Math.round(parseFloat(invoice.new_cost) * 100)) / 100;
+				invoice.new_fsc = (Math.round(parseFloat(invoice.new_fsc) * 100)) / 100;
+				invoice.new_total_cost = (Math.round(parseFloat(invoice.new_total_cost) * 100)) / 100;
 				invoice.discount_percent = sanatizePercent(invoice.discount_percent);
-				invoice.savings = (Math.round(parseFloat(invoice.savings)*100)/100);
+				invoice.savings = (Math.round(parseFloat(invoice.savings) * 100) / 100);
 				console.log(invoice);
+				for (var i in $scope.allCompanies) {
+					if ($scope.allCompanies[i].client_id === invoice.client_id) {
+						invoice.client_name = $scope.allCompanies[i].client_name;
+					}
+				}
+				if (!$scope.params.xpoID) {
+					$http.post('/secure-api/xpo/insert_xpo_invoice', invoice, config)
+						.then(function(reponse) {
+							console.log('New Invoice Added');
+							$state.reload();
+						}, function(err) {
+							console.error(err);
+						});
+				} else {
+					$http.put('/secure-api/xpo/update_xpo_invoice', invoice, config)
+						.then(function(response) {
+							console.log('Invoice Updated');
+							$state.reload();
+						}, function(err) {
+							console.log(err);
+						});
+				}
 			};
 
 			$scope.carrierCheck = function() {
@@ -238,7 +282,7 @@
 						}
 						if (!invoice.hasOwnProperty('receiver_address_2')) {
 							invoice.receiver_address_2 = '';
-						} 
+						}
 						if (!invoice.hasOwnProperty('receiver_zip_4')) {
 							invoice.receiver_zip_4 = '';
 						}
@@ -438,6 +482,7 @@
 						$scope.invoice.sender_country = $scope.allCompanies[i].client_country;
 						$scope.invoice.sender_state = $scope.allCompanies[i].client_state;
 						$scope.invoice.client_id = $scope.allCompanies[i].client_id;
+						$scope.invoice.sender = $scope.allCompanies[i].client_name;
 						$scope.invoice.iot_id = 117;
 					}
 				}
@@ -481,8 +526,8 @@
 					}
 				});
 				$scope.shippingClasses = newDataListItem;
-				for(var i in $scope.shippingClasses){
-					if(!$scope.shippingClasses[i].item_id){
+				for (var i in $scope.shippingClasses) {
+					if (!$scope.shippingClasses[i].item_id) {
 						newItem++;
 					}
 				}
@@ -493,17 +538,17 @@
 					}
 				});
 				$scope.accessorialCharges = newDataListCharge;
-				for(i in $scope.accessorialCharges){
-					if(!$scope.accessorialCharges[i].cost_id){
+				for (i in $scope.accessorialCharges) {
+					if (!$scope.accessorialCharges[i].cost_id) {
 						newItem++;
 					}
 				}
 
-				if($scope.shippingClasses.length < 1){
+				if ($scope.shippingClasses.length < 1) {
 					$scope.addRowItem($scope.shippingClasses);
 				}
 
-				if(newItem < 1 ){
+				if (newItem < 1) {
 					$scope.newRow = false;
 				}
 			};
