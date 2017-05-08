@@ -163,6 +163,9 @@
 						invoice.client_name = $scope.allCompanies[i].client_name;
 					}
 				}
+				if(!invoice.accelerated_charge){
+					invoice.accelerated_charge = 0;
+				}
 				if (!$scope.params.xpoID) {
 					$http.post('/secure-api/xpo/insert_xpo_invoice', invoice, config)
 						.then(function(reponse) {
@@ -264,6 +267,10 @@
 					}
 				}
 				var r = true;
+				if(!invoice.accelerated_charge){
+					invoice.accelerated_charge = 0;
+				}
+				
 
 				if (!senderState || !receiverState || !senderZip || !receiverZip) {
 					r = confirm("The carrier you selected does not appear to deleive to the selected State and Zip Code combination, would you like to continue anyway?");
