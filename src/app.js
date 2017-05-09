@@ -119,11 +119,6 @@
                     url: '/invoice/form-xpo-invoice/:xpoID',
                     templateUrl: '/src/components/invoice/views/form-invoice.html',
                     controller: 'invoiceFormCtrl'
-                })
-                .state('edi_test', {
-                    url:'/edi_test',
-                    templateUrl:'/src/components/edi_parse/edi_parse.html',
-                    controller:'ediCtrl'
                 });
             $urlRouterProvider.otherwise('/');
         }]);
