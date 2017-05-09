@@ -77,6 +77,8 @@
 							$scope.specificInvoice[i].receiver_zip = undoCleanEntry($scope.specificInvoice[i].receiver_zip);
 							$scope.specificInvoice[i].sender_zip = undoCleanEntry($scope.specificInvoice[i].sender_zip);
 							$scope.specificInvoice[i].sender_zip_4 = undoCleanEntry($scope.specificInvoice[i].sender_zip_4);
+							$scope.specificInvoice[i].deficit = parseFloat($scope.specificInvoice[i].deficit);
+							$scope.specificInvoice[i].deficit_rate = parseFloat($scope.specificInvoice[i].deficit_rate);
 						}
 						$scope.invoice = $scope.specificInvoice[0];
 						$scope.items = $scope.specificInvoice;
@@ -122,7 +124,6 @@
 						$state.go('login');
 					});
 			} else {
-
 				$scope.invoice = {};
 				var today = new Date();
 				var day = today.getDay();
@@ -342,6 +343,11 @@
 										$state.reload();
 									}, function(err) {
 										console.error(err);
+										for(var i in err.data.errors){
+											$scope.errors = true;
+											console.log(err.data.errors[i].message);
+											$scope.errorsArry.push(err.data.errors[i].message);
+										}
 									});
 							} else {
 								$http.put('/secure-api/invoice/update_invoice', {
@@ -353,7 +359,12 @@
 										console.log('Invoice Updated');
 										$state.reload();
 									}, function(err) {
+										$scope.errors = true;
 										console.log(err);
+										for(var i in err.data.errors){
+											console.log(err.data.errors[i].message);
+											$scope.errorsArry.push(err.data.errors[i].message);
+										}
 									});
 							}
 						});
@@ -433,6 +444,7 @@
 						var sum = returnString.slice(318, 326);
 						sum = [sum.slice(0, -2), '.', sum.slice(-2)].join('');
 						$scope.invoice.rated_sum = parseFloat(sum);
+						$scope.invoice.deficit_rate = parseFloat(returnString.slice(342, 349))/100;
 
 						var totalCharge = returnString.slice(396, 404);
 						totalCharge = [totalCharge.slice(0, -2), '.', totalCharge.slice(-2)].join('');
@@ -444,35 +456,35 @@
 						switch (err.data) {
 							case '01':
 								console.log('This tariff is not available');
-								$scope.errorsArry.push('This tariff is not available');
+								$scope.errorsArry.push('MARS Error 01: This tariff is not available');
 								break;
 							case '02':
 								console.log('Rates are not available for this date');
-								$scope.errorsArry.push('Rates are not available for this date');
+								$scope.errorsArry.push('MARS Error 02: Rates are not available for this date');
 								break;
 							case '03':
 								console.log('The origin ZIP Code was not found in this tariff');
-								$scope.errorsArry.push('The origin ZIP Code was not found in this tariff');
+								$scope.errorsArry.push('MARS Error 03: The origin ZIP Code was not found in this tariff');
 								break;
 							case '04':
 								console.log('The destination ZIP Code was not found in this tariff');
-								$scope.errorsArry.push('The destination ZIP Code was not found in this tariff');
+								$scope.errorsArry.push('MARS Error 04: The destination ZIP Code was not found in this tariff');
 								break;
 							case '05':
 								console.log('A rate base number was not found for this pair of ZIP Codes');
-								$scope.errorsArry.push('A rate base number was not found for this pair of ZIP Codes');
+								$scope.errorsArry.push('MARS Error 05: A rate base number was not found for this pair of ZIP Codes');
 								break;
 							case '06':
 								console.log('Tariff data is missing or corrupt');
-								$scope.errorsArry.push('Tariff data is missing or corrupt');
+								$scope.errorsArry.push('MARS Error 06: Tariff data is missing or corrupt');
 								break;
 							case '99':
 								console.log('Internal system error');
-								$scope.errorsArry.push('Internal system error');
+								$scope.errorsArry.push('MARS Error 99: Internal system error');
 								break;
 							default:
-								$scope.errorsArry.push('We have encountered an unknown error retreiving your shipment rating');
-								console.log('We have encountered an unknown error retreiving your shipment rating');
+								$scope.errorsArry.push('We have encountered an unknown MARS related error retreiving your shipment rating');
+								console.log('We have encountered an unknown MARS related error retreiving your shipment rating');
 						}
 					});
 			};

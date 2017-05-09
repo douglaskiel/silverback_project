@@ -68,7 +68,14 @@
 		<div class="col-md-4">
 			<h4> <b>Total Rated Charge:</b> <span ng-bind-html='specificInvoice[0].rated_total_charge | currency'> </span></h4>
 		</div>
-
+	</div>
+		<div class="row">
+		<div class="col-md-4">
+			<h4> <b>Deficit:</b> <span ng-bind-html='specificInvoice[0].deficit | currency'> </span></h4>
+		</div>
+		<div class="col-md-4">
+			<h4> <b>Deficit Rate:</b> <span ng-bind-html='specificInvoice[0].deficit_rate | currency'> </span></h4>
+		</div>
 	</div>
 	<div class="row">
 		<div class="col-md-4">

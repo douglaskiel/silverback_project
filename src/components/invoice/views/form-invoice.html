@@ -127,6 +127,16 @@
 			</div>
 			
 		</div><br>
+				<div class="row">
+			<div class="col-sm-3">
+				<label>Deficit:</label>
+				<input class="form-control" type="number" placeholder="Deficit Weight" max="99999" step=".005" min="0" ng-model="invoice.deficit" ng-init="invoice.deficit = 0" required>
+			</div>
+			<div class="col-sm-3">
+				<label>Deficit Weight:</label>
+				<p class="form-control-static"> {{invoice.deficit_rate | currency}} </p>
+			</div>		
+		</div><br>
 		<div class="row">
 			<div class="col-sm-3">
 				<label> Delivery Type:</label>

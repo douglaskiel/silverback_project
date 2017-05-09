@@ -89,14 +89,14 @@
 					$scope.savingsInvoices[i].benchmark_fuel_surcharge = Math.round($scope.savingsInvoices[i].benchmark_fuel_surcharge * 10000) / 100;
 					$scope.savingsInvoices[i].bfsc_percent = $scope.savingsInvoices[i].benchmark_fuel_surcharge + '%';
 					$scope.savingsInvoices[i].accelerated_charge = parseFloat($scope.savingsInvoices[i].accelerated_charge);
-
+					$scope.savingsInvoices[i].deficit = parseFloat($scope.savingsInvoices[i].deficit);
 					//benchmark
 					if ((($scope.savingsInvoices[i].gross_charge * (100 - $scope.savingsInvoices[i].discount)) / 100) <= 88.39) {
 						$scope.savingsInvoices[i].freight_charge = 88.39;
 						$scope.savingsInvoices[i].bmdiscount = 'AMC';
 					} else {
 						$scope.savingsInvoices[i].bmdiscount = $scope.savingsInvoices[i].discount + '%';
-						$scope.savingsInvoices[i].freight_charge = Math.round(($scope.savingsInvoices[i].gross_charge * (100 - $scope.savingsInvoices[i].discount))) / 100;
+						$scope.savingsInvoices[i].freight_charge = (Math.round((($scope.savingsInvoices[i].gross_charge + $scope.savingsInvoices[i].deficit)* (100 - $scope.savingsInvoices[i].discount))) / 100);
 					}
 
 					$scope.savingsInvoices[i].benchmark_fuel_charge = Math.round((($scope.savingsInvoices[i].benchmark_fuel_surcharge / 100 * $scope.savingsInvoices[i].fsc_factor / 100) * $scope.savingsInvoices[i].freight_charge) * 100) / 100;
@@ -107,7 +107,7 @@
 						$scope.savingsInvoices[i].savings_frieght_charge = $scope.savingsInvoices[i].absolute_min_charge;
 					} else {
 						$scope.savingsInvoices[i].savings_discount = $scope.savingsInvoices[i].carrier_discount + '%';
-						$scope.savingsInvoices[i].savings_frieght_charge = Math.round(($scope.savingsInvoices[i].gross_charge * (100 - $scope.savingsInvoices[i].carrier_discount))) / 100;
+						$scope.savingsInvoices[i].savings_frieght_charge = Math.round((($scope.savingsInvoices[i].gross_charge + $scope.savingsInvoices[i].deficit) * (100 - $scope.savingsInvoices[i].carrier_discount))) / 100;
 					}
 
 					$scope.savingsInvoices[i].savings_fuel_surcharge = Math.round(($scope.savingsInvoices[i].savings_frieght_charge * ($scope.savingsInvoices[i].fuel_surcharge / 100)) * 100) / 100;
