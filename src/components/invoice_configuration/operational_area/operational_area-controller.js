@@ -96,6 +96,7 @@
 						}
 						$scope.allOperations[i].region = undoCleanEntry($scope.allOperations[i].region);
 
+						$scope.allOperations[i].carrier_name = undoCleanEntry($scope.allOperations[i].carrier_name);
 					}
 				}, function(err) {
 					console.log(err);

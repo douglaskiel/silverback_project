@@ -19,6 +19,22 @@
 			</tr>
 		</table>
 	</div>
+	<div class="row" ng-if="errors === true">
+		<div class="col-sm-4">
+			<h5 class="no_match"> Error! </h5>
+			<ul>
+				<li class="no_match" ng-repeat="error in errorsArry"> {{error}} </li>
+			</ul>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-2">
+			<input type="button" ng-click="selectedAll()" ng-model="selectAll" value="Select All">
+		</div>
+		<div class="col-sm-2">
+			<input type="button" ng-click="exportToSavings(visibleInvoices, visibleXPOInvoices)" value="Calculate Savings">
+		</div>
+	</div> <br>
 	<div class="row">
 		<table class="table table-striped table-hover">
 			<tr>
@@ -98,6 +114,12 @@
 			</tr>
 		</table>
 	</div>
-	<input type="button" ng-click="selectedAll()" ng-model="selectAll" value="Select All">
-	<input type="button" ng-click="exportToSavings(visibleInvoices, visibleXPOInvoices)" value="Calculate Savings">
+	<div class="row">
+		<div class="col-sm-2">
+			<input type="button" ng-click="selectedAll()" ng-model="selectAll" value="Select All">
+		</div>
+		<div class="col-sm-1">
+			<input type="button" ng-click="exportToSavings(visibleInvoices, visibleXPOInvoices)" value="Calculate Savings">
+		</div>
+	</div>
 </div>

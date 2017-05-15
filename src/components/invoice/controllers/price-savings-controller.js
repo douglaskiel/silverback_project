@@ -239,6 +239,7 @@
 							}
 						}
 					}
+					console.log($scope.savingsInvoices);
 				}, function(err) {
 					console.log(err);
 					$state.go('login');

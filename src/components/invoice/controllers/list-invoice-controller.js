@@ -12,6 +12,8 @@
 			$scope.to = new Date(moment().day(5));
 			$scope.from = new Date(moment().day(1));
 			$scope.selectAll = false;
+			$scope.errors = false;
+			$scope.errorsArry = [];
 
 			$scope.exportToSavings = function(invoices, xpoInvoices) {
 				var submittedInvoices = [];
@@ -33,6 +35,9 @@
 					});
 				} else {
 					console.log('Please select at least 1 invoice.');
+					$scope.errors = true;
+					$scope.errorsArry = [];
+					$scope.errorsArry.push('Please select at least 1 invoice.');
 				}
 			};
 
@@ -101,7 +106,6 @@
 						$scope.allXPOInvoices[i].invoice_number = $scope.allXPOInvoices[i].pro_number;
 						$scope.allXPOInvoices[i].ship_date = date_parse($scope.allXPOInvoices[i].ship_date);
 						$scope.allXPOInvoices[i].process_date = date_parse($scope.allXPOInvoices[i].process_date);
-						console.log($scope.allXPOInvoices[i]);
 					}
 				}, function(err) {
 					console.log(err);

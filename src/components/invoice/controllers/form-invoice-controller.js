@@ -60,6 +60,7 @@
 							});
 							$scope.PD = {};
 
+							$scope.specificInvoice[i].carrier_name =undoCleanEntry($scope.specificInvoice[i].carrier_name);
 							$scope.specificInvoice[i].invoice_number = undoCleanEntry($scope.specificInvoice[i].invoice_number);
 							$scope.specificInvoice[i].sender_name = undoCleanEntry($scope.specificInvoice[i].sender_name);
 							$scope.specificInvoice[i].sender_address_1 = undoCleanEntry($scope.specificInvoice[i].sender_address_1);
@@ -675,6 +676,9 @@
 			$http.get('/secure-api/carrier/get_carriers', config)
 				.then(function(response) {
 					$scope.allCarriers = response.data.data;
+					for(var i in $scope.allCarriers){
+						$scope.allCarriers[i].carrier_name = undoCleanEntry($scope.allCarriers[i].carrier_name);
+					}
 				}, function(err) {
 					console.log(err);
 				});
