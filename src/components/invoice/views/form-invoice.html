@@ -1,4 +1,4 @@
-<div ng-if="invoice.carrier_name != 'XPO'">
+<div ng-if="invoice.carrier_name != 'XPO Logistics'">
 	<form ng-submit="submitInvoice(invoice, shippingClasses, accessorialCharges)">
 		<div class="row">
 			<div class="col-sm-3">
@@ -245,7 +245,7 @@
 </form>
 </div>
 
-<div ng-if="invoice.carrier_name == 'XPO'">
+<div ng-if="invoice.carrier_name == 'XPO Logistics'">
 <form ng-submit="submitXPOInvoice(invoice)">
 	<div class="row">
 		<div class="col-sm-3">

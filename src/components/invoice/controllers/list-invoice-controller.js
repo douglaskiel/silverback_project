@@ -59,9 +59,9 @@
 			$scope.check = false;
 			$scope.color = '';
 			$scope.rateCheck = function(invoice) {
-				var check = (invoice.gross_charge !== invoice.rated_sum && invoice.deficit !== invoice.deficit_rate && invoice.rated_sum !== '0' && invoice.rated_sum !== 0);
+				var check = (invoice.gross_charge !== invoice.rated_sum && invoice.rated_sum !== '0' && invoice.rated_sum !== 0);
 				var color = '';
-				if (check) {
+				if (check || invoice.deficit !== invoice.deficit_rate) {
 					color = "lightsalmon";
 				} 
 				// else if (invoice.rated_sum === 0 || invoice.rated_sum === '0'){
