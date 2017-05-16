@@ -96,7 +96,7 @@
 						$scope.savingsInvoices[i].bmdiscount = 'AMC';
 					} else {
 						$scope.savingsInvoices[i].bmdiscount = $scope.savingsInvoices[i].discount + '%';
-						$scope.savingsInvoices[i].freight_charge = (Math.round((($scope.savingsInvoices[i].gross_charge + $scope.savingsInvoices[i].deficit)* (100 - $scope.savingsInvoices[i].discount))) / 100);
+						$scope.savingsInvoices[i].freight_charge = (Math.round((($scope.savingsInvoices[i].gross_charge + $scope.savingsInvoices[i].deficit) * (100 - $scope.savingsInvoices[i].discount))) / 100);
 					}
 
 					$scope.savingsInvoices[i].benchmark_fuel_charge = Math.round((($scope.savingsInvoices[i].benchmark_fuel_surcharge / 100 * $scope.savingsInvoices[i].fsc_factor / 100) * $scope.savingsInvoices[i].freight_charge) * 100) / 100;
@@ -182,13 +182,15 @@
 									for (i in $scope.savingsXPOInvoices) {
 										$scope.savingsXPOInvoices[i].ship_date = date_parse($scope.savingsXPOInvoices[i].ship_date);
 										$scope.savingsXPOInvoices[i].process_date = date_parse($scope.savingsXPOInvoices[i].process_date);
-										$scope.savingsXPOInvoices[i].invoice_number = $scope.savingsXPOInvoices[i].pro_number; 
+										$scope.savingsXPOInvoices[i].invoice_number = $scope.savingsXPOInvoices[i].pro_number;
 									}
+									$scope.getAssoccClass();
 									$scope.calculation();
 								}, function(err) {
 									console.log(err);
 								});
 						} else {
+							$scope.getAssoccClass();
 							$scope.calculation();
 						}
 					}, function(err) {
@@ -211,38 +213,39 @@
 					});
 			}
 
-
-
-			$http.get('/secure-api/accessorial_cost_invoice/get_associated_costs_invoices', config)
-				.then(function(response) {
-					$scope.ACCSCosts = response.data.data;
-					for (var i in $scope.ACCSCosts) {
-						$scope.ACCSCosts[i].invoice_number = undoCleanEntry($scope.ACCSCosts[i].invoice_number);
-						for (var j in $scope.savingsInvoices) {
-							if ($scope.ACCSCosts[i].invoice_number === $scope.savingsInvoices[j].invoice_number) {
-								$scope.savingsInvoices[j].ACCSCosts.push($scope.ACCSCosts[i]);
+			$scope.getAssoccClass = function() {
+				$http.get('/secure-api/accessorial_cost_invoice/get_associated_costs_invoices', config)
+					.then(function(response) {
+						$scope.ACCSCosts = response.data.data;
+						for (var i in $scope.ACCSCosts) {
+							$scope.ACCSCosts[i].invoice_number = undoCleanEntry($scope.ACCSCosts[i].invoice_number);
+							for (var j in $scope.savingsInvoices) {
+								if ($scope.ACCSCosts[i].invoice_number === $scope.savingsInvoices[j].invoice_number) {
+									$scope.savingsInvoices[j].ACCSCosts.push($scope.ACCSCosts[i]);
+								}
 							}
 						}
-					}
+					}, function(err) {
+						console.log(err);
+					});
+
+				$http.get('/secure-api/shipping_class_invoice/get_shipping_class_invoice', config)
+					.then(function(response) {
+						$scope.shipped_Item = response.data.data;
+						for (var i in $scope.shipped_Item) {
+							$scope.shipped_Item[i].invoice_number = undoCleanEntry($scope.shipped_Item[i].invoice_number);
+							for (var j in $scope.savingsInvoices) {
+								if ($scope.shipped_Item[i].invoice_number === $scope.savingsInvoices[j].invoice_number) {
+									$scope.savingsInvoices[j].shipped_Item.push($scope.shipped_Item[i]);
+								}
+							}
+						}
 				}, function(err) {
-					console.log(err);
-				});
-
-			$http.get('/secure-api/shipping_class_invoice/get_shipping_class_invoice', config)
-				.then(function(response) {
-					$scope.shipped_Item = response.data.data;
-					for (var i in $scope.shipped_Item) {
-						$scope.shipped_Item[i].invoice_number = undoCleanEntry($scope.shipped_Item[i].invoice_number);
-						for (var j in $scope.savingsInvoices) {
-							if ($scope.shipped_Item[i].invoice_number === $scope.savingsInvoices[j].invoice_number) {
-								$scope.savingsInvoices[j].shipped_Item.push($scope.shipped_Item[i]);
-							}
-						}
-					}
+						console.log(err);
+					});
 					console.log($scope.savingsInvoices);
-				}, function(err) {
-					console.log(err);
-					$state.go('login');
-				});
+					console.log($scope.savingsInvoices.length);
+			};
+
 		}]);
 })(window, window.angular);
