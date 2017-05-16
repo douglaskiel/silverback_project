@@ -56,12 +56,16 @@
 				});
 			};
 
-			$scope.check = false;
+			$scope.AMCcheck = false;
+			$scope.grossCheck = false;
+			$scope.deficitCheck = false;
 			$scope.color = '';
 			$scope.rateCheck = function(invoice) {
-				var check = (invoice.gross_charge !== invoice.rated_sum && invoice.rated_sum !== '0' && invoice.rated_sum !== 0);
+				var AMCcheck = (invoice.rated_sum !== '0' && invoice.rated_sum !== 0);
+				var grossCheck = (invoice.gross_charge !== invoice.rated_sum);
+				var deficitCheck = (invoice.deficit !== invoice.deficit_rate);
 				var color = '';
-				if (check || invoice.deficit !== invoice.deficit_rate) {
+				if ((AMCcheck || deficitCheck) && AMCcheck) {
 					color = "lightsalmon";
 				} 
 				// else if (invoice.rated_sum === 0 || invoice.rated_sum === '0'){
