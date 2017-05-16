@@ -183,7 +183,7 @@
 										$scope.savingsXPOInvoices[i].ship_date = date_parse($scope.savingsXPOInvoices[i].ship_date);
 										$scope.savingsXPOInvoices[i].process_date = date_parse($scope.savingsXPOInvoices[i].process_date);
 										$scope.savingsXPOInvoices[i].invoice_number = $scope.savingsXPOInvoices[i].pro_number;
-										$scope.savingsXPOInvoices[i].discount_percent = Math.round($scope.savingsXPOInvoices[i].discount_percent);
+										$scope.savingsXPOInvoices[i].discount_percent = Math.round($scope.savingsXPOInvoices[i].discount_percent * 10000) / 100;
 									}
 									$scope.getAssoccClass();
 									$scope.calculation();
@@ -206,7 +206,7 @@
 							$scope.savingsXPOInvoices[i].ship_date = date_parse($scope.savingsXPOInvoices[i].ship_date);
 							$scope.savingsXPOInvoices[i].process_date = date_parse($scope.savingsXPOInvoices[i].process_date);
 							$scope.savingsXPOInvoices[i].invoice_number = $scope.savingsXPOInvoices[i].pro_number;
-							$scope.savingsXPOInvoices[i].discount_percent = Math.round($scope.savingsXPOInvoices[i].discount_percent * 10000)/100;
+							$scope.savingsXPOInvoices[i].discount_percent = Math.round($scope.savingsXPOInvoices[i].discount_percent * 10000) / 100;
 						}
 						$scope.process_date = $scope.savingsXPOInvoices[0].process_date;
 						$scope.client_name = $scope.savingsXPOInvoices[0].client_name;
