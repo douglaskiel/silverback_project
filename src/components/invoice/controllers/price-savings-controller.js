@@ -183,6 +183,7 @@
 										$scope.savingsXPOInvoices[i].ship_date = date_parse($scope.savingsXPOInvoices[i].ship_date);
 										$scope.savingsXPOInvoices[i].process_date = date_parse($scope.savingsXPOInvoices[i].process_date);
 										$scope.savingsXPOInvoices[i].invoice_number = $scope.savingsXPOInvoices[i].pro_number;
+										$scope.savingsXPOInvoices[i].discount_percent = Math.round($scope.savingsXPOInvoices[i].discount_percent);
 									}
 									$scope.getAssoccClass();
 									$scope.calculation();
@@ -200,10 +201,12 @@
 				$http.get('/secure-api/xpo/get_xpo_invoices_price_savings?' + $scope.params.xpoIDs, config)
 					.then(function(response) {
 						$scope.savingsXPOInvoices = response.data.data;
+						console.log(response.data.data);
 						for (var i in $scope.savingsXPOInvoices) {
 							$scope.savingsXPOInvoices[i].ship_date = date_parse($scope.savingsXPOInvoices[i].ship_date);
 							$scope.savingsXPOInvoices[i].process_date = date_parse($scope.savingsXPOInvoices[i].process_date);
 							$scope.savingsXPOInvoices[i].invoice_number = $scope.savingsXPOInvoices[i].pro_number;
+							$scope.savingsXPOInvoices[i].discount_percent = Math.round($scope.savingsXPOInvoices[i].discount_percent * 10000)/100;
 						}
 						$scope.process_date = $scope.savingsXPOInvoices[0].process_date;
 						$scope.client_name = $scope.savingsXPOInvoices[0].client_name;

@@ -31,6 +31,7 @@
 					$scope.xpoInvoice = response.data.data;
 					$scope.xpoInvoice[0].ship_date = date_parse($scope.xpoInvoice[0].ship_date);
 					$scope.xpoInvoice[0].process_date = date_parse($scope.xpoInvoice[0].process_date);
+					$scope.xpoInvoice[0].discount_percent = sanatizePercent($scope.xpoInvoice[0].discount_percent);
 				}, function(err) {
 					console.log(err);
 					$state.go('login');

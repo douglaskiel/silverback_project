@@ -116,6 +116,8 @@
 						$scope.xpoInvoice[0].base_charge = (Math.round(parseFloat($scope.xpoInvoice[0].base_charge) * 100) / 100);
 						$scope.xpoInvoice[0].ship_date = date_parse($scope.xpoInvoice[0].ship_date);
 						$scope.xpoInvoice[0].process_date = date_parse($scope.xpoInvoice[0].process_date);
+						$scope.xpoInvoice[0].discount_ammount = (Math.round(parseFloat($scope.xpoInvoice[0].discount_ammount) * 100) / 100);
+						
 						console.log($scope.xpoInvoice[0]);
 						$scope.invoice = $scope.xpoInvoice[0];
 					}, function(err) {
