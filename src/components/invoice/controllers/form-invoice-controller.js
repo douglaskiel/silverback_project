@@ -72,8 +72,6 @@
 							$scope.specificInvoice[i].receiver_country = undoCleanEntry($scope.specificInvoice[i].receiver_country);
 							$scope.specificInvoice[i].transportation_mode = undoCleanEntry($scope.specificInvoice[i].transportation_mode);
 							$scope.specificInvoice[i].package_type = undoCleanEntry($scope.specificInvoice[i].package_type);
-							$scope.specificInvoice[i].sender_address_2 = undoCleanEntry($scope.specificInvoice[i].sender_address_2);
-							$scope.specificInvoice[i].receiver_address_2 = undoCleanEntry($scope.specificInvoice[i].receiver_address_2);
 							$scope.specificInvoice[i].receiver_zip_4 = undoCleanEntry($scope.specificInvoice[i].receiver_zip_4);
 							$scope.specificInvoice[i].receiver_zip = undoCleanEntry($scope.specificInvoice[i].receiver_zip);
 							$scope.specificInvoice[i].sender_zip = undoCleanEntry($scope.specificInvoice[i].sender_zip);
@@ -142,6 +140,7 @@
 
 			$scope.setOldCost = function(oldCharge) {
 				$scope.invoice.old_cost = (oldCharge * (1 - 0.829));
+				$scope.invoice.discount_percent = sanatizePercent($scope.invoice.discount_ammount/oldCharge);
 				$scope.invoice.new_cost = (oldCharge * (1 - sanatizePercent($scope.invoice.discount_percent)));
 				$scope.invoice.old_fsc = ($scope.invoice.old_cost * sanatizePercent($scope.invoice.fsc_percent));
 				$scope.invoice.new_fsc = ($scope.invoice.new_cost * sanatizePercent($scope.invoice.fsc_percent));
@@ -159,6 +158,7 @@
 				invoice.new_total_cost = (Math.round(parseFloat(invoice.new_total_cost) * 100)) / 100;
 				invoice.discount_percent = sanatizePercent(invoice.discount_percent);
 				invoice.savings = (Math.round(parseFloat(invoice.savings) * 100) / 100);
+				invoice.discount_ammount = (Math.round(parseFloat(invoice.discount_ammount)*100)/100);
 				console.log(invoice);
 				for (var i in $scope.allCompanies) {
 					if ($scope.allCompanies[i].client_id === invoice.client_id) {
@@ -283,14 +283,8 @@
 					$scope.totalBenchmarkCost = 0;
 
 					if (items != [] && items.length !== 0) {
-						if (!invoice.hasOwnProperty('sender_address_2')) {
-							invoice.sender_address_2 = '';
-						}
 						if (!invoice.hasOwnProperty('sender_zip_4')) {
 							invoice.sender_zip_4 = '';
-						}
-						if (!invoice.hasOwnProperty('receiver_address_2')) {
-							invoice.receiver_address_2 = '';
 						}
 						if (!invoice.hasOwnProperty('receiver_zip_4')) {
 							invoice.receiver_zip_4 = '';

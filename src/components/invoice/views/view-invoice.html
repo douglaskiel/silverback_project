@@ -13,9 +13,6 @@
 				<tr>
 					<td ng-bind-html='specificInvoice[0].sender_address_1'></td>
 				</tr>
-				<tr ng-hide="!specificInvoice[0].sender_address_2">
-					<td ng-bind-html='specificInvoice[0].sender_address_2'></td>
-				</tr>
 				<tr>
 					<td><span ng-bind-html='specificInvoice[0].sender_city'> </span> <span ng-bind-html='specificInvoice[0].sender_state'> </span>, <span ng-bind-html='specificInvoice[0].sender_zip'> </span><span ng-show="specificInvoice[0].sender_zip_4">-<span ng-bind-html='specificInvoice[0].sender_zip_4'> </span></span> </td>
 				</tr>
@@ -34,9 +31,6 @@
 				</tr>
 				<tr>
 					<td ng-bind-html='specificInvoice[0].receiver_address_1'></td>
-				</tr>
-				<tr ng-hide="!specificInvoice[0].receiver_address_2">
-					<td ng-bind-html='specificInvoice[0].receiver_address_2'></td>
 				</tr>
 				<tr>
 					<td><span ng-bind-html='specificInvoice[0].receiver_city'></span> <span ng-bind-html='specificInvoice[0].receiver_state'></span>, <span ng-bind-html='specificInvoice[0].receiver_zip'></span><span ng-show="specificInvoice[0].receiver_zip_4">-<span ng-bind-html='specificInvoice[0].receiver_zip_4'></span></span> </td>
