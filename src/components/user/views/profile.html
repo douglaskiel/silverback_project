@@ -1,6 +1,14 @@
+<div class="row" ng-if="errors === true">
+	<div class="col-sm-4">
+		<h5 class="no_match"> Error! </h5>
+		<ul>
+			<li class="no_match" ng-repeat="error in errorsArry"> {{error}} </li>
+		</ul>
+	</div>
+</div>
 <div class="row" ng-if="!edit" ng-init="edit = false">
 	<div class="col-sm-6">
-	<h2> {{user.first_name}} {{user.last_name}} </h2>
+		<h2> {{user.first_name}} {{user.last_name}} </h2>
 		<h3> Username: {{user.username}} </h3>
 		<h3> Email: {{user.email}} </h3>
 	</div>
@@ -28,20 +36,41 @@
 		<br><br>
 	</div>
 </div>
-<div class="row">
+<div ng-if="password" class="row">
 	<div class="col-sm-4">
-		<input ng-if="password" type="password" class="form-control" ng-model="user.old_password" placeholder="Enter Current Password">
-		<input ng-if="password" type="password" class="form-control" ng-model="user.new_password" placeholder="Enter New Password">
-		<input ng-if="password" type="password" class="form-control" ng-model="user.confirm_password" placeholder="Confirm new Password">
-		<button type="button" class="btn" ng-init="!password" ng-click="password = !password">Change Password</button>
+		<p ng-class="{true: 'match', false: 'no_match'}[requirements]"> Passwords must have the following: </p>
+	</div>
+</div>
+<div ng-if="password" class="row">
+	<div class="col-sm-4">
+		<ul>
+			<li ng-class="{true: 'match', false: 'no_match'}[passLength]"> 14 Characters </li>
+			<li ng-class="{true: 'match', false:'no_match'}[upperCase]"> Capital Letter </li>
+			<li ng-class="{true: 'match', false:'no_match'}[lowerCase]"> Lower Case Letter </li>
+		</ul>
+	</div>
+	<div class="col-sm-4">
+		<ul>
+			<li ng-class="{true: 'match', false:'no_match'}[number]"> Number </li>
+			<li ng-class="{true: 'match', false:'no_match'}[special]"> Symbol </li>
+			<li ng-class="{true: 'match', false:'no_match'}[passMatch]"> Passwords Match </li>
+		</ul>
+	</div>
+</div>
+<div ng-if="password" class="row">
+	<div class="col-sm-4">
+		<input type="password" class="form-control" ng-model="user.old_password" placeholder="Enter Current Password">
+		<input type="password" class="form-control" ng-model="user.new_password" ng-change="passCheck(user.new_password, user.confirm_password)" placeholder="Enter New Password">
+		<input type="password" class="form-control" ng-model="user.confirm_password" ng-change="passCheck(user.new_password, user.confirm_password)" placeholder="Confirm new Password">
 		<button type="button" class="btn" ng-if="password" ng-click="changePassword(user)">Submit Password</button> <br><br>
 	</div>
 </div>
+<button type="button" class="btn" ng-init="!password" ng-click="password = !password">Change Password</button>
 <div class="row">
 	<div class="col-sm-3">
 		<a href="" ng-click="deleteProfile(user.id)"> Delete Account </a>
 	</div>
 </div>
 <div class="row">
-<div id="password_Error"> </div>
+	<div id="password_Error"> </div>
 </div>
