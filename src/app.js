@@ -52,7 +52,7 @@
                 })
                 .state('iot', {
                     url: '/invoice_configuration/iot',
-                    templateUrl: '/src/components/invoice_configuration/iot/iot.html',
+                    templateUrl: '/src/components/invoice_configuration/IOT/iot.html',
                     controller: 'iotCtrl'
                 })
                 .state('fuel_rates', {
