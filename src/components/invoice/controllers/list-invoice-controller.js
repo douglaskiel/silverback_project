@@ -65,7 +65,7 @@
 				var grossCheck = (invoice.gross_charge !== invoice.rated_sum);
 				var deficitCheck = (invoice.deficit !== invoice.deficit_rate);
 				var color = '';
-				if ((AMCcheck || deficitCheck) && AMCcheck) {
+				if ((grossCheck || deficitCheck) && AMCcheck) {
 					color = "lightsalmon";
 				} 
 				// else if (invoice.rated_sum === 0 || invoice.rated_sum === '0'){
