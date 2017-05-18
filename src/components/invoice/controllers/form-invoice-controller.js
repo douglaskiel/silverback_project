@@ -302,8 +302,6 @@
 						invoice.receiver_country = cleanEntry(invoice.receiver_country);
 						invoice.transportation_mode = cleanEntry(invoice.transportation_mode);
 						invoice.package_type = cleanEntry(invoice.package_type);
-						invoice.sender_address_2 = cleanEntry(invoice.sender_address_2);
-						invoice.receiver_address_2 = cleanEntry(invoice.receiver_address_2);
 						invoice.receiver_zip_4 = cleanEntry(invoice.receiver_zip_4);
 						invoice.receiver_zip = cleanEntry(invoice.receiver_zip);
 						invoice.sender_zip = cleanEntry(invoice.sender_zip);
