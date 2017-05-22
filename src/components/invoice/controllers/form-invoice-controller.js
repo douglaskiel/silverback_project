@@ -232,7 +232,7 @@
 						}
 					}
 					if (senderInfo && receiverInfo) {
-						if (parseFloat(senderInfo.absolute_minimum_charge) > parseFloat(receiverInfo.absolute_minimum_charge)) {
+						if (parseFloat(senderInfo.absolute_minimum_charge) < parseFloat(receiverInfo.absolute_minimum_charge)) {
 							$scope.invoice.absolute_min_charge = parseFloat(senderInfo.absolute_minimum_charge);
 							$scope.invoice.carrier_discount = parseFloat(senderInfo.discount);
 							$scope.invoice.accelerated_charge = parseFloat(senderInfo.accelerated_charge);

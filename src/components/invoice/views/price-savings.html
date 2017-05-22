@@ -42,7 +42,14 @@
 						<td style="vertical-align: middle;" ng-bind-html="invoice.receiver_name"> </td>
 						<td style="vertical-align: middle;" ng-bind-html="invoice.receiver_zip"> </td>
 						<td style="background-color: lightblue; border-left: 1px solid black; vertical-align: middle; text-align: center;" ng-bind-html="invoice.bmdiscount"> </td>
-						<td style="background-color: lightblue; vertical-align: middle; text-align: right;" ng-bind-html="invoice.freight_charge | currency">
+						<td style="background-color: lightblue; vertical-align: middle; text-align: right;">
+							<div ng-if="export" ng-init="export = false">
+								<span ng-bind-html="invoice.freight_charge | currency""></span>
+							</div>
+							<div ng-if="!export">
+								<a href="" ng-bind-html="invoice.freight_charge | currency" ng-click="editTS = true" ng-hide="editTS"> </a>
+								<input ng-if="editTS" type="number" step="0.01" ng-model="invoice.freight_charge" class="form-control" ng-change="recalculation(invoice)">
+							</div>
 						</td>
 						<td style="background-color: lightblue; vertical-align: middle; text-align: right;" ng-bind-html="invoice.benchmark_fuel_charge | currency"> </td>
 						<td style="background-color: lightblue; vertical-align: middle; text-align: right;" ng-init="invoice.benchamrk_access = invoice.total_benchmark">
@@ -51,7 +58,7 @@
 							</div>
 							<div ng-if="!export">
 								<a href="" ng-bind-html="invoice.benchamrk_access | currency" ng-click="editTS = true" ng-hide="editTS"> </a>
-								<input ng-if="editTS" type="number" step="0.01" ng-model="invoice.benchamrk_access" class="form-control" ng-change="recalculation(invoice)">
+								<input ng-if="editTS" type="number" step="0.01" ng-model="invoice.benchamrk_access" class="form-control" ng-change="recalculationSimple(invoice)">
 							</div>
 						</td>
 						<td style="background-color: lightblue; vertical-align: middle; text-align: right;">
@@ -60,11 +67,19 @@
 							</div>
 							<div ng-if="!export">
 								<a href="" ng-bind-html="invoice.benchmark_charge | currency" ng-click="editTS = true" ng-hide="editTS"> </a>
-								<input ng-if="editTS" type="number" step="0.01" ng-model="invoice.benchmark_charge" class="form-control" ng-change="recalculation(invoice)">
+								<input ng-if="editTS" type="number" step="0.01" ng-model="invoice.benchmark_charge" class="form-control" ng-change="recalculationSimple(invoice)">
 							</div>
 						</td>
 						<td style="background-color: lightyellow; border-left: 1px solid black; vertical-align: middle; text-align: center;" ng-bind-html="invoice.savings_discount"> </td>
-						<td style="background-color: lightyellow; vertical-align: middle; text-align: right;" ng-bind-html="invoice.savings_frieght_charge | currency"> </td>
+						<td style="background-color: lightyellow; vertical-align: middle; text-align: right;">
+							<div ng-if="export" ng-init="export = false">
+								<span ng-bind-html="invoice.savings_frieght_charge | currency""></span>
+							</div>
+							<div ng-if="!export">
+								<a href="" ng-bind-html="invoice.savings_frieght_charge | currency" ng-click="editTS = true" ng-hide="editTS"> </a>
+								<input ng-if="editTS" type="number" step="0.01" ng-model="invoice.savings_frieght_charge" class="form-control" ng-change="recalculation(invoice)">
+							</div>
+						</td>
 						<td style="background-color: lightyellow; vertical-align: middle; text-align: right;" ng-bind-html="invoice.savings_fuel_surcharge | currency"> </td>
 						<td style="background-color: lightyellow; vertical-align: middle; text-align: right;" ng-init="invoice.assess_charge = invoice.total_associated_costs">
 							<div ng-if="export" ng-init="export = false">
@@ -72,7 +87,7 @@
 							</div>
 							<div ng-if="!export">
 								<a href="" ng-bind-html="invoice.assess_charge | currency" ng-click="editTS = true" ng-hide="editTS"> </a>
-								<input ng-if="editTS" type="number" step="0.01" ng-model="invoice.assess_charge" class="form-control" ng-change="recalculation(invoice)">
+								<input ng-if="editTS" type="number" step="0.01" ng-model="invoice.assess_charge" class="form-control" ng-change="recalculationSimple(invoice)">
 							</div>
 						</td>
 						<td style="background-color: lightyellow; min-width: 100px; vertical-align: middle; text-align: right;">
@@ -81,14 +96,13 @@
 							</div>
 							<div ng-if="!export">
 								<a href="" ng-bind-html="invoice.savings_total_charge | currency" ng-click="editTS = true" ng-hide="editTS"> </a>
-								<input ng-if="editTS" type="number" step="0.01" ng-model="invoice.savings_total_charge" class="form-control" ng-change="recalculation(invoice)">
+								<input ng-if="editTS" type="number" step="0.01" ng-model="invoice.savings_total_charge" class="form-control" ng-change="recalculationSimple(invoice)">
 							</div>
 						</td>
 						<td style="background-color: lightgreen; border-left: 1px solid black; vertical-align: middle; text-align: right;" ng-bind-html="invoice.benchmark_charge - invoice.savings_total_charge | currency"> </td>
 						<td style="border-left: 1px solid black; vertical-align: middle; text-align: right;" ng-bind-html="(invoice.benchmark_charge - invoice.savings_total_charge)/2 | currency"> </td>
 					</tr>
 					<tr ng-repeat="xpoInvoice in savingsXPOInvoices | orderBy:'ship_date'" style="text-align: left;  font-size: 11px;">
-
 						<td style="vertical-align: middle;" ng-bind-html="xpoInvoice.carrier_name"></td>
 						<td style="vertical-align: middle;" ng-bind-html="xpoInvoice.pro_number"> </td>
 						<td style="vertical-align: middle;" ng-bind-html="xpoInvoice.receiver"> </td>
@@ -104,7 +118,7 @@
 						<td style="background-color: lightyellow; border-left: 1px solid black; vertical-align: middle; text-align: center;"> <span ng-bind-html="xpoInvoice.discount_percent"> </span>% </td>
 						<td style="background-color: lightyellow; vertical-align: middle; text-align: right;" ng-bind-html="xpoInvoice.new_cost | currency"> </td>
 						<td style="background-color: lightyellow; vertical-align: middle; text-align: right;" ng-bind-html="xpoInvoice.new_fsc | currency"> </td>
-						<td style="background-color: lightyellow; vertical-align: middle; text-align: right;" > 
+						<td style="background-color: lightyellow; vertical-align: middle; text-align: right;" >
 							
 						</td>
 						<td style="background-color: lightyellow; min-width: 100px; vertical-align: middle; text-align: right;">
