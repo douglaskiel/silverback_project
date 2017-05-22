@@ -13,16 +13,21 @@
 					var blob = new Blob([document.getElementById('savings_report').innerHTML], {
 						type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8"
 					});
-					var blob2 = new Blob([document.getElementById('all_data').innerHTML], {
+					var blob2 = new Blob([document.getElementById('xpo_data').innerHTML], {
+						type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8"
+					});
+					var blob3 = new Blob([document.getElementById('all_data').innerHTML], {
 						type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8"
 					});
 					saveAs(blob, "Savings-Report-" + $scope.client_name + '-' + moment().format('YYYY/DD/MM') + ".xls");
-					saveAs(blob2, "All-Data-" + $scope.client_name + '-' + moment().format('YYYY/DD/MM') + ".xls");
+					saveAs(blob2, "XPO-Data-" + $scope.client_name + '-' + moment().format('YYYY/DD/MM') + ".xls");
+					saveAs(blob3, "All-Data-" + $scope.client_name + '-' + moment().format('YYYY/DD/MM') + ".xls");
 				}, 500);
 			};
 
 			$scope.savingsInvoices = [];
 			$scope.associatedCosts = [];
+			
 			$scope.totalBenchmarkFrieghtCharge = 0;
 			$scope.totalBenchmarkCharge = 0;
 			$scope.totalBenchmarkAccessorial = 0;

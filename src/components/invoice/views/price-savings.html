@@ -90,7 +90,7 @@
 								<input ng-if="editTS" type="number" step="0.01" ng-model="invoice.assess_charge" class="form-control" ng-change="recalculationSimple(invoice)">
 							</div>
 						</td>
-						<td style="background-color: lightyellow; min-width: 100px; vertical-align: middle; text-align: right;">
+						<td style="background-color: lightyellow;  vertical-align: middle; text-align: right;">
 							<div ng-if="export" ng-init="export = false">
 								<span ng-bind-html="invoice.savings_total_charge | currency"></span>
 							</div>
@@ -121,7 +121,7 @@
 						<td style="background-color: lightyellow; vertical-align: middle; text-align: right;" >
 							
 						</td>
-						<td style="background-color: lightyellow; min-width: 100px; vertical-align: middle; text-align: right;">
+						<td style="background-color: lightyellow;  vertical-align: middle; text-align: right;">
 							<span ng-bind-html="xpoInvoice.new_total_cost | currency"></span>
 						</td>
 						<td style="background-color: lightgreen; border-left: 1px solid black; vertical-align: middle; text-align: right;" ng-bind-html="xpoInvoice.savings | currency"> </td>
@@ -149,6 +149,61 @@
 						<td colspan="14"> </td>
 						<td style="border: 3px solid; text-align: center; vertical-align: middle; font-weight:bold;  font-size: 11px;"> <span ng-bind-html="(1-(totalCharged / totalBenchmarkCharge))*100| number :2"> </span>%</td>
 						<td></td>
+					</tr>
+				</table>
+			</div>
+		</div>
+		<div class="table-responsive">
+			<div id="xpo_data">
+				<table class="table table-condensed table-striped" style="font-family: 'Arial Narrow', Arial, sans-serif; font-size: 11px;">
+					
+					<tr style="text-align: center; font-weight: bold;  font-size: 11px;">
+						<td colspan="11"> </td>
+						<td style="background-color: lightblue; border-left: 1px solid black;" colspan="3"> Benchmark </td>
+						<td style="background-color: lightyellow; border-left: 1px solid black;" colspan="3"> New Charges </td>
+						<td style="background-color: lightgreen; border-bottom: 1px solid black; border-left: 1px solid black;" rowspan="2"> Savings </td>
+					</tr>
+					<tr style="font-weight: bold; text-align: left; font-size: 11px;">
+						<td style="border-bottom: 1px solid black; vertical-align: middle;"> Carrier </td>
+						<td style="border-bottom: 1px solid black; vertical-align: middle;"> Ship Date </td>
+						<td style="border-bottom: 1px solid black; vertical-align: middle;"> Pro </td>
+						<td style="border-bottom: 1px solid black; vertical-align: middle;"> Shipper Name</td>
+						<td style="border-bottom: 1px solid black; vertical-align: middle;"> Zip Code </td>
+						<td style="border-bottom: 1px solid black; vertical-align: middle;"> Cosignee </td>
+						<td style="border-bottom: 1px solid black; vertical-align: middle;"> Zip Code </td>
+						<td style="border-bottom: 1px solid black; vertical-align: middle;"> FSC % </td>
+						<td style="border-bottom: 1px solid black; vertical-align: middle;"> Base Charge </td>
+						<td style="border-bottom: 1px solid black; vertical-align: middle;"> Discount $ </td>
+						<td style="border-bottom: 1px solid black; vertical-align: middle;"> Discount % </td>
+						<td style="background-color: lightblue; border-bottom: 1px solid black; border-left: 1px solid black; vertical-align: middle;"> Frt Charge</td>
+						<td style="background-color: lightblue; border-bottom: 1px solid black; vertical-align: middle;"> FSC </td>
+						<td style="background-color: lightblue; border-bottom: 1px solid black; vertical-align: middle;"> TTL Charge </td>
+						<td style="background-color: lightyellow; border-bottom: 1px solid black; border-left: 1px solid black; vertical-align: middle;"> Frt Charges </td>
+						<td style="background-color: lightyellow; border-bottom: 1px solid black; vertical-align: middle;"> FSC </td>
+						<td style="background-color: lightyellow; border-bottom: 1px solid black; vertical-align: middle;"> TTL Charges </td>
+					</tr>
+					<tr ng-repeat="xpoInvoice in savingsXPOInvoices | orderBy:'ship_date'" style="text-align: left;  font-size: 11px;">
+						<td style="vertical-align: middle;" ng-bind-html="xpoInvoice.carrier_name"></td>
+						<td style="vertical-align: middle;" ng-bind-html="xpoInvoice.ship_date | date:'yyyy-MM-dd'"> </td>
+						<td style="vertical-align: middle;" ng-bind-html="xpoInvoice.pro_number"> </td>
+						<td style="vertical-align: middle;" ng-bind-html="xpoInvoice.sender"> </td>
+						<td style="vertical-align: middle;" ng-bind-html="xpoInvoice.sender_zip"> </td>
+						<td style="vertical-align: middle;" ng-bind-html="xpoInvoice.receiver"> </td>
+						<td style="vertical-align: middle;" ng-bind-html="xpoInvoice.receiver_zip"> </td>
+						<td style="vertical-align: middle;" ng-bind-html="xpoInvoice.fsc_percent"> </td>
+						<td style="vertical-align: middle;" ng-bind-html="xpoInvoice.base_charge"> </td>
+						<td style="vertical-align: middle;" ng-bind-html="xpoInvoice.discount_ammount"> </td>
+						<td style="vertical-align: middle;" ng-bind-html="xpoInvoice.discount_percent"> </td>
+						<td style="background-color: lightblue; vertical-align: middle; text-align: right; border-left: 1px solid black;" ng-bind-html="xpoInvoice.old_cost | currency">
+						</td>
+						<td style="background-color: lightblue; vertical-align: middle; text-align: right;" ng-bind-html="xpoInvoice.old_fsc | currency"> </td>
+						<td style="background-color: lightblue; vertical-align: middle; text-align: right;" ng-bind-html="xpoInvoice.old_total_cost | currency">
+						</td>
+						<td style="background-color: lightyellow; vertical-align: middle; text-align: right; border-left: 1px solid black;" ng-bind-html="xpoInvoice.new_cost | currency"> </td>
+						<td style="background-color: lightyellow; vertical-align: middle; text-align: right;" ng-bind-html="xpoInvoice.new_fsc | currency"> </td>
+						<td style="background-color: lightyellow; vertical-align: middle; text-align: right;" ng-bind-html="xpoInvoice.new_total_cost | currency">
+						</td>
+						<td style="background-color: lightgreen; border-left: 1px solid black; vertical-align: middle; text-align: right;" ng-bind-html="xpoInvoice.savings | currency"> </td>
 					</tr>
 				</table>
 			</div>
