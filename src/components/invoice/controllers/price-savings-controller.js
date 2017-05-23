@@ -27,7 +27,7 @@
 
 			$scope.savingsInvoices = [];
 			$scope.associatedCosts = [];
-			
+
 			$scope.totalBenchmarkFrieghtCharge = 0;
 			$scope.totalBenchmarkCharge = 0;
 			$scope.totalBenchmarkAccessorial = 0;
@@ -39,7 +39,7 @@
 			$scope.state = $state.current;
 			$scope.params = $stateParams;
 
-			$scope.recalculation = function(invoice) {
+			$scope.recalculation = function(invoice, text) {
 				$scope.totalFuelBenchmark = 0;
 				$scope.totalBenchmarkAccessorial = 0;
 				$scope.totalBenchmarkFrieghtCharge = 0;
@@ -52,13 +52,23 @@
 				for (var i in $scope.savingsInvoices) {
 					if ($scope.savingsInvoices[i].invoice_id === invoice.invoice_id) {
 						$scope.savingsInvoices[i] = invoice;
-						//benchmark recalculation
+						if (text === 'simple') {
+							if ($scope.savingsInvoices[i].total_benchmark !== invoice.benchamrk_access && $scope.savingsInvoices[i].benchamrk_access !== null) {
+								$scope.savingsInvoices[i].benchmark_charge += (parseFloat(invoice.benchamrk_access) - parseFloat($scope.savingsInvoices[i].total_benchmark));
+								$scope.savingsInvoices[i].total_benchmark = invoice.benchamrk_access;
+							}
+							if ($scope.savingsInvoices[i].assess_charge !== invoice.total_associated_costs && $scope.savingsInvoices[i].assess_charge !== null) {
+								$scope.savingsInvoices[i].savings_total_charge += (parseFloat(invoice.assess_charge) - parseFloat($scope.savingsInvoices[i].total_associated_costs));
+								$scope.savingsInvoices[i].total_associated_costs = invoice.assess_charge;
+							}
+						} else if(text === 'complex'){
+							//benchmark recalculation
 						$scope.savingsInvoices[i].benchmark_fuel_charge = (invoice.freight_charge * (invoice.benchmark_fuel_surcharge / 100) * invoice.fsc_factor / 100);
 						$scope.savingsInvoices[i].benchmark_charge = Math.round(($scope.savingsInvoices[i].benchmark_fuel_charge + $scope.savingsInvoices[i].freight_charge + $scope.savingsInvoices[i].total_benchmark) * 100) / 100;
 						//savings recalculation 
 						$scope.savingsInvoices[i].savings_fuel_surcharge = (invoice.savings_frieght_charge * (invoice.fuel_surcharge / 100));
 						$scope.savingsInvoices[i].savings_total_charge = Math.round(($scope.savingsInvoices[i].savings_fuel_surcharge + $scope.savingsInvoices[i].savings_frieght_charge + $scope.savingsInvoices[i].assess_charge) * 100) / 100;
-
+						}
 					}
 
 					$scope.totalFuelBenchmark += $scope.savingsInvoices[i].benchmark_fuel_charge;
@@ -70,47 +80,6 @@
 					$scope.totalFreightCharge += $scope.savingsInvoices[i].savings_frieght_charge;
 					$scope.totalFuelCharge += parseFloat($scope.savingsInvoices[i].savings_fuel_surcharge);
 				}
-				for (i in $scope.savingsXPOInvoices) {
-					$scope.totalBenchmarkFrieghtCharge += parseFloat($scope.savingsXPOInvoices[i].old_cost);
-					$scope.totalFuelBenchmark += parseFloat($scope.savingsXPOInvoices[i].old_fsc);
-					$scope.totalBenchmarkCharge += parseFloat($scope.savingsXPOInvoices[i].old_total_cost);
-					$scope.totalFreightCharge += parseFloat($scope.savingsXPOInvoices[i].new_cost);
-					$scope.totalFuelCharge += parseFloat($scope.savingsXPOInvoices[i].new_fsc);
-					$scope.totalCharged += parseFloat($scope.savingsXPOInvoices[i].new_total_cost);
-				}
-			};
-
-			$scope.recalculationSimple = function(invoice) {
-				$scope.totalFuelBenchmark = 0;
-				$scope.totalBenchmarkAccessorial = 0;
-				$scope.totalBenchmarkFrieghtCharge = 0;
-				$scope.totalBenchmarkCharge = 0;
-				$scope.totalAccesorialCharge = 0;
-				$scope.totalCharged = 0;
-				$scope.totalFreightCharge = 0;
-				$scope.totalFuelCharge = 0;
-				for (var i in $scope.savingsInvoices) {
-					if ($scope.savingsInvoices[i].invoice_id === invoice.invoice_id) {
-						$scope.savingsInvoices[i] = invoice;
-						if ($scope.savingsInvoices[i].total_benchmark !== invoice.benchamrk_access && $scope.savingsInvoices[i].benchamrk_access !== null) {
-							$scope.savingsInvoices[i].benchmark_charge += (parseFloat(invoice.benchamrk_access) - parseFloat($scope.savingsInvoices[i].total_benchmark));
-							$scope.savingsInvoices[i].total_benchmark = invoice.benchamrk_access;
-						}
-						if ($scope.savingsInvoices[i].assess_charge !== invoice.total_associated_costs && $scope.savingsInvoices[i].assess_charge !== null) {
-							$scope.savingsInvoices[i].savings_total_charge += (parseFloat(invoice.assess_charge) - parseFloat($scope.savingsInvoices[i].total_associated_costs));
-							$scope.savingsInvoices[i].total_associated_costs = invoice.assess_charge;
-						}
-					}
-					$scope.totalFuelBenchmark += $scope.savingsInvoices[i].benchmark_fuel_charge;
-					$scope.totalBenchmarkAccessorial += parseFloat($scope.savingsInvoices[i].total_benchmark);
-					$scope.totalBenchmarkFrieghtCharge += $scope.savingsInvoices[i].freight_charge;
-					$scope.totalBenchmarkCharge += $scope.savingsInvoices[i].benchmark_charge;
-					$scope.totalAccesorialCharge += parseFloat($scope.savingsInvoices[i].total_associated_costs);
-					$scope.totalCharged += $scope.savingsInvoices[i].savings_total_charge;
-					$scope.totalFreightCharge += $scope.savingsInvoices[i].savings_frieght_charge;
-					$scope.totalFuelCharge += parseFloat($scope.savingsInvoices[i].savings_fuel_surcharge);
-				}
-
 				for (i in $scope.savingsXPOInvoices) {
 					$scope.totalBenchmarkFrieghtCharge += parseFloat($scope.savingsXPOInvoices[i].old_cost);
 					$scope.totalFuelBenchmark += parseFloat($scope.savingsXPOInvoices[i].old_fsc);
