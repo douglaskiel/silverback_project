@@ -1,6 +1,6 @@
 (function(window, angular, undefined) {
 	angular.module('app')
-		.controller('invoiceFormCtrl', ['$scope', '$state', '$http', '$stateParams', 'userSvc', function($scope, $state, $http, $stateParams, userSvc) {
+		.controller('invoiceFormCtrl', ['$scope', '$state', '$http', '$stateParams', 'userSvc', 'accessSvc', 'carrierSvc', function($scope, $state, $http, $stateParams, userSvc, accessSvc, carrierSvc) {
 
 			var config = {
 				headers: {
@@ -11,10 +11,10 @@
 			$scope.allInvoices = [];
 			$scope.specificInvoice = [];
 			$scope.allCompanies = [];
-			$scope.allCarriers = [];
+			
 			$scope.allFuelRates = [];
 			$scope.allIOT = [];
-			$scope.allPrebuiltAccessorial = [];
+	
 			$scope.items = [];
 			$scope.totalWeight = 0;
 			$scope.totalAccessorialCharges = 0;
@@ -23,7 +23,6 @@
 				50, 55, 60, 65, 70, 77.5, 85, 92.5, 100, 110, 125, 150, 175, 200, 250, 300, 400, 500
 			];
 			$scope.shippingClasses = [];
-			$scope.accessorialCharges = [];
 			$scope.associatedCosts = [];
 			$scope.totalBenchmarkCost = [];
 			$scope.allOperations = [];
@@ -34,6 +33,23 @@
 			$scope.errors = false;
 			$scope.errorsArry = [];
 			$scope.newRow = false;
+
+			$scope.allAccessorial = [];
+			$scope.allCarriers = [];
+			$scope.getEverything = function(config) {
+				accessSvc
+					.getAccess(config)
+					.then(function(message) {
+						$scope.allAccessorial = message;
+						console.log(message);
+					});
+				carrierSvc
+					.getCarriers(config)
+					.then(function(message) {
+						$scope.allCarriers = message;
+					});
+			};
+			$scope.getEverything(config);
 
 			if ($scope.params.invoiceID) {
 				$http.get('/secure-api/invoice/get_invoice?' + $scope.params.invoiceID, config)
@@ -60,7 +76,7 @@
 							});
 							$scope.PD = {};
 
-							$scope.specificInvoice[i].carrier_name =undoCleanEntry($scope.specificInvoice[i].carrier_name);
+							$scope.specificInvoice[i].carrier_name = undoCleanEntry($scope.specificInvoice[i].carrier_name);
 							$scope.specificInvoice[i].invoice_number = undoCleanEntry($scope.specificInvoice[i].invoice_number);
 							$scope.specificInvoice[i].sender_name = undoCleanEntry($scope.specificInvoice[i].sender_name);
 							$scope.specificInvoice[i].sender_address_1 = undoCleanEntry($scope.specificInvoice[i].sender_address_1);
@@ -101,7 +117,7 @@
 						console.log(err);
 						$state.go('login');
 					});
-			} else if($scope.params.xpoID) {
+			} else if ($scope.params.xpoID) {
 				$http.get('/secure-api/xpo/get_xpo_invoice?' + $scope.params.xpoID, config)
 					.then(function(response) {
 						$scope.xpoInvoice = response.data.data;
@@ -117,7 +133,7 @@
 						$scope.xpoInvoice[0].ship_date = date_parse($scope.xpoInvoice[0].ship_date);
 						$scope.xpoInvoice[0].process_date = date_parse($scope.xpoInvoice[0].process_date);
 						$scope.xpoInvoice[0].discount_ammount = (Math.round(parseFloat($scope.xpoInvoice[0].discount_ammount) * 100) / 100);
-						
+
 						console.log($scope.xpoInvoice[0]);
 						$scope.invoice = $scope.xpoInvoice[0];
 					}, function(err) {
@@ -142,7 +158,7 @@
 
 			$scope.setOldCost = function(oldCharge) {
 				$scope.invoice.old_cost = (oldCharge * (1 - 0.829));
-				$scope.invoice.discount_percent = sanatizePercent($scope.invoice.discount_ammount/oldCharge);
+				$scope.invoice.discount_percent = sanatizePercent($scope.invoice.discount_ammount / oldCharge);
 				$scope.invoice.new_cost = (oldCharge * (1 - sanatizePercent($scope.invoice.discount_percent)));
 				$scope.invoice.old_fsc = ($scope.invoice.old_cost * sanatizePercent($scope.invoice.fsc_percent));
 				$scope.invoice.new_fsc = ($scope.invoice.new_cost * sanatizePercent($scope.invoice.fsc_percent));
@@ -160,14 +176,14 @@
 				invoice.new_total_cost = (Math.round(parseFloat(invoice.new_total_cost) * 100)) / 100;
 				invoice.discount_percent = sanatizePercent(invoice.discount_percent);
 				invoice.savings = (Math.round(parseFloat(invoice.savings) * 100) / 100);
-				invoice.discount_ammount = (Math.round(parseFloat(invoice.discount_ammount)*100)/100);
+				invoice.discount_ammount = (Math.round(parseFloat(invoice.discount_ammount) * 100) / 100);
 				console.log(invoice);
 				for (var i in $scope.allCompanies) {
 					if ($scope.allCompanies[i].client_id === invoice.client_id) {
 						invoice.client_name = $scope.allCompanies[i].client_name;
 					}
 				}
-				if(!invoice.accelerated_charge){
+				if (!invoice.accelerated_charge) {
 					invoice.accelerated_charge = 0;
 				}
 				if (!$scope.params.xpoID) {
@@ -232,10 +248,10 @@
 						}
 					}
 					var indyCheck;
-					if(senderInfo.states === 'IN' || receiverInfo.states === 'IN'){
-					indyCheck = parseFloat(senderInfo.absolute_minimum_charge) > parseFloat(receiverInfo.absolute_minimum_charge);
+					if (senderInfo.states === 'IN' || receiverInfo.states === 'IN') {
+						indyCheck = parseFloat(senderInfo.absolute_minimum_charge) > parseFloat(receiverInfo.absolute_minimum_charge);
 					} else {
-					indyCheck = parseFloat(senderInfo.absolute_minimum_charge) < parseFloat(receiverInfo.absolute_minimum_charge);
+						indyCheck = parseFloat(senderInfo.absolute_minimum_charge) < parseFloat(receiverInfo.absolute_minimum_charge);
 					}
 					if (senderInfo && receiverInfo) {
 						if (indyCheck) {
@@ -277,10 +293,10 @@
 					}
 				}
 				var r = true;
-				if(!invoice.accelerated_charge){
+				if (!invoice.accelerated_charge) {
 					invoice.accelerated_charge = 0;
 				}
-				
+
 
 				if (!senderState || !receiverState || !senderZip || !receiverZip) {
 					r = confirm("The carrier you selected does not appear to deleive to the selected State and Zip Code combination, would you like to continue anyway?");
@@ -344,7 +360,7 @@
 										$state.reload();
 									}, function(err) {
 										console.error(err);
-										for(var i in err.data.errors){
+										for (var i in err.data.errors) {
 											$scope.errors = true;
 											console.log(err.data.errors[i].message);
 											$scope.errorsArry.push(err.data.errors[i].message);
@@ -362,7 +378,7 @@
 									}, function(err) {
 										$scope.errors = true;
 										console.log(err);
-										for(var i in err.data.errors){
+										for (var i in err.data.errors) {
 											console.log(err.data.errors[i].message);
 											$scope.errorsArry.push(err.data.errors[i].message);
 										}
@@ -445,7 +461,7 @@
 						var sum = returnString.slice(318, 326);
 						sum = [sum.slice(0, -2), '.', sum.slice(-2)].join('');
 						$scope.invoice.rated_sum = parseFloat(sum);
-						$scope.invoice.deficit_rate = parseFloat(returnString.slice(342, 349))/100;
+						$scope.invoice.deficit_rate = parseFloat(returnString.slice(342, 349)) / 100;
 
 						var totalCharge = returnString.slice(396, 404);
 						totalCharge = [totalCharge.slice(0, -2), '.', totalCharge.slice(-2)].join('');
@@ -652,21 +668,15 @@
 			};
 
 			$scope.changeCharge = function(index, charge) {
-				for (var i in $scope.allPrebuiltAccessorial) {
-					if ($scope.allPrebuiltAccessorial[i].prebuilt_cost_id === charge.prebuilt_cost_id) {
-						$scope.accessorialCharges[index].benchmark_cost = parseFloat($scope.allPrebuiltAccessorial[i].benchmark_cost);
-						$scope.accessorialCharges[index].cost_code = $scope.allPrebuiltAccessorial[i].cost_code;
+				for (var i in $scope.allAccessorial) {
+					if ($scope.allAccessorial[i].prebuilt_cost_id === charge.prebuilt_cost_id) {
+						$scope.accessorialCharges[index].benchmark_cost = parseFloat($scope.allAccessorial[i].benchmark_cost);
+						$scope.accessorialCharges[index].cost_code = $scope.allAccessorial[i].cost_code;
 						break;
 					}
 				}
 			};
 
-			$http.get('/secure-api/accessorial_cost/get_prebuilt_associated_costs', config)
-				.then(function(response) {
-					$scope.allPrebuiltAccessorial = response.data.data;
-				}, function(err) {
-					console.log(err);
-				});
 			$http.get('/secure-api/company/get_companies', config)
 				.then(function(response) {
 					$scope.allCompanies = response.data.data;
@@ -676,7 +686,7 @@
 			$http.get('/secure-api/carrier/get_carriers', config)
 				.then(function(response) {
 					$scope.allCarriers = response.data.data;
-					for(var i in $scope.allCarriers){
+					for (var i in $scope.allCarriers) {
 						$scope.allCarriers[i].carrier_name = undoCleanEntry($scope.allCarriers[i].carrier_name);
 					}
 				}, function(err) {

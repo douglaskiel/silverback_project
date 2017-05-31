@@ -41,8 +41,8 @@
 					<span ng-if="!edit">${{fuelRate.fuel_rate}}</span>
 					<span ng-if="edit"><input type="text" placeholder="Fuel Rate" class="form-control" ng-model="fuelRate.fuel_rate" required> </span>
 				</td>
-				<td> <span ng-bind-html="fuelRate.benchmark_fuel_surcharge*100 |number: 2"> </span>%</td>
-				<td> <span ng-bind-html="fuelRate.fuel_surcharge*100 |number: 2"> </span>%</td>
+				<td> {{fuelRate.benchmark_fuel_surcharge*100 |number: 2}}%</td>
+				<td> {{fuelRate.fuel_surcharge*100 |number: 2}}%</td>
 				<td ng-init="edit = false">
 					<a href="" ng-click="edit = !edit"><i ng-if="approved" class="fa fa-pencil-square-o" aria-hidden="true" ></i></a>
 				</td>

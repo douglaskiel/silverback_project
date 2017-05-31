@@ -1,3 +1,6 @@
+<div class="row">
+{{allAccessorial.$$state.value}}
+</div>
 <div class="row" data-ng-init="approvedUser();">
 	<p><a href="#!/invoice_configuration"> Back to Invoice Configuration </a></p>
 	<div class="table-responsive">
@@ -18,15 +21,15 @@
 			</tr>
 			<tr ng-repeat="cost in allAccessorial">
 				<td>
-				<span ng-if="!edit" ng-bind-html="cost.description"></span>
+				<span ng-if="!edit">{{cost.description}}</span>
 				<span ng-if="edit"><input class="form-control" type="text" placeholder="Accessorial Charge" ng-model="cost.description" name="" required></span>
 				</td>
 				<td>
-				<span ng-if="!edit" ng-bind-html="cost.benchmark_cost | currency"></span>
+				<span ng-if="!edit">{{cost.benchmark_cost | currency}}</span>
 				<span ng-if="edit"><input class="form-control" type="number" step="0.01" placeholder="Benchmark Charge" ng-model="cost.benchmark_cost" name="" required></span>
 				</td>
 				<td>
-				<span ng-if="!edit" ng-bind-html="cost.cost_code"></span>
+				<span ng-if="!edit">{{cost.cost_code}}</span>
 				<span ng-if="edit"><input class="form-control" type="text" placeholder="Cost Code" ng-model="cost.cost_code" name="" required></span>
 				</td>
 				<td>

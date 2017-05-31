@@ -96,24 +96,24 @@
 			</tr>
 			<tr ng-repeat="invoice in visibleInvoices = (allInvoices | dateRange : 'process_date' : from : to | filter:searchText | orderBy:sortType:sortReverse)" ng-style="{'background-color': rateCheck(invoice)}" ng-init="rateCheck(invoice)" id="invoice{{$index}}">
 				<td> <input type="checkbox" ng-model="invoice.selected"> </td>
-				<td ng-bind-html="invoice.carrier_name"> </td>
-				<td ng-bind-html="invoice.client_name"> </td>
-				<td ng-bind-html="invoice.invoice_number"></td>
-				<td ng-bind-html="invoice.sender_name"></td>
-				<td ng-bind-html="invoice.receiver_name"></td>
-				<td ng-bind-html="invoice.process_date | date:'yyyy-MM-dd'"></td>
-				<td ng-bind-html="invoice.ship_date | date:'yyyy-MM-dd'"></td>
+				<td> {{invoice.carrier_name}} </td>
+				<td> {{invoice.client_name}} </td>
+				<td> {{invoice.invoice_number}}</td>
+				<td> {{invoice.sender_name}}</td>
+				<td> {{invoice.receiver_name}}</td>
+				<td> {{invoice.process_date | date:'yyyy-MM-dd'}}</td>
+				<td> {{invoice.ship_date | date:'yyyy-MM-dd'}}</td>
 				<td><a ui-sref="view-invoice({invoiceID:{{invoice.invoice_id}}})"> Open </a></td>
 			</tr>
 			<tr ng-repeat="xpoInvoice in visibleXPOInvoices = (allXPOInvoices | dateRange: 'process_date' : from : to | filter:searchText | orderBy:sortType:sortReverse)">
 				<td> <input type="checkbox" ng-model="xpoInvoice.selected"> </td>
-				<td ng-bind-html="xpoInvoice.carrier_name"> </td>
-				<td ng-bind-html="xpoInvoice.client_name"> </td>
-				<td ng-bind-html="xpoInvoice.invoice_number"></td>
-				<td ng-bind-html="xpoInvoice.sender"></td>
-				<td ng-bind-html="xpoInvoice.receiver"></td>
-				<td ng-bind-html="xpoInvoice.process_date | date:'yyyy-MM-dd'"></td>
-				<td ng-bind-html="xpoInvoice.ship_date | date:'yyyy-MM-dd'"></td>
+				<td> {{xpoInvoice.carrier_name}} </td>
+				<td> {{xpoInvoice.client_name}} </td>
+				<td> {{xpoInvoice.invoice_number}} </td>
+				<td> {{xpoInvoice.sender}} </td>
+				<td> {{xpoInvoice.receiver}} </td>
+				<td> {{xpoInvoice.process_date | date:'yyyy-MM-dd'}} </td>
+				<td> {{xpoInvoice.ship_date | date:'yyyy-MM-dd'}} </td>
 				<td> <a ui-sref="view-xpo-invoice({invoiceID:{{xpoInvoice.xpo_id}}})"> Open </a> </td>
 			</tr>
 		</table>

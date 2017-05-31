@@ -1,6 +1,6 @@
 (function(window, angular, undefined) {
 	angular.module('app')
-		.controller('stateRegionCtrl', ['$scope', '$state', '$http', 'userSvc', function($scope, $state, $http, userSvc) {
+		.controller('stateRegionCtrl', ['$scope', '$state', '$http', 'userSvc', 'regionSvc', 'statesSvc', function($scope, $state, $http, userSvc, regionSvc, statesSvc) {
 
 			var config = {
 				headers: {
@@ -9,25 +9,46 @@
 			};
 
 			$scope.allRegions = [];
+			$scope.newRegion = {};
+			$scope.allStates = [];
+			$scope.newState = {};
+
+			$scope.getEverything = function(config) {
+				regionSvc
+					.getRegion(config)
+					.then(function(message) {
+						$scope.allRegions = message;
+					});
+				statesSvc
+					.getStates(config)
+					.then(function(message) {
+						$scope.allStates = message;
+					});
+			};
+			$scope.getEverything(config);
 
 			$scope.submitRegion = function(submittedRegion) {
+				for (var i in $scope.allRegions) {
+					if ($scope.allRegions[i].state_id === submittedRegion.state_id) {
+						submittedRegion.states = $scope.allRegions[i].states;
+					}
+				}
 				submittedRegion.region = cleanEntry(submittedRegion.region);
 				if (submittedRegion.state_region_id) {
-					$http.put('/secure-api/region/update_region', submittedRegion, config)
-						.then(function(response) {
-							console.log('Region Updated');
-							$state.reload();
-						}, function(err) {
-							console.log(err);
-						});
+					regionSvc.updateRegion(submittedRegion, config);
 				} else {
-					$http.post('/secure-api/region/insert_region', submittedRegion, config)
-						.then(function(reponse) {
-							console.log('IOT Added');
-							$state.reload();
-						}, function(err) {
-							console.error(err);
-						});
+					regionSvc.sumbitRegion(submittedRegion, config);
+					$scope.newRegion = {};
+				}
+			};
+
+			$scope.submitState = function(submittedState) {
+				submittedState.states = cleanEntry(submittedState.states);
+				if (submittedState.state_id) {
+					statesSvc.updateStates(submittedState, config);
+				} else {
+					statesSvc.sumbitStates(submittedState, config);
+					$scope.newState = {};
 				}
 			};
 
@@ -35,34 +56,12 @@
 				var r = confirm("Are you sure you want to delete this Region?");
 				if (r) {
 					request = '/secure-api/region/delete_region/?' + regionID;
-					$http.delete(request, config)
-						.then(function(response) {
-							console.log('Region Removed');
-							$state.reload();
-						}, function(err) {
-							console.log(err);
-						});
-				}
-			};
-
-			$scope.submitState = function(submittedState) {
-				submittedState.states = cleanEntry(submittedState.states);
-				if (submittedState.state_region_id) {
-					$http.put('/secure-api/states/update_state', submittedState, config)
-						.then(function(response) {
-							console.log('State Updated');
-							$state.reload();
-						}, function(err) {
-							console.log(err);
-						});
-				} else {
-					$http.post('/secure-api/states/insert_state', submittedState, config)
-						.then(function(reponse) {
-							console.log('State Added');
-							$state.reload();
-						}, function(err) {
-							console.error(err);
-						});
+					regionSvc.deleteRegion(request, config);
+					for (var i in $scope.allRegions) {
+						if ($scope.allRegions[i].state_region_id === regionID) {
+							$scope.allRegions.splice(i, 1);
+						}
+					}
 				}
 			};
 
@@ -70,41 +69,13 @@
 				var r = confirm("Are you sure you want to delete this State?");
 				if (r) {
 					request = '/secure-api/states/delete_state/?' + stateID;
-					$http.delete(request, config)
-						.then(function(response) {
-							console.log('Region Removed');
-							$state.reload();
-						}, function(err) {
-							console.log(err);
-						});
+					regionSvc.deleteRegion(request, config);
+					for (var i in $scope.allStates) {
+						if ($scope.allStates[i].state_id === stateID) {
+							$scope.allStates.splice(i, 1);
+						}
+					}
 				}
 			};
-
-			$http.get('/secure-api/states/get_state', config)
-				.then(function(response) {
-					$scope.allStates = response.data.data;
-				}, function(err) {
-					console.log(err);
-					if (err.data === 'Invalid Token') {
-						$scope.logout();
-					} else {
-						$state.go('home');
-					}
-				});
-
-			$http.get('/secure-api/region/get_region', config)
-				.then(function(response) {
-					$scope.allRegions = response.data.data;
-					for (var i in $scope.allRegions) {
-						$scope.allRegions[i].region = undoCleanEntry($scope.allRegions[i].region);
-					}
-				}, function(err) {
-					console.log(err);
-					if (err.data === 'Invalid Token') {
-						$scope.logout();
-					} else {
-						$state.go('home');
-					}
-				});
 		}]);
 })(window, window.angular);

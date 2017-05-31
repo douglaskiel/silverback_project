@@ -9,15 +9,24 @@
 			};
 			$scope.allFuelRates = [];
 			$scope.fscs = [];
-			$scope.benchmark_fscs = [];
 			$scope.limit = 100;
+
+			$scope.allBenchmarkFSC = [];
+			$scope.getEverything = function(config) {
+				benchmarkSvc
+					.getBenchmark(config)
+					.then(function(message) {
+						$scope.allBenchmarkFSC = message;
+					});
+			};
+			$scope.getEverything(config);
 
 			$scope.submitFuelRate = function(submittedFuelRate) {
 				submittedFuelRate.fuel_rate_rounded = Math.floor(submittedFuelRate.fuel_rate * 100);
-				for (var i in $scope.benchmark_fscs) {
+				for (var i in $scope.allBenchmarkFSC) {
 
-					if (submittedFuelRate.fuel_rate_rounded === $scope.benchmark_fscs[i].fuel_index) {
-						submittedFuelRate.benchmark_fuel_surcharge = $scope.benchmark_fscs[i].benchmark_fuel_surcharge;
+					if (submittedFuelRate.fuel_rate_rounded === $scope.allBenchmarkFSC[i].fuel_index) {
+						submittedFuelRate.benchmark_fuel_surcharge = $scope.allBenchmarkFSC[i].benchmark_fuel_surcharge;
 					}
 				}
 
@@ -94,24 +103,6 @@
 						$scope.fscs[i].start_rate = parseFloat($scope.fscs[i].start_rate);
 						$scope.fscs[i].end_rate = parseFloat($scope.fscs[i].end_rate);
 						$scope.fscs[i].fuel_surcharge = parseFloat($scope.fscs[i].fuel_surcharge);
-					}
-				}, function(err) {
-					console.log(err);
-					if (err.data === 'Invalid Token') {
-						$scope.logout();
-					} else {
-						$state.go('home');
-					}
-				});
-
-			$http.get('/secure-api/benchmark_fsc/get_benchmark_fsc', config)
-				.then(function(response) {
-					$scope.benchmark_fscs = response.data.data;
-					for (var i in $scope.benchmark_fscs) {
-						$scope.benchmark_fscs[i].benchmark_fuel_surcharge_percent = Math.round($scope.benchmark_fscs[i].benchmark_fuel_surcharge * 10000) / 100 + '%';
-						$scope.benchmark_fscs[i].fuel_index = parseFloat($scope.benchmark_fscs[i].fuel_index);
-						$scope.benchmark_fscs[i].benchmark_fuel_surcharge = parseFloat($scope.benchmark_fscs[i].benchmark_fuel_surcharge);
-
 					}
 				}, function(err) {
 					console.log(err);

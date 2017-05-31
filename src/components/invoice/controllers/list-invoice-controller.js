@@ -96,6 +96,8 @@
 						$scope.allInvoices[i].receiver_zip = undoCleanEntry($scope.allInvoices[i].receiver_zip);
 						$scope.allInvoices[i].sender_zip = undoCleanEntry($scope.allInvoices[i].sender_zip);
 						$scope.allInvoices[i].sender_zip_4 = undoCleanEntry($scope.allInvoices[i].sender_zip_4);
+						$scope.allInvoices[i].carrier_name = undoCleanEntry($scope.allInvoices[i].carrier_name);
+
 					}
 				}, function(err) {
 					console.log(err);

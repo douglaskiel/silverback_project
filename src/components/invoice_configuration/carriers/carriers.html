@@ -12,7 +12,7 @@
 		</tr>
 		<tr ng-repeat="carrier in allCarriers">
 			<td>
-				<span ng-show="!edit" ng-bind-html="carrier.carrier_name"> </span>
+				<span ng-show="!edit"> {{carrier.carrier_name}} </span>
 				<span ng-show="edit"> <input class="form-control" type="text" ng-model="carrier.carrier_name" maxlength="40" placeholder="Carrier Name" required/> </span>
 			</td>
 			<td>
