@@ -7,7 +7,7 @@
 					'auth-token': userSvc.token
 				}
 			};
-			
+
 			$scope.allFuelRates = [];
 			$scope.allFscs = [];
 			$scope.limit = 100;
@@ -58,21 +58,23 @@
 
 				if (submittedFuelRate.fuel_rate_id) {
 					fuelRateService.updateFuelRate(submittedFuelRate, config);
-						} else {
+				} else {
 					fuelRateService.sumbitFuelRate(submittedFuelRate, config);
 					$scope.newFSC = {};
 				}
 			};
 
 			$scope.deleteFuelRate = function(fuelRateID) {
-				request = '/secure-api/fuel_rates/delete_fuel_rate/?' + fuelRateID;
-				$http.delete(request, config)
-					.then(function(response) {
-						console.log('Fuel Rate Removed');
-						$state.reload();
-					}, function(err) {
-						console.log(err);
-					});
+				var r = confirm("Are you sure you want to delete this Fuel Rate?");
+				if (r) {
+					request = '/secure-api/fuel_rates/delete_fuel_rate/?' + fuelRateID;
+					fuelRateService.deleteFuelRate(request, config);
+					for (var i in $scope.allFuelRates) {
+						if ($scope.allFuelRates[i].fuel_rate_id === fuelRateID) {
+							$scope.allFuelRates.splice(i, 1);
+						}
+					}
+				}
 			};
 
 			$scope.sortBy = function(propertyName) {

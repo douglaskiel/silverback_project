@@ -22,9 +22,9 @@
 				return deferred.promise;
 			};
 
-			vm.sumbitFuelRate = function(fscs, config, callback) {
+			vm.sumbitFuelRate = function(fuel_rate, config, callback) {
 				var deferred = $q.defer();
-				$http.post('/secure-api/fuel_rates/insert_fuel_rate', fscs, config)
+				$http.post('/secure-api/fuel_rates/insert_fuel_rate', fuel_rate, config)
 					.then(function(response) {
 						console.log('Fuel Surcharge Submitted');
 						$state.reload();
@@ -34,9 +34,9 @@
 					});
 			};
 
-			vm.updateFuelRate = function(fscs, config, callback) {
+			vm.updateFuelRate = function(fuel_rate, config, callback) {
 				var deferred = $q.defer();
-				$http.put('/secure-api/fuel_rates/update_fuel_rate', fscs, config)
+				$http.put('/secure-api/fuel_rates/update_fuel_rate', fuel_rate, config)
 					.then(function(response) {
 						console.log('Fuel Surcharge Updated');
 					})
