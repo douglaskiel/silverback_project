@@ -1,6 +1,6 @@
 (function(window, angular, undefined) {
 	angular.module('app')
-		.controller('fuelRatesCtrl', ['$scope', '$state', '$http', 'userSvc', 'benchmarkSvc', function($scope, $state, $http, userSvc, benchmarkSvc) {
+		.controller('fuelRatesCtrl', ['$scope', '$state', '$http', 'userSvc', 'benchmarkSvc', 'fscsSvc', 'fuelRateService', function($scope, $state, $http, userSvc, benchmarkSvc, fscsSvc, fuelRateService) {
 
 			var config = {
 				headers: {
@@ -9,8 +9,9 @@
 			};
 			
 			$scope.allFuelRates = [];
-			$scope.fscs = [];
+			$scope.allFscs = [];
 			$scope.limit = 100;
+
 
 			$scope.allBenchmarkFSC = [];
 			$scope.getEverything = function(config) {
@@ -18,6 +19,16 @@
 					.getBenchmark(config)
 					.then(function(message) {
 						$scope.allBenchmarkFSC = message;
+					});
+				fscsSvc
+					.getFscs(config)
+					.then(function(message) {
+						$scope.allFscs = message;
+					});
+				fuelRateService
+					.getFuelRate(config)
+					.then(function(message) {
+						$scope.allFuelRates = message;
 					});
 			};
 			$scope.getEverything(config);
@@ -38,29 +49,18 @@
 				if (submittedFuelRate.fuel_rate < 2) {
 					submittedFuelRate.fuel_surcharge = 0;
 				} else {
-					for (var j in $scope.fscs) {
-						if ($scope.fscs[j].start_rate <= submittedFuelRate.fuel_rate && submittedFuelRate.fuel_rate <= $scope.fscs[j].end_rate) {
-							submittedFuelRate.fuel_surcharge = $scope.fscs[j].fuel_surcharge;
+					for (var j in $scope.allFscs) {
+						if ($scope.allFscs[j].start_rate <= submittedFuelRate.fuel_rate && submittedFuelRate.fuel_rate <= $scope.allFscs[j].end_rate) {
+							submittedFuelRate.fuel_surcharge = $scope.allFscs[j].fuel_surcharge;
 						}
 					}
 				}
 
 				if (submittedFuelRate.fuel_rate_id) {
-					$http.put('/secure-api/fuel_rates/update_fuel_rate', submittedFuelRate, config)
-						.then(function(response) {
-							console.log('Fuel Rate Updated');
-							// $state.reload();
-						}, function(err) {
-							console.log(err);
-						});
-				} else {
-					$http.post('/secure-api/fuel_rates/insert_fuel_rate', submittedFuelRate, config)
-						.then(function(reponse) {
-							console.log('Fuel Rate Added');
-							$state.reload();
-						}, function(err) {
-							console.error(err);
-						});
+					fuelRateService.updateFuelRate(submittedFuelRate, config);
+						} else {
+					fuelRateService.sumbitFuelRate(submittedFuelRate, config);
+					$scope.newFSC = {};
 				}
 			};
 
@@ -79,40 +79,6 @@
 				$scope.reverse = (propertyName !== null && $scope.propertyName === propertyName) ? !$scope.reverse : false;
 				$scope.propertyName = propertyName;
 			};
-
-			$http.get('/secure-api/fuel_rates/get_fuel_rates', config)
-				.then(function(response) {
-					$scope.allFuelRates = response.data.data;
-					for (var i = 0; i < $scope.allFuelRates.length; i++) {
-						$scope.allFuelRates[i].fuel_date = date_parse($scope.allFuelRates[i].fuel_date);
-					}
-
-				}, function(err) {
-					console.log(err);
-					if (err.data === 'Invalid Token') {
-						$scope.logout();
-					} else {
-						$state.go('home');
-					}
-				});
-
-			$http.get('/secure-api/fuel_surcharge_rates/get_fsc', config)
-				.then(function(response) {
-					$scope.fscs = response.data.data;
-					for (var i in $scope.fscs) {
-						$scope.fscs[i].fuel_surcharge_percent = Math.round($scope.fscs[i].fuel_surcharge * 10000) / 100 + '%';
-						$scope.fscs[i].start_rate = parseFloat($scope.fscs[i].start_rate);
-						$scope.fscs[i].end_rate = parseFloat($scope.fscs[i].end_rate);
-						$scope.fscs[i].fuel_surcharge = parseFloat($scope.fscs[i].fuel_surcharge);
-					}
-				}, function(err) {
-					console.log(err);
-					if (err.data === 'Invalid Token') {
-						$scope.logout();
-					} else {
-						$state.go('home');
-					}
-				});
 
 			$scope.increaseLimit = function() {
 				$scope.limit += 100;

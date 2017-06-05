@@ -13,7 +13,7 @@
 		<tr>
 			<th colspan="8"> Registered Users</th>
 		</tr>
-		<tr ng-repeat="user in allUsers">
+		<tr ng-repeat="user in allUsers | orderBy:'last_name'">
 			<td> {{user.first_name}} </td>
 			<td> {{user.last_name}} </td>
 			<td> {{user.username}} </td>

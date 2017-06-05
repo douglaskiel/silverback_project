@@ -345,6 +345,10 @@
 							$scope.totalBenchmarkCost += accessorialCharges[i].benchmark_cost;
 
 						}
+
+						if(!accessorialCharges){
+							accessorialCharges = [];
+						}
 						invoice.total_associated_costs = $scope.totalAccessorialCharges;
 						invoice.total_benchmark = $scope.totalBenchmarkCost;
 
