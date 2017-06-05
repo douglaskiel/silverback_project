@@ -23,7 +23,7 @@
 				50, 55, 60, 65, 70, 77.5, 85, 92.5, 100, 110, 125, 150, 175, 200, 250, 300, 400, 500
 			];
 			$scope.shippingClasses = [];
-			$scope.associatedCosts = [];
+			$scope.accessorialCharges = [];
 			$scope.totalBenchmarkCost = [];
 			$scope.allOperations = [];
 			$scope.rateString = '';
@@ -34,13 +34,13 @@
 			$scope.errorsArry = [];
 			$scope.newRow = false;
 
-			$scope.allAccessorial = [];
+			$scope.allAccessorialBenchmark = [];
 			$scope.allCarriers = [];
 			$scope.getEverything = function(config) {
 				accessSvc
 					.getAccess(config)
 					.then(function(message) {
-						$scope.allAccessorial = message;
+						$scope.allAccessorialBenchmark = message;
 						console.log(message);
 					});
 				carrierSvc
@@ -542,6 +542,9 @@
 			};
 
 			$scope.addRowCharge = function(accessorialCharges) {
+				if(!accessorialCharges){
+						accessorialCharges = [];
+				}
 				if (accessorialCharges.length < 12 || accessorialCharges.length === undefined) {
 					$scope.accessorialCharges.push({
 						'actual_cost': accessorialCharges.actual_cost,
@@ -671,10 +674,10 @@
 			};
 
 			$scope.changeCharge = function(index, charge) {
-				for (var i in $scope.allAccessorial) {
-					if ($scope.allAccessorial[i].prebuilt_cost_id === charge.prebuilt_cost_id) {
-						$scope.accessorialCharges[index].benchmark_cost = parseFloat($scope.allAccessorial[i].benchmark_cost);
-						$scope.accessorialCharges[index].cost_code = $scope.allAccessorial[i].cost_code;
+				for (var i in $scope.allAccessorialBenchmark) {
+					if ($scope.allAccessorialBenchmark[i].prebuilt_cost_id === charge.prebuilt_cost_id) {
+						$scope.accessorialCharges[index].benchmark_cost = parseFloat($scope.allAccessorialBenchmark[i].benchmark_cost);
+						$scope.accessorialCharges[index].cost_code = $scope.allAccessorialBenchmark[i].cost_code;
 						break;
 					}
 				}

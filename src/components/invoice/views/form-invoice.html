@@ -204,7 +204,7 @@
 		<table class="table table-striped table-bordered">
 			<thead>
 				<tr>
-					<th class="col-sm-1"><button type="button" class="btn" ng-click="addRowCharge(accessorialCharges)"> Add Charge</button> </th>
+					<th class="col-sm-1"><button type="button" class="btn" ng-click="addRowCharge(accessorialCharges)">Add Charge</button> </th>
 					<th class="col-sm-2">Actual Charge</th>
 					<th class="col-sm-2">Benchmark Charge</th>
 					<th class="col-sm-2">Cost Code</th>
@@ -227,7 +227,7 @@
 						<input type="text" class="form-control" ng-model="accessorialCharge.cost_code" required/>
 					</td>
 					<td class="col-sm-3">
-					<select class="form-control" ng-model="accessorialCharge.prebuilt_cost_id" ng-options = "charge.prebuilt_cost_id as charge.cost_code + ' - ' + (charge.benchmark_cost | currency) + ' - ' + charge.description for charge in allAccessorial" ng-change="changeCharge($index, accessorialCharge)"></select>
+					<select class="form-control" ng-model="accessorialCharge.prebuilt_cost_id" ng-options = "charge.prebuilt_cost_id as charge.cost_code + ' - ' + (charge.benchmark_cost | currency) + ' - ' + charge.description for charge in allAccessorialBenchmark" ng-change="changeCharge($index, accessorialCharge)"></select>
 				</td>
 			</tr>
 		</tbody>
