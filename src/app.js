@@ -52,7 +52,7 @@
                 })
                 .state('iot', {
                     url: '/invoice_configuration/iot',
-                    templateUrl: '/src/components/invoice_configuration/iot/iot.html',
+                    templateUrl: '/src/components/invoice_configuration/IOT/iot.html',
                     controller: 'iotCtrl'
                 })
                 .state('fuel_rates', {
@@ -106,9 +106,19 @@
                     controller: 'invoiceViewCtrl'
                 })
                 .state('price-savings', {
-                    url: '/invoice/price-savings/:invoiceIDs',
+                    url: '/invoice/price-savings/:invoiceIDs/:xpoIDs',
                     templateUrl: '/src/components/invoice/views/price-savings.html',
                     controller: 'priceSavingsCtrl'
+                })
+                .state('view-xpo-invoice', {
+                    url:'/invoice/view-xpo-invoice/:invoiceID',
+                    templateUrl: '/src/components/invoice/views/view-xpo-invoice.html',
+                    controller:'viewXPOInvoice'
+                })
+                .state('form-xpo-invoice', {
+                    url: '/invoice/form-xpo-invoice/:xpoID',
+                    templateUrl: '/src/components/invoice/views/form-invoice.html',
+                    controller: 'invoiceFormCtrl'
                 });
             $urlRouterProvider.otherwise('/');
         }]);

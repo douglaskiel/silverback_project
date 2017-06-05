@@ -74,6 +74,10 @@
   border-radius: 5px;
 }
 
+.rate_error {
+  background-color: lightsalmon;
+}
+
 .match {
   color: darkgreen;
   background-color: lawngreen;

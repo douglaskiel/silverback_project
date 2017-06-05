@@ -15,17 +15,17 @@
 			<td> <input class="form-control" type="button" ng-click="submitFSC(newFSC)" value="Save"></td>
 			<td> </td>
 		</tr>
-		<tr ng-repeat="fsc in fscs | orderBy: 'start_rate'">
+		<tr ng-repeat="fsc in allFscs | orderBy: 'start_rate'">
 			<td>
-				<span ng-if="!edit">$<span ng-bind-html="fsc.start_rate"> </span></span>
+				<span ng-if="!edit">${{fsc.start_rate}}</span>
 				<input class="form-control" ng-if="edit" type="number" step=".0005" ng-model="fsc.start_rate" placeholder="Starting Rate">
 			</td>
 			<td>
-				<span ng-if="!edit">$<span ng-bind-html="fsc.end_rate"> </span></span>
+				<span ng-if="!edit">${{fsc.end_rate}}</span>
 				<input class="form-control" ng-if="edit" type="number" step=".0005" ng-model="fsc.end_rate" placeholder="Ending Rate">
 			</td>
 			<td>
-				<span ng-if="!edit" ng-bind-html="fsc.fuel_surcharge_percent"> </span>
+				<span ng-if="!edit"> {{fsc.fuel_surcharge_percent}} </span>
 				<input class="form-control" ng-if="edit" type="number" step=".0005" ng-model="fsc.fuel_surcharge" placeholder="Fuel Surcharge">
 			</td>
 			<td><a href="" ng-click="edit = !edit"><i ng-if="approved" class="fa fa-pencil-square-o" aria-hidden="true" ></i></a> </td>

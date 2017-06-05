@@ -32,8 +32,6 @@
 						$scope.specificInvoice[i].receiver_country = undoCleanEntry($scope.specificInvoice[i].receiver_country);
 						$scope.specificInvoice[i].transportation_mode = undoCleanEntry($scope.specificInvoice[i].transportation_mode);
 						$scope.specificInvoice[i].package_type = undoCleanEntry($scope.specificInvoice[i].package_type);
-						$scope.specificInvoice[i].sender_address_2 = undoCleanEntry($scope.specificInvoice[i].sender_address_2);
-						$scope.specificInvoice[i].receiver_address_2 = undoCleanEntry($scope.specificInvoice[i].receiver_address_2);
 						$scope.specificInvoice[i].receiver_zip_4 = undoCleanEntry($scope.specificInvoice[i].receiver_zip_4);
 						$scope.specificInvoice[i].receiver_zip = undoCleanEntry($scope.specificInvoice[i].receiver_zip);
 						$scope.specificInvoice[i].sender_zip = undoCleanEntry($scope.specificInvoice[i].sender_zip);

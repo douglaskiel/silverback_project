@@ -1,13 +1,23 @@
 (function(window, angular, undefined) {
 	angular.module('app')
-		.controller('carrierCtrl', ['$scope', '$state', '$http', 'userSvc', function($scope, $state, $http, userSvc) {
-			$scope.allCarriers = [];
-
+		.controller('carrierCtrl', ['$scope', '$state', '$http', 'userSvc', 'carrierSvc', function($scope, $state, $http, userSvc, carrierSvc) {
+			
 			var config = {
 				headers: {
 					'auth-token': userSvc.token
 				}
 			};
+
+			$scope.allCarriers = [];
+			$scope.getCarriers = function(config){
+				carrierSvc
+					.getCarriers(config)
+					.then(function(message){
+						$scope.allCarriers = message;
+					});
+			};
+			$scope.getCarriers(config);
+
 
 			$scope.submitCarrier = function(submittedCarrier) {
 				submittedCarrier.carrier_name = cleanEntry(submittedCarrier.carrier_name);
@@ -44,20 +54,6 @@
 						});
 				}
 			};
-
-			$http.get('/secure-api/carrier/get_carriers', config)
-				.then(function(response) {
-					$scope.allCarriers = response.data.data;
-					for (var i in $scope.allCarriers) {
-						$scope.allCarriers[i].carrier_name = undoCleanEntry($scope.allCarriers[i].carrier_name);
-					}
-				}, function(err) {
-					console.log(err);
-					if (err.data === 'Invalid Token') {
-						$scope.logout();
-					} else {
-						$state.go('home');
-					}
-				});
+			
 		}]);
 })(window, window.angular);

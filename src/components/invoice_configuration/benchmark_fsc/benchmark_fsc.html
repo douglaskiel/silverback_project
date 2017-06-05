@@ -13,13 +13,13 @@
 			<td></td>
 			<td> <button ng-click="submitBenchmarkFSC(newbfsc)" > Save Rate </button></td>
 		</tr>
-		<tr ng-repeat="bfsc in benchmark_fscs | orderBy: 'fuel_index'">
+		<tr ng-repeat="bfsc in allBenchmarkFSC | orderBy: 'fuel_index'">
 			<td>
-				<span ng-if="!edit" ng-bind-html="bfsc.fuel_index"> </span>
+				<span ng-if="!edit"> {{bfsc.fuel_index}} </span>
 				<input ng-if="edit" type="number" class="form-control" min="0" max="999" ng-model="bfsc.fuel_index">
 			</td>
 			<td>
-				<span ng-if="!edit" ng-bind-html="bfsc.benchmark_fuel_surcharge_percent"> </span>
+				<span ng-if="!edit"> {{bfsc.benchmark_fuel_surcharge_percent}} </span>
 				<input ng-if="edit" class="form-control" type="number" step=".0005" ng-model="bfsc.benchmark_fuel_surcharge">
 			</td>
 			<td> <a href="" ng-click="edit = !edit"><i ng-if="approved" class="fa fa-pencil-square-o" aria-hidden="true" ></i></a> </td>

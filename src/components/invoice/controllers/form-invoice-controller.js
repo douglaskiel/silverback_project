@@ -1,6 +1,6 @@
 (function(window, angular, undefined) {
 	angular.module('app')
-		.controller('invoiceFormCtrl', ['$scope', '$state', '$http', '$stateParams', 'userSvc', function($scope, $state, $http, $stateParams, userSvc) {
+		.controller('invoiceFormCtrl', ['$scope', '$state', '$http', '$stateParams', 'userSvc', 'accessSvc', 'carrierSvc', function($scope, $state, $http, $stateParams, userSvc, accessSvc, carrierSvc) {
 
 			var config = {
 				headers: {
@@ -11,10 +11,10 @@
 			$scope.allInvoices = [];
 			$scope.specificInvoice = [];
 			$scope.allCompanies = [];
-			$scope.allCarriers = [];
+			
 			$scope.allFuelRates = [];
 			$scope.allIOT = [];
-			$scope.allPrebuiltAccessorial = [];
+	
 			$scope.items = [];
 			$scope.totalWeight = 0;
 			$scope.totalAccessorialCharges = 0;
@@ -23,7 +23,6 @@
 				50, 55, 60, 65, 70, 77.5, 85, 92.5, 100, 110, 125, 150, 175, 200, 250, 300, 400, 500
 			];
 			$scope.shippingClasses = [];
-			$scope.accessorialCharges = [];
 			$scope.associatedCosts = [];
 			$scope.totalBenchmarkCost = [];
 			$scope.allOperations = [];
@@ -31,8 +30,28 @@
 			$scope.returnString = '';
 			$scope.state = $state.current;
 			$scope.params = $stateParams;
+			$scope.errors = false;
+			$scope.errorsArry = [];
+			$scope.newRow = false;
 
-			if ($scope.params.invoiceID !== "") {
+			$scope.allAccessorial = [];
+			$scope.allCarriers = [];
+			$scope.getEverything = function(config) {
+				accessSvc
+					.getAccess(config)
+					.then(function(message) {
+						$scope.allAccessorial = message;
+						console.log(message);
+					});
+				carrierSvc
+					.getCarriers(config)
+					.then(function(message) {
+						$scope.allCarriers = message;
+					});
+			};
+			$scope.getEverything(config);
+
+			if ($scope.params.invoiceID) {
 				$http.get('/secure-api/invoice/get_invoice?' + $scope.params.invoiceID, config)
 					.then(function(response) {
 						$scope.specificInvoice = response.data.data;
@@ -57,6 +76,7 @@
 							});
 							$scope.PD = {};
 
+							$scope.specificInvoice[i].carrier_name = undoCleanEntry($scope.specificInvoice[i].carrier_name);
 							$scope.specificInvoice[i].invoice_number = undoCleanEntry($scope.specificInvoice[i].invoice_number);
 							$scope.specificInvoice[i].sender_name = undoCleanEntry($scope.specificInvoice[i].sender_name);
 							$scope.specificInvoice[i].sender_address_1 = undoCleanEntry($scope.specificInvoice[i].sender_address_1);
@@ -68,12 +88,12 @@
 							$scope.specificInvoice[i].receiver_country = undoCleanEntry($scope.specificInvoice[i].receiver_country);
 							$scope.specificInvoice[i].transportation_mode = undoCleanEntry($scope.specificInvoice[i].transportation_mode);
 							$scope.specificInvoice[i].package_type = undoCleanEntry($scope.specificInvoice[i].package_type);
-							$scope.specificInvoice[i].sender_address_2 = undoCleanEntry($scope.specificInvoice[i].sender_address_2);
-							$scope.specificInvoice[i].receiver_address_2 = undoCleanEntry($scope.specificInvoice[i].receiver_address_2);
 							$scope.specificInvoice[i].receiver_zip_4 = undoCleanEntry($scope.specificInvoice[i].receiver_zip_4);
 							$scope.specificInvoice[i].receiver_zip = undoCleanEntry($scope.specificInvoice[i].receiver_zip);
 							$scope.specificInvoice[i].sender_zip = undoCleanEntry($scope.specificInvoice[i].sender_zip);
 							$scope.specificInvoice[i].sender_zip_4 = undoCleanEntry($scope.specificInvoice[i].sender_zip_4);
+							$scope.specificInvoice[i].deficit = parseFloat($scope.specificInvoice[i].deficit);
+							$scope.specificInvoice[i].deficit_rate = parseFloat($scope.specificInvoice[i].deficit_rate);
 						}
 						$scope.invoice = $scope.specificInvoice[0];
 						$scope.items = $scope.specificInvoice;
@@ -97,7 +117,31 @@
 						console.log(err);
 						$state.go('login');
 					});
+			} else if ($scope.params.xpoID) {
+				$http.get('/secure-api/xpo/get_xpo_invoice?' + $scope.params.xpoID, config)
+					.then(function(response) {
+						$scope.xpoInvoice = response.data.data;
+						$scope.xpoInvoice[0].old_cost = (Math.round(parseFloat($scope.xpoInvoice[0].old_cost) * 100)) / 100;
+						$scope.xpoInvoice[0].old_fsc = (Math.round(parseFloat($scope.xpoInvoice[0].old_fsc) * 100)) / 100;
+						$scope.xpoInvoice[0].old_total_cost = (Math.round(parseFloat($scope.xpoInvoice[0].old_total_cost) * 100)) / 100;
+						$scope.xpoInvoice[0].new_cost = (Math.round(parseFloat($scope.xpoInvoice[0].new_cost) * 100)) / 100;
+						$scope.xpoInvoice[0].new_fsc = (Math.round(parseFloat($scope.xpoInvoice[0].new_fsc) * 100)) / 100;
+						$scope.xpoInvoice[0].new_total_cost = (Math.round(parseFloat($scope.xpoInvoice[0].new_total_cost) * 100)) / 100;
+						$scope.xpoInvoice[0].discount_percent = sanatizePercent($scope.xpoInvoice[0].discount_percent);
+						$scope.xpoInvoice[0].savings = (Math.round(parseFloat($scope.xpoInvoice[0].savings) * 100) / 100);
+						$scope.xpoInvoice[0].base_charge = (Math.round(parseFloat($scope.xpoInvoice[0].base_charge) * 100) / 100);
+						$scope.xpoInvoice[0].ship_date = date_parse($scope.xpoInvoice[0].ship_date);
+						$scope.xpoInvoice[0].process_date = date_parse($scope.xpoInvoice[0].process_date);
+						$scope.xpoInvoice[0].discount_ammount = (Math.round(parseFloat($scope.xpoInvoice[0].discount_ammount) * 100) / 100);
+
+						console.log($scope.xpoInvoice[0]);
+						$scope.invoice = $scope.xpoInvoice[0];
+					}, function(err) {
+						console.log(err);
+						$state.go('login');
+					});
 			} else {
+				$scope.invoice = {};
 				var today = new Date();
 				var day = today.getDay();
 
@@ -106,7 +150,60 @@
 				} else {
 					$scope.invoice.process_date = new Date(moment().day(5));
 				}
+				$scope.shippingClasses.push({
+
+				});
+				$scope.PD = {};
 			}
+
+			$scope.setOldCost = function(oldCharge) {
+				$scope.invoice.old_cost = (oldCharge * (1 - 0.829));
+				$scope.invoice.discount_percent = sanatizePercent($scope.invoice.discount_ammount / oldCharge);
+				$scope.invoice.new_cost = (oldCharge * (1 - sanatizePercent($scope.invoice.discount_percent)));
+				$scope.invoice.old_fsc = ($scope.invoice.old_cost * sanatizePercent($scope.invoice.fsc_percent));
+				$scope.invoice.new_fsc = ($scope.invoice.new_cost * sanatizePercent($scope.invoice.fsc_percent));
+				$scope.invoice.old_total_cost = $scope.invoice.old_cost + $scope.invoice.old_fsc;
+				$scope.invoice.new_total_cost = $scope.invoice.new_cost + $scope.invoice.new_fsc;
+				$scope.invoice.savings = $scope.invoice.old_total_cost - $scope.invoice.new_total_cost;
+			};
+
+			$scope.submitXPOInvoice = function(invoice) {
+				invoice.old_cost = (Math.round(parseFloat(invoice.old_cost) * 100)) / 100;
+				invoice.old_fsc = (Math.round(parseFloat(invoice.old_fsc) * 100)) / 100;
+				invoice.old_total_cost = (Math.round(parseFloat(invoice.old_total_cost) * 100)) / 100;
+				invoice.new_cost = (Math.round(parseFloat(invoice.new_cost) * 100)) / 100;
+				invoice.new_fsc = (Math.round(parseFloat(invoice.new_fsc) * 100)) / 100;
+				invoice.new_total_cost = (Math.round(parseFloat(invoice.new_total_cost) * 100)) / 100;
+				invoice.discount_percent = sanatizePercent(invoice.discount_percent);
+				invoice.savings = (Math.round(parseFloat(invoice.savings) * 100) / 100);
+				invoice.discount_ammount = (Math.round(parseFloat(invoice.discount_ammount) * 100) / 100);
+				console.log(invoice);
+				for (var i in $scope.allCompanies) {
+					if ($scope.allCompanies[i].client_id === invoice.client_id) {
+						invoice.client_name = $scope.allCompanies[i].client_name;
+					}
+				}
+				if (!invoice.accelerated_charge) {
+					invoice.accelerated_charge = 0;
+				}
+				if (!$scope.params.xpoID) {
+					$http.post('/secure-api/xpo/insert_xpo_invoice', invoice, config)
+						.then(function(reponse) {
+							console.log('New Invoice Added');
+							$state.reload();
+						}, function(err) {
+							console.error(err);
+						});
+				} else {
+					$http.put('/secure-api/xpo/update_xpo_invoice', invoice, config)
+						.then(function(response) {
+							console.log('Invoice Updated');
+							$state.reload();
+						}, function(err) {
+							console.log(err);
+						});
+				}
+			};
 
 			$scope.carrierCheck = function() {
 				var senderStateString = $scope.invoice.sender_state;
@@ -117,8 +214,14 @@
 				var senderInfo;
 				var receiverInfo;
 
+				for (var i in $scope.allCarriers) {
+					if ($scope.invoice.carrier_id === $scope.allCarriers[i].carrier_id) {
+						$scope.invoice.carrier_name = $scope.allCarriers[i].carrier_name;
+					}
+				}
+
 				if (carrierString && senderStateString && receiverStateString) {
-					for (var i in $scope.allOperations) {
+					for (i in $scope.allOperations) {
 						if ($scope.allOperations[i].carrier_id === carrierString) {
 							if ($scope.allOperations[i].states === senderStateString) {
 								if (!$scope.allOperations[i].zip_code || $scope.allOperations[i].zip_code === "") {
@@ -144,8 +247,14 @@
 							}
 						}
 					}
+					var indyCheck;
+					if (senderInfo.states === 'IN' || receiverInfo.states === 'IN') {
+						indyCheck = parseFloat(senderInfo.absolute_minimum_charge) > parseFloat(receiverInfo.absolute_minimum_charge);
+					} else {
+						indyCheck = parseFloat(senderInfo.absolute_minimum_charge) < parseFloat(receiverInfo.absolute_minimum_charge);
+					}
 					if (senderInfo && receiverInfo) {
-						if (parseFloat(senderInfo.absolute_minimum_charge) > parseFloat(receiverInfo.absolute_minimum_charge)) {
+						if (indyCheck) {
 							$scope.invoice.absolute_min_charge = parseFloat(senderInfo.absolute_minimum_charge);
 							$scope.invoice.carrier_discount = parseFloat(senderInfo.discount);
 							$scope.invoice.accelerated_charge = parseFloat(senderInfo.accelerated_charge);
@@ -159,6 +268,8 @@
 			};
 
 			$scope.submitInvoice = function(invoice, items, accessorialCharges) {
+				$scope.errors = false;
+				$scope.errorsArry = [];
 				var senderState = false;
 				var receiverState = false;
 				var senderZip = false;
@@ -182,6 +293,10 @@
 					}
 				}
 				var r = true;
+				if (!invoice.accelerated_charge) {
+					invoice.accelerated_charge = 0;
+				}
+
 
 				if (!senderState || !receiverState || !senderZip || !receiverZip) {
 					r = confirm("The carrier you selected does not appear to deleive to the selected State and Zip Code combination, would you like to continue anyway?");
@@ -192,18 +307,8 @@
 					$scope.totalBenchmarkCost = 0;
 
 					if (items != [] && items.length !== 0) {
-						if (!invoice.hasOwnProperty('sender_address_2')) {
-							invoice.sender_address_2 = '';
-						} else {
-							invoice.sender_address_2 = cleanEntry(invoice.sender_address_2);
-						}
-						if (!invoice.hasOwnProperty('sender_address_2')) {
+						if (!invoice.hasOwnProperty('sender_zip_4')) {
 							invoice.sender_zip_4 = '';
-						}
-						if (!invoice.hasOwnProperty('receiver_address_2')) {
-							invoice.receiver_address_2 = '';
-						} else {
-							invoice.receiver_address_2 = cleanEntry(invoice.receiver_address_2);
 						}
 						if (!invoice.hasOwnProperty('receiver_zip_4')) {
 							invoice.receiver_zip_4 = '';
@@ -219,8 +324,6 @@
 						invoice.receiver_country = cleanEntry(invoice.receiver_country);
 						invoice.transportation_mode = cleanEntry(invoice.transportation_mode);
 						invoice.package_type = cleanEntry(invoice.package_type);
-						invoice.sender_address_2 = cleanEntry(invoice.sender_address_2);
-						invoice.receiver_address_2 = cleanEntry(invoice.receiver_address_2);
 						invoice.receiver_zip_4 = cleanEntry(invoice.receiver_zip_4);
 						invoice.receiver_zip = cleanEntry(invoice.receiver_zip);
 						invoice.sender_zip = cleanEntry(invoice.sender_zip);
@@ -257,6 +360,11 @@
 										$state.reload();
 									}, function(err) {
 										console.error(err);
+										for (var i in err.data.errors) {
+											$scope.errors = true;
+											console.log(err.data.errors[i].message);
+											$scope.errorsArry.push(err.data.errors[i].message);
+										}
 									});
 							} else {
 								$http.put('/secure-api/invoice/update_invoice', {
@@ -268,7 +376,12 @@
 										console.log('Invoice Updated');
 										$state.reload();
 									}, function(err) {
+										$scope.errors = true;
 										console.log(err);
+										for (var i in err.data.errors) {
+											console.log(err.data.errors[i].message);
+											$scope.errorsArry.push(err.data.errors[i].message);
+										}
 									});
 							}
 						});
@@ -348,6 +461,7 @@
 						var sum = returnString.slice(318, 326);
 						sum = [sum.slice(0, -2), '.', sum.slice(-2)].join('');
 						$scope.invoice.rated_sum = parseFloat(sum);
+						$scope.invoice.deficit_rate = parseFloat(returnString.slice(342, 349)) / 100;
 
 						var totalCharge = returnString.slice(396, 404);
 						totalCharge = [totalCharge.slice(0, -2), '.', totalCharge.slice(-2)].join('');
@@ -355,6 +469,40 @@
 						callback(invoice);
 					}, function(err) {
 						console.log(err);
+						$scope.errors = true;
+						switch (err.data) {
+							case '01':
+								console.log('This tariff is not available');
+								$scope.errorsArry.push('MARS Error 01: This tariff is not available');
+								break;
+							case '02':
+								console.log('Rates are not available for this date');
+								$scope.errorsArry.push('MARS Error 02: Rates are not available for this date');
+								break;
+							case '03':
+								console.log('The origin ZIP Code was not found in this tariff');
+								$scope.errorsArry.push('MARS Error 03: The origin ZIP Code was not found in this tariff');
+								break;
+							case '04':
+								console.log('The destination ZIP Code was not found in this tariff');
+								$scope.errorsArry.push('MARS Error 04: The destination ZIP Code was not found in this tariff');
+								break;
+							case '05':
+								console.log('A rate base number was not found for this pair of ZIP Codes');
+								$scope.errorsArry.push('MARS Error 05: A rate base number was not found for this pair of ZIP Codes');
+								break;
+							case '06':
+								console.log('Tariff data is missing or corrupt');
+								$scope.errorsArry.push('MARS Error 06: Tariff data is missing or corrupt');
+								break;
+							case '99':
+								console.log('Internal system error');
+								$scope.errorsArry.push('MARS Error 99: Internal system error');
+								break;
+							default:
+								$scope.errorsArry.push('We have encountered an unknown MARS related error retreiving your shipment rating');
+								console.log('We have encountered an unknown MARS related error retreiving your shipment rating');
+						}
 					});
 			};
 
@@ -370,13 +518,13 @@
 						$scope.invoice.sender_country = $scope.allCompanies[i].client_country;
 						$scope.invoice.sender_state = $scope.allCompanies[i].client_state;
 						$scope.invoice.client_id = $scope.allCompanies[i].client_id;
-						$scope.invoice.iot_id = 117;
+						$scope.invoice.sender = $scope.allCompanies[i].client_name;
 					}
 				}
 			};
 
 			$scope.addRowItem = function(shippingClasses) {
-				if (shippingClasses.length < 10) {
+				if (shippingClasses.length < 10 || shippingClasses.length === undefined) {
 					$scope.shippingClasses.push({
 						'weight': shippingClasses.weight,
 						'classification': shippingClasses.class,
@@ -384,10 +532,13 @@
 					});
 					$scope.PD = {};
 				}
+				if ($scope.newRow === false) {
+					$scope.newRow = true;
+				}
 			};
 
 			$scope.addRowCharge = function(accessorialCharges) {
-				if (accessorialCharges.length < 12) {
+				if (accessorialCharges.length < 12 || accessorialCharges.length === undefined) {
 					$scope.accessorialCharges.push({
 						'actual_cost': accessorialCharges.actual_cost,
 						'benchmark_cost': accessorialCharges.benchmark_cost,
@@ -396,16 +547,25 @@
 					});
 					$scope.PD = {};
 				}
+				if ($scope.newRow === false) {
+					$scope.newRow = true;
+				}
 			};
 
 			$scope.remove = function() {
 				var newDataListItem = [];
+				var newItem = 0;
 				angular.forEach($scope.shippingClasses, function(selected) {
 					if (!selected.selected) {
 						newDataListItem.push(selected);
 					}
 				});
 				$scope.shippingClasses = newDataListItem;
+				for (var i in $scope.shippingClasses) {
+					if (!$scope.shippingClasses[i].item_id) {
+						newItem++;
+					}
+				}
 				var newDataListCharge = [];
 				angular.forEach($scope.accessorialCharges, function(selected) {
 					if (!selected.selected) {
@@ -413,6 +573,31 @@
 					}
 				});
 				$scope.accessorialCharges = newDataListCharge;
+				for (i in $scope.accessorialCharges) {
+					if (!$scope.accessorialCharges[i].cost_id) {
+						newItem++;
+					}
+				}
+
+				if ($scope.shippingClasses.length < 1) {
+					$scope.addRowItem($scope.shippingClasses);
+				}
+
+				if (newItem < 1) {
+					$scope.newRow = false;
+				}
+			};
+
+			$scope.fuelChange = function(fuelSurchargeID) {
+				for (var i in $scope.allFuelRates) {
+					if ($scope.allFuelRates[i].fuel_rate_id === fuelSurchargeID) {
+						$scope.invoice.fuel_rate_id = $scope.allFuelRates[i].fuel_rate_id;
+						$scope.invoice.fuel_date = $scope.allFuelRates[i].fuel_date;
+						$scope.invoice.fuel_rate = $scope.allFuelRates[i].fuel_rate;
+						$scope.invoice.fuel_surcharge = $scope.allFuelRates[i].fuel_surcharge;
+						break;
+					}
+				}
 			};
 
 			$scope.autoFuelSurcharge = function(shipDate) {
@@ -440,44 +625,6 @@
 				}
 			};
 
-			$scope.addAccessorialCharge = function(newCharge) {
-				newCharge.invoice_number = $scope.specificInvoice[0].invoice_number;
-				$scope.totalAccessorialCharges = 0;
-				$scope.totalBenchmarkCost = 0;
-				for (var i in $scope.accessorialCharges) {
-					$scope.totalAccessorialCharges += $scope.accessorialCharges[i].actual_cost;
-					$scope.totalBenchmarkCost += $scope.accessorialCharges[i].benchmark_cost;
-				}
-				newCharge.total_associated_costs = $scope.totalAccessorialCharges;
-				newCharge.total_benchmark = $scope.totalBenchmarkCost;
-
-				$http.post('/secure-api/accessorial_cost_invoice/insert_associated_costs_invoice', newCharge, config)
-					.then(function(response) {
-						console.log('Charge Added!');
-						$state.reload();
-					}, function(err) {
-						console.log(err);
-					});
-			};
-
-			$scope.updateAccessorialCharge = function(charge) {
-				charge.invoice_number = $scope.specificInvoice[0].invoice_number;
-				$scope.totalAccessorialCharges = 0;
-				$scope.totalBenchmarkCost = 0;
-				for (var i in $scope.accessorialCharges) {
-					$scope.totalAccessorialCharges += $scope.accessorialCharges[i].actual_cost;
-					$scope.totalBenchmarkCost += $scope.accessorialCharges[i].benchmark_cost;
-				}
-				charge.total_associated_costs = $scope.totalAccessorialCharges;
-				charge.total_benchmark = $scope.totalBenchmarkCost;
-				$http.put('/secure-api/accessorial_cost_invoice/update_associated_costs_invoice', charge, config)
-					.then(function(response) {
-						console.log('Item Updated');
-					}, function(err) {
-						console.log(err);
-					});
-			};
-
 			$scope.deleteAccessorialCharge = function(charge) {
 				var r = confirm("Are you sure you want to delete this Charge?");
 				$scope.totalAccessorialCharges = 0;
@@ -500,47 +647,13 @@
 				}
 			};
 
-			$scope.addShippingClass = function(newItem) {
-				newItem.invoice_number = $scope.specificInvoice[0].invoice_number;
-				$scope.totalWeight = 0;
-				for (var i in $scope.shippingClasses) {
-					$scope.totalWeight += $scope.shippingClasses[i].weight;
-				}
-				newItem.billed_weight = $scope.totalWeight;
-
-
-				$http.post('/secure-api/shipping_class_invoice/insert_shipping_class_invoice', newItem, config)
-					.then(function(response) {
-						console.log('Item Added!');
-						$state.reload();
-					}, function(err) {
-						console.log(err);
-					});
-			};
-
-			$scope.updateShippingClass = function(item) {
-				$scope.totalWeight = 0;
-				for (var i in $scope.shippingClasses) {
-					$scope.totalWeight += $scope.shippingClasses[i].weight;
-				}
-				item.billed_weight = $scope.totalWeight;
-				$http.put('/secure-api/shipping_class_invoice/update_shipping_class_invoice', item, config)
-					.then(function(response) {
-						console.log('Item Updated');
-					}, function(err) {
-						console.log(err);
-					});
-			};
-
 			$scope.deleteShippingClass = function(item) {
 				var r = confirm("Are you sure you want to delete this Item?");
 				$scope.totalWeight = 0;
 				for (var i in $scope.shippingClasses) {
 					$scope.totalWeight += $scope.shippingClasses[i].weight;
 				}
-				console.log($scope.totalWeight);
 				$scope.totalWeight -= item.weight;
-				console.log($scope.totalWeight);
 				if (r === true) {
 					request = '/secure-api/shipping_class_invoice/delete_shipping_class_invoice?' + item.item_id + "/" + $scope.totalWeight + "|" + item.invoice_number;
 					$http.delete(request, config)
@@ -554,21 +667,15 @@
 			};
 
 			$scope.changeCharge = function(index, charge) {
-				for (var i in $scope.allPrebuiltAccessorial) {
-					if ($scope.allPrebuiltAccessorial[i].prebuilt_cost_id === charge.prebuilt_cost_id) {
-						$scope.accessorialCharges[index].benchmark_cost = parseFloat($scope.allPrebuiltAccessorial[i].benchmark_cost);
-						$scope.accessorialCharges[index].cost_code = $scope.allPrebuiltAccessorial[i].cost_code;
+				for (var i in $scope.allAccessorial) {
+					if ($scope.allAccessorial[i].prebuilt_cost_id === charge.prebuilt_cost_id) {
+						$scope.accessorialCharges[index].benchmark_cost = parseFloat($scope.allAccessorial[i].benchmark_cost);
+						$scope.accessorialCharges[index].cost_code = $scope.allAccessorial[i].cost_code;
 						break;
 					}
 				}
 			};
 
-			$http.get('/secure-api/accessorial_cost/get_prebuilt_associated_costs', config)
-				.then(function(response) {
-					$scope.allPrebuiltAccessorial = response.data.data;
-				}, function(err) {
-					console.log(err);
-				});
 			$http.get('/secure-api/company/get_companies', config)
 				.then(function(response) {
 					$scope.allCompanies = response.data.data;
@@ -578,6 +685,9 @@
 			$http.get('/secure-api/carrier/get_carriers', config)
 				.then(function(response) {
 					$scope.allCarriers = response.data.data;
+					for (var i in $scope.allCarriers) {
+						$scope.allCarriers[i].carrier_name = undoCleanEntry($scope.allCarriers[i].carrier_name);
+					}
 				}, function(err) {
 					console.log(err);
 				});
@@ -592,6 +702,7 @@
 					$scope.allFuelRates = response.data.data;
 					for (var i in $scope.allFuelRates) {
 						$scope.allFuelRates[i].fuel_date = date_parse($scope.allFuelRates[i].fuel_date);
+						$scope.allFuelRates[i].fuel_date_display = moment($scope.allFuelRates[i].fuel_date).format('YYYY/MM/DD');
 					}
 				}, function(err) {
 					console.log(err);

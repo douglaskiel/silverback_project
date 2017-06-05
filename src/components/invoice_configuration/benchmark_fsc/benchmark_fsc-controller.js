@@ -1,18 +1,26 @@
 (function(window, angular, undefined) {
 	angular.module('app')
-		.controller('benchmarkFSCCtrl', ['$scope', '$state', '$http', 'userSvc', function($scope, $state, $http, userSvc) {
+		.controller('benchmarkFSCCtrl', ['$scope', '$state', '$http', 'userSvc', 'benchmarkSvc', function($scope, $state, $http, userSvc, benchmarkSvc) {
 
 			var config = {
 				headers: {
 					'auth-token': userSvc.token
 				}
 			};
-			$scope.benchmark_fscs = [];
+			$scope.allBenchmarkFSC = [];
+			$scope.getEverything = function(config) {
+				benchmarkSvc
+					.getBenchmark(config)
+					.then(function(message) {
+						$scope.allBenchmarkFSC = message;
+					});
+			};
+			$scope.getEverything(config);
 
 			$scope.submitBenchmarkFSC = function(submittedBenchmarkFSC) {
 				var exists = false;
-				for (var i in $scope.benchmark_fscs) {
-					if ($scope.benchmark_fscs[i].fuel_index === submittedBenchmarkFSC.fuel_index && submittedBenchmarkFSC.benchmark_fsc_id !== $scope.benchmark_fscs[i].benchmark_fsc_id) {
+				for (var i in $scope.allBenchmarkFSC) {
+					if ($scope.allBenchmarkFSC[i].fuel_index === submittedBenchmarkFSC.fuel_index && submittedBenchmarkFSC.benchmark_fsc_id !== $scope.allBenchmarkFSC[i].benchmark_fsc_id) {
 						console.log('That rate is already covered please enter a diffrent rate');
 						exists = true;
 						break;
@@ -51,23 +59,6 @@
 						console.log(err);
 					});
 			};
-
-			$http.get('/secure-api/benchmark_fsc/get_benchmark_fsc', config)
-				.then(function(response) {
-					$scope.benchmark_fscs = response.data.data;
-					for (var i in $scope.benchmark_fscs) {
-						$scope.benchmark_fscs[i].benchmark_fuel_surcharge_percent = Math.round($scope.benchmark_fscs[i].benchmark_fuel_surcharge * 10000) / 100 + '%';
-						$scope.benchmark_fscs[i].fuel_index = parseFloat($scope.benchmark_fscs[i].fuel_index);
-						$scope.benchmark_fscs[i].benchmark_fuel_surcharge = parseFloat($scope.benchmark_fscs[i].benchmark_fuel_surcharge);
-					}
-				}, function(err) {
-					console.log(err);
-					if (err.data === 'Invalid Token') {
-						$scope.logout();
-					} else {
-						$state.go('home');
-					}
-				});
 
 		}]);
 })(window, window.angular);

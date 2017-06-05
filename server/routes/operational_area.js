@@ -96,7 +96,7 @@ router.delete('/delete_operational_area', function(req, res) {
 	if (req.user_role === 'Admin' || req.user_role === 'Editor') {
 		var query = "DELETE FROM operational_area WHERE operation_id=" + req._parsedUrl.query;
 		db.query(query).spread(function(result, metadata) {
-			res.status(200).send('Fuel Rate Deleted!');
+			res.status(200).send('Operational Area Deleted!');
 		}).catch(function(err) {
 			res.status(500).send(err);
 		});
