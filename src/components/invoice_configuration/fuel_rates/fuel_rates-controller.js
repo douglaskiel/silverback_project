@@ -1,12 +1,13 @@
 (function(window, angular, undefined) {
 	angular.module('app')
-		.controller('fuelRatesCtrl', ['$scope', '$state', '$http', 'userSvc', function($scope, $state, $http, userSvc) {
+		.controller('fuelRatesCtrl', ['$scope', '$state', '$http', 'userSvc', 'benchmarkSvc', function($scope, $state, $http, userSvc, benchmarkSvc) {
 
 			var config = {
 				headers: {
 					'auth-token': userSvc.token
 				}
 			};
+			
 			$scope.allFuelRates = [];
 			$scope.fscs = [];
 			$scope.limit = 100;

@@ -519,7 +519,6 @@
 						$scope.invoice.sender_state = $scope.allCompanies[i].client_state;
 						$scope.invoice.client_id = $scope.allCompanies[i].client_id;
 						$scope.invoice.sender = $scope.allCompanies[i].client_name;
-						$scope.invoice.iot_id = 117;
 					}
 				}
 			};
