@@ -131,7 +131,7 @@
 					}
 
 					//benchmark
-					if (((grossCharge + deficitRate * (100 - $scope.savingsInvoices[i].discount)) / 100) <= 88.39) {
+					if ((((grossCharge + deficitRate) * (100 - $scope.savingsInvoices[i].discount)) / 100) <= 88.39) {
 						$scope.savingsInvoices[i].freight_charge = 88.39;
 						$scope.savingsInvoices[i].bmdiscount = 'AMC';
 					} else {
@@ -141,7 +141,7 @@
 
 
 					//savings
-					if ((($scope.savingsInvoices[i].gross_charge + $scope.savingsInvoices[i].deficit_rate * (100 - $scope.savingsInvoices[i].carrier_discount)) / 100) <= $scope.savingsInvoices[i].absolute_min_charge) {
+					if (((($scope.savingsInvoices[i].gross_charge + $scope.savingsInvoices[i].deficit_rate) * (100 - $scope.savingsInvoices[i].carrier_discount)) / 100) <= $scope.savingsInvoices[i].absolute_min_charge) {
 						$scope.savingsInvoices[i].savings_discount = 'AMC';
 						$scope.savingsInvoices[i].savings_frieght_charge = $scope.savingsInvoices[i].absolute_min_charge;
 					} else {
