@@ -99,6 +99,7 @@
 				$scope.totalCharged = 0;
 				$scope.totalFreightCharge = 0;
 				$scope.totalFuelCharge = 0;
+				console.log($scope.savingsInvoices[i]);
 				for (var i = 0; i < $scope.savingsInvoices.length; i++) {
 					$scope.savingsInvoices[i].process_date = new Date($scope.savingsInvoices[i].process_date);
 					$scope.savingsInvoices[i].ship_date = new Date($scope.savingsInvoices[i].ship_date);
