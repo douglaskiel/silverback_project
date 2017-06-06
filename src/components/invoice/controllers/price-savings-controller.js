@@ -170,8 +170,15 @@
 					}
 
 					//fuel charge
+					var math = 0;
+					math = $scope.savingsInvoices[i].freight_charge;
+					console.log(math);
+					math = $scope.savingsInvoices[i].freight_charge + $scope.savingsInvoices[i].benchmark_accelerated_charge;
+					console.log(math);
+
 					$scope.savingsInvoices[i].savings_fuel_surcharge = Math.round((($scope.savingsInvoices[i].savings_frieght_charge + $scope.savingsInvoices[i].savings_accelerated_charge) * ($scope.savingsInvoices[i].fuel_surcharge / 100)) * 100) / 100;
-					$scope.savingsInvoices[i].benchmark_fuel_charge = Math.round((($scope.savingsInvoices[i].benchmark_fuel_surcharge / 100 * $scope.savingsInvoices[i].fsc_factor / 100) * $scope.savingsInvoices[i].freight_charge) * 100) / 100;
+
+					$scope.savingsInvoices[i].benchmark_fuel_charge = Math.round((($scope.savingsInvoices[i].benchmark_fuel_surcharge / 100 * $scope.savingsInvoices[i].fsc_factor / 100) * math) * 100) / 100;
 
 
 					$scope.savingsInvoices[i].savings_total_charge = Math.round((parseFloat($scope.savingsInvoices[i].savings_frieght_charge) + parseFloat($scope.savingsInvoices[i].savings_fuel_surcharge) + parseFloat($scope.savingsInvoices[i].total_associated_costs)) * 100) / 100;
