@@ -102,7 +102,7 @@ router.post('/approve_user', function(req, res) {
 });
 
 router.put('/update_user', function(req, res) {
-	if (req.user_id != req.body.id) {
+	if (req.user_id === req.body.id) {
 		res.status(500).send('Please make any changes to your account at your account page');
 	} else {
 		if (req.user_role === "Admin") {

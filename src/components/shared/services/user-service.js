@@ -1,7 +1,86 @@
 (function(window, angular, undefined) {
 	angular.module('app')
-		.service('userSvc', [function() {
+		.service('userSvc', ['$http', '$q', '$state', function($http, $q, $state) {
 			var vm = this;
+
+			var allUsers = [];
+			var allUnapprovedUsers = [];
+
+			vm.passwordRequest = function(user, callback) {
+				var deferred = $q.defer();
+				$http.post('api/user/password_request', user)
+					.then(function(response) {
+						console.log('Request Submitted');
+					})
+					.catch(function(e) {
+						console.log('Request Submitted');
+					});
+			};
+
+			vm.approveUser = function(user, config, callback) {
+				var deferred = $q.defer();
+				$http.post('/secure-api/user/approve_user', user, config)
+					.then(function(response) {
+						console.log('User Approved');
+						$state.reload();
+					})
+					.catch(function(e) {
+						deferred.reject(e);
+					});
+			};
+
+			vm.submitUser = function(user, config, callback) {
+				var deferred = $q.defer();
+				$http.put('/secure-api/user/update_user', user, config)
+					.then(function(response) {
+						console.log('User Updated');
+						$state.reload();
+					})
+					.catch(function(e) {
+						deferred.reject(e);
+					});
+			};
+
+			vm.deleteUser = function(request, config, callback){
+				var deferred = $q.defer();
+				$http.delete(request, config)
+					.then(function(response) {
+						console.log('User Removed');
+						deferred.resolve(response);
+					})
+					.catch(function(e) {
+						deferred.reject(e);
+					});
+			};
+
+			vm.getUsers = function(config, callback) {
+				var deferred = $q.defer();
+				$http.get('/secure-api/user/get_users', config)
+					.then(function(response) {
+						allUsers = response.data.data;
+						deferred.resolve(allUsers);
+					})
+					.catch(function(e) {
+						deferred.reject(e);
+						$state.go('login');
+					});
+				return deferred.promise;
+			};
+
+			vm.getUnapprovedUsers = function(config, callback) {
+				var deferred = $q.defer();
+				$http.get('/secure-api/user/get_unapproved_users', config)
+					.then(function(response) {
+						allUnapprovedUsers = response.data.data;
+						deferred.resolve(allUnapprovedUsers);
+					})
+					.catch(function(e) {
+						deferred.reject(e);
+						$state.go('login');
+					});
+				return deferred.promise;
+			};
+
 			vm.token = undefined;
 			vm.user = undefined;
 			vm.role = undefined;
@@ -83,7 +162,7 @@
 					.replace(/\//g, "&sol;")
 					.replace(/\|/g, "&vert;");
 			};
-			
+
 			undoCleanEntry = function(text) {
 				return text
 					.replace(/&tilde;/g, "~")

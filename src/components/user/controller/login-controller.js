@@ -1,6 +1,7 @@
 (function(window, angular, undefined) {
 	angular.module('app')
-		.controller('loginCtrl', ['$scope', '$state', '$http', 'userSvc', function($scope, $state, $http, userSvc) {
+		.controller('loginCtrl', ['$scope', '$state', 'userSvc', '$http', function($scope, $state, userSvc, $http) {
+			
 			$scope.logUserIn = function(user) {
 				$http.post('/api/user/login', user)
 					.then(function(response) {
@@ -41,18 +42,13 @@
 
 			$scope.forgotPassword = function(user) {
 				$scope.email = user.email;
+				config = {'hello': 'hi'};
 				user = {
 					to: user.email,
 					urlBase: window.location.origin
 				};
-				console.log(window.location.origin);
-				$http.post('api/user/password_request', user)
-					.then(function(response) {
-						$scope.sent = true;
-					}, function(err) {
-						console.log(err);
-						$scope.sent = true;
-					});
+				$scope.sent = true;
+				userSvc.passwordRequest(user);
 			};
 		}]);
 })(window, window.angular);

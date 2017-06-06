@@ -1,6 +1,6 @@
 (function(window, angular, undefined) {
 	angular.module('app')
-		.controller('iotCtrl', ['$scope', '$state', '$http', 'userSvc', 'iotSvc', function($scope, $state, $http, userSvc, iotSvc) {
+		.controller('iotCtrl', ['$scope', '$state', 'userSvc', 'iotSvc', function($scope, $state, userSvc, iotSvc) {
 
 			var config = {
 				headers: {

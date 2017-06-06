@@ -1,6 +1,6 @@
 (function(window, angular, undefined) {
 	angular.module('app')
-		.controller('operationalAreaCtrl', ['$scope', '$state', '$http', 'userSvc', 'carrierSvc', 'operationAreaSvc', 'regionSvc', 'statesSvc', function($scope, $state, $http, userSvc, carrierSvc, operationAreaSvc, regionSvc, statesSvc) {
+		.controller('operationalAreaCtrl', ['$scope', '$state', 'userSvc', 'carrierSvc', 'operationAreaSvc', 'regionSvc', 'statesSvc', function($scope, $state, userSvc, carrierSvc, operationAreaSvc, regionSvc, statesSvc) {
 
 			var config = {
 				headers: {

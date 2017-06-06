@@ -1,6 +1,6 @@
 (function(window, angular, undefined) {
 	angular.module('app')
-		.controller('carrierCtrl', ['$scope', '$state', '$http', 'userSvc', 'carrierSvc', function($scope, $state, $http, userSvc, carrierSvc) {
+		.controller('carrierCtrl', ['$scope', '$state', 'userSvc', 'carrierSvc', function($scope, $state, userSvc, carrierSvc) {
 
 			var config = {
 				headers: {

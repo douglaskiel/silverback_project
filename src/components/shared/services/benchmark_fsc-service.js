@@ -24,5 +24,40 @@
 				return deferred.promise;
 			};
 
+			vm.sumbitBenchmark = function(benchmark_fsc, config, callback) {
+				var deferred = $q.defer();
+				$http.post('/secure-api/benchmark_fsc/insert_benchmark_fsc', benchmark_fsc, config)
+					.then(function(response) {
+						console.log('Fuel Surcharge Submitted');
+						$state.reload();
+					})
+					.catch(function(e) {
+						deferred.reject(e);
+					});
+			};
+
+			vm.updateBenchmark = function(benchmark_fsc, config, callback) {
+				var deferred = $q.defer();
+				$http.put('/secure-api/benchmark_fsc/update_benchmark_fsc', benchmark_fsc, config)
+					.then(function(response) {
+						console.log('Fuel Surcharge Updated');
+					})
+					.catch(function(e) {
+						deferred.reject(e);
+					});
+			};
+
+			vm.deleteBenchmark = function(request, config, callback) {
+				var deferred = $q.defer();
+				$http.delete(request, config)
+					.then(function(response) {
+						console.log('Benchmark FSC Removed');
+						deferred.resolve(response);
+					})
+					.catch(function(e) {
+						deferred.reject(e);
+					});
+			};
+
 		}]);
 })(window, window.angular);

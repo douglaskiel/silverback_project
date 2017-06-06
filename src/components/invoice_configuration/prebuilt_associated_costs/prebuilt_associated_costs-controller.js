@@ -1,6 +1,6 @@
 (function(window, angular, undefined) {
 	angular.module('app')
-		.controller('accessorialCtrl', ['$scope', '$state', '$http', 'userSvc', 'accessSvc', function($scope, $state, $http, userSvc, accessSvc) {
+		.controller('accessorialCtrl', ['$scope', '$state', 'userSvc', 'accessSvc', function($scope, $state, userSvc, accessSvc) {
 			
 			var config = {
 				headers: {

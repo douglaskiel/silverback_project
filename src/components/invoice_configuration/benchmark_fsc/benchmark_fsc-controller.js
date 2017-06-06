@@ -1,6 +1,6 @@
 (function(window, angular, undefined) {
 	angular.module('app')
-		.controller('benchmarkFSCCtrl', ['$scope', '$state', '$http', 'userSvc', 'benchmarkSvc', function($scope, $state, $http, userSvc, benchmarkSvc) {
+		.controller('benchmarkFSCCtrl', ['$scope', '$state', 'userSvc', 'benchmarkSvc', function($scope, $state, userSvc, benchmarkSvc) {
 
 			var config = {
 				headers: {
@@ -29,36 +29,25 @@
 				if (!exists) {
 					submittedBenchmarkFSC.benchmark_fuel_surcharge = sanatizePercent(submittedBenchmarkFSC.benchmark_fuel_surcharge);
 					if (submittedBenchmarkFSC.benchmark_fsc_id) {
-						$http.put('/secure-api/benchmark_fsc/update_benchmark_fsc', submittedBenchmarkFSC, config)
-							.then(function(response) {
-								console.log('FSC Updated');
-								$state.reload();
-							}, function(err) {
-								console.log(err);
-							});
-
+						benchmarkSvc.updateBenchmark(submittedBenchmarkFSC, config);
 					} else {
-						$http.post('/secure-api/benchmark_fsc/insert_benchmark_fsc', submittedBenchmarkFSC, config)
-							.then(function(reponse) {
-								console.log('FSC Added');
-								$state.reload();
-							}, function(err) {
-								console.error(err);
-							});
+						benchmarkSvc.sumbitBenchmark(submittedBenchmarkFSC, config);
+						$scope.newCarrier = {};
 					}
 				}
 			};
 
 			$scope.deleteBenchmarkFSC = function(benchmarkFuelSurchargeID) {
-				request = '/secure-api/benchmark_fsc/delete_benchmark_fsc/?' + benchmarkFuelSurchargeID;
-				$http.delete(request, config)
-					.then(function(response) {
-						console.log('FSC Removed');
-						$state.reload();
-					}, function(err) {
-						console.log(err);
-					});
+				var r = confirm("Are you sure you want to delete this Benchmark?");
+				if (r) {
+					request = '/secure-api/benchmark_fsc/delete_benchmark_fsc/?' + benchmarkFuelSurchargeID;
+					benchmarkSvc.deleteBenchmark(request, config);
+					for (var i in $scope.allBenchmarkFSC) {
+						if ($scope.allBenchmarkFSC[i].benchmark_fsc_id === benchmarkFuelSurchargeID) {
+							$scope.allBenchmarkFSC.splice(i, 1);
+						}
+					}
+				}
 			};
-
 		}]);
 })(window, window.angular);

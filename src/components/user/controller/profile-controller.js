@@ -33,13 +33,8 @@
 				var r = confirm("Are you sure you want to delete your account? This CANNOT be undone.");
 				if (r && $scope.user_id === userID) {
 					request = '/secure-api/user/delete_profile/?' + userID;
-					$http.delete(request, config)
-						.then(function(response) {
-							$scope.logout();
-							console.log('Profile Deleted');
-						}, function(err) {
-							console.log(err);
-						});
+					userSvc.deleteUser(request, config);
+					$scope.logout();
 				}
 			};
 

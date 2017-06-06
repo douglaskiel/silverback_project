@@ -1,6 +1,6 @@
 (function(window, angular, undefined) {
 	angular.module('app')
-		.controller('fuelRatesCtrl', ['$scope', '$state', '$http', 'userSvc', 'benchmarkSvc', 'fscsSvc', 'fuelRateService', function($scope, $state, $http, userSvc, benchmarkSvc, fscsSvc, fuelRateService) {
+		.controller('fuelRatesCtrl', ['$scope', '$state', 'userSvc', 'benchmarkSvc', 'fscsSvc', 'fuelRateService', function($scope, $state, userSvc, benchmarkSvc, fscsSvc, fuelRateService) {
 
 			var config = {
 				headers: {

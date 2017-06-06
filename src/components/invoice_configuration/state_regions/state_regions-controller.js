@@ -1,6 +1,6 @@
 (function(window, angular, undefined) {
 	angular.module('app')
-		.controller('stateRegionCtrl', ['$scope', '$state', '$http', 'userSvc', 'regionSvc', 'statesSvc', function($scope, $state, $http, userSvc, regionSvc, statesSvc) {
+		.controller('stateRegionCtrl', ['$scope', '$state', 'userSvc', 'regionSvc', 'statesSvc', function($scope, $state, userSvc, regionSvc, statesSvc) {
 
 			var config = {
 				headers: {

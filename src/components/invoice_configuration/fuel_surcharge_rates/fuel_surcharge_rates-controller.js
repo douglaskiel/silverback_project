@@ -1,6 +1,6 @@
 (function(window, angular, undefined) {
 	angular.module('app')
-		.controller('fscCtrl', ['$scope', '$state', '$http', 'userSvc', 'fscsSvc', function($scope, $state, $http, userSvc, fscsSvc) {
+		.controller('fscCtrl', ['$scope', '$state', 'userSvc', 'fscsSvc', function($scope, $state, userSvc, fscsSvc) {
 
 			var config = {
 				headers: {
