@@ -174,7 +174,9 @@
 
 					var math = 0;
 					math = $scope.savingsInvoices[i].freight_charge;
-					console.log(math);
+					console.log('Fieght Charge: ' + math);
+					math = $scope.savingsInvoices[i].freight_charge + $scope.savingsInvoices[i].benchmark_accelerated_charge;
+					console.log('Frieght Charge + Benchmark Accelerated: ' + math);
 					
 					$scope.savingsInvoices[i].benchmark_fuel_charge = Math.round(((($scope.savingsInvoices[i].benchmark_fuel_surcharge / 100) * ($scope.savingsInvoices[i].fsc_factor / 100) * $scope.savingsInvoices[i].freight_charge) * 100) / 100);
 					console.log($scope.savingsInvoices[i].benchmark_fuel_charge);
