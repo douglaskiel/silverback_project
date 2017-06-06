@@ -19,6 +19,17 @@
 			$scope.errors = false;
 			$scope.errorsArry = [];
 
+			$scope.getProfile = function(userID, config) {
+				userSvc
+					.getProfile(userID, config)
+					.then(function(message) {
+						$scope.user = message;
+						$scope.user_id = $scope.user.id;
+					});
+			};
+
+			$scope.getProfile(userSvc.user, config);
+
 			$scope.submitProfile = function(user) {
 				$http.put('/secure-api/user/update_profile', user, config)
 					.then(function(response) {
@@ -108,18 +119,5 @@
 					$scope.errorsArry.push('Passwords Requirments Not Met');
 				}
 			};
-
-			$http.get('/secure-api/user/get_user?' + userSvc.user, config)
-				.then(function(response) {
-					$scope.user = response.data.data[0];
-					$scope.user_id = $scope.user.id;
-				}, function(err) {
-					console.log(err);
-					if (err.data === 'Invalid Token') {
-						$scope.logout();
-					} else {
-						$state.go('home');
-					}
-				});
 		}]);
 })(window, window.angular);

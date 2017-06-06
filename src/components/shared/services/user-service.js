@@ -81,6 +81,20 @@
 				return deferred.promise;
 			};
 
+			vm.getProfile = function(userId, config,callback){
+				var deferred = $q.defer();
+				$http.get('/secure-api/user/get_user?' + userId, config)
+					.then(function(response) {
+						user = response.data.data[0];
+						deferred.resolve(user);
+					})
+					.catch(function(e) {
+						deferred.reject(e);
+						$state.go('login');
+					});
+				return deferred.promise;
+			};
+
 			vm.token = undefined;
 			vm.user = undefined;
 			vm.role = undefined;
