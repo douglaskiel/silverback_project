@@ -173,7 +173,10 @@
 					$scope.savingsInvoices[i].savings_fuel_surcharge = Math.round((($scope.savingsInvoices[i].savings_frieght_charge + $scope.savingsInvoices[i].savings_accelerated_charge) * ($scope.savingsInvoices[i].fuel_surcharge / 100)) * 100) / 100;
 
 					var math = 0;
-					$scope.savingsInvoices[i].benchmark_fuel_charge = Math.round(((($scope.savingsInvoices[i].benchmark_fuel_surcharge / 100) * ($scope.savingsInvoices[i].fsc_factor / 100) * $scope.savingsInvoices[i].freight_charge + $scope.savingsInvoices[i].benchmark_accelerated_charge) * 100) / 100);
+					math = $scope.savingsInvoices[i].freight_charge;
+					console.log(math);
+					
+					$scope.savingsInvoices[i].benchmark_fuel_charge = Math.round(((($scope.savingsInvoices[i].benchmark_fuel_surcharge / 100) * ($scope.savingsInvoices[i].fsc_factor / 100) * $scope.savingsInvoices[i].freight_charge) * 100) / 100);
 					console.log($scope.savingsInvoices[i].benchmark_fuel_charge);
 
 
