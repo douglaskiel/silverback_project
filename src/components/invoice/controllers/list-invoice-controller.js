@@ -9,7 +9,7 @@
 			};
 
 			$scope.allInvoices = [];
-			$scope.to = new Date(moment().day(5));
+			$scope.to = new Date(moment().day(6));
 			$scope.from = new Date(moment().day(1));
 			$scope.selectAll = false;
 			$scope.errors = false;
