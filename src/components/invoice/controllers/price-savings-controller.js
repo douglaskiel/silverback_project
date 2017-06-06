@@ -178,7 +178,7 @@
 					math = math + $scope.savingsInvoices[i].benchmark_accelerated_charge;
 					console.log(math);
 
-					$scope.savingsInvoices[i].benchmark_fuel_charge = Math.round(((math * ($scope.savingsInvoices[i].fsc_factor / 100) * $scope.savingsInvoices[i].freight_charge) * 100) / 100);
+					$scope.savingsInvoices[i].benchmark_fuel_charge = Math.round(((math * ($scope.savingsInvoices[i].fsc_factor / 100) * $scope.savingsInvoices[i].freight_charge)) / 100);
 					console.log($scope.savingsInvoices[i].benchmark_fuel_charge);
 
 
