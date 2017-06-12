@@ -48,5 +48,3 @@
 			};
 		}]);
 })(window, window.angular);
-
-//chris rock
