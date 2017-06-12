@@ -49,4 +49,4 @@
 		}]);
 })(window, window.angular);
 
-//chris rocks
+//chris rock
