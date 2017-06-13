@@ -11,6 +11,7 @@
 			$scope.allInvoices = [];
 			$scope.specificInvoice = [];
 			$scope.allCompanies = [];
+			$scope.incomingEdi = [];
 
 			$scope.allFuelRates = [];
 			$scope.allIOT = [];
@@ -69,8 +70,6 @@
 					});
 			};
 			$scope.getEverything(config);
-
-
 
 			if ($scope.params.invoiceID) {
 				invoiceSvc.getSpecificInvoice($scope.params.invoiceID, config)
