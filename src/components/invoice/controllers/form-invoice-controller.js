@@ -12,7 +12,11 @@
 			$scope.specificInvoice = [];
 			$scope.allCompanies = [];
 			$scope.incomingEdi = [];
+<<<<<<< HEAD
 
+=======
+			
+>>>>>>> 8211cc9b857eb3f8ff7ce80969b6b555f6df702c
 			$scope.allFuelRates = [];
 			$scope.allIOT = [];
 

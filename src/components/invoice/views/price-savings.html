@@ -51,7 +51,15 @@
 								<input ng-if="editTS" type="number" step="0.01" ng-model="invoice.freight_charge" class="form-control" ng-change="recalculation(invoice, 'complex')">
 							</div>
 						</td>
-						<td style="background-color: lightblue; vertical-align: middle; text-align: right;"> {{invoice.benchmark_fuel_charge | currency}} </td>
+						<td style="background-color: lightblue; vertical-align: middle; text-align: right;"> 
+							<div ng-if="export" ng-init="export = false">
+								{{invoice.benchmark_fuel_charge | currency}}
+							</div>
+							<div ng-if="!export">
+								<a href="" ng-click="editTS = true" ng-hide="editTS"> {{invoice.benchmark_fuel_charge | currency}} </a>
+								<input ng-if="editTS" type="number" step="0.01" ng-model="invoice.benchmark_fuel_charge" class="form-control" ng-change="recalculation(invoice, 'simple')">
+							</div>
+						</td>
 						<td style="background-color: lightblue; vertical-align: middle; text-align: right;" ng-init="invoice.benchamrk_access = invoice.total_benchmark">
 							<div ng-if="export" ng-init="export = false">
 								{{invoice.benchamrk_access | currency}}
@@ -80,7 +88,15 @@
 								<input ng-if="editTS" type="number" step="0.01" ng-model="invoice.savings_frieght_charge" class="form-control" ng-change="recalculation(invoice, 'complex')">
 							</div>
 						</td>
-						<td style="background-color: lightyellow; vertical-align: middle; text-align: right;"> {{invoice.savings_fuel_surcharge | currency}} </td>
+						<td style="background-color: lightyellow; vertical-align: middle; text-align: right;"> 
+							<div ng-if="export" ng-init="export = false">
+								{{invoice.savings_fuel_surcharge | currency}}
+							</div>
+							<div ng-if="!export">
+								<a href="" ng-click="editTS = true" ng-hide="editTS"> {{invoice.savings_fuel_surcharge | currency}} </a>
+								<input ng-if="editTS" type="number" step="0.01" ng-model="invoice.savings_fuel_surcharge" class="form-control" ng-change="recalculation(invoice, 'simple')">
+							</div>
+						</td>
 						<td style="background-color: lightyellow; vertical-align: middle; text-align: right;" ng-init="invoice.assess_charge = invoice.total_associated_costs">
 							<div ng-if="export" ng-init="export = false">
 								{{invoice.assess_charge | currency}}

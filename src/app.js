@@ -90,6 +90,11 @@
                     templateUrl: 'src/components/invoice_configuration/state_regions/state_regions.html',
                     controller: 'stateRegionCtrl'
                 })
+                .state('edi-parsing', {
+                    url: '/invoice/',
+                    templateUrl: '/srccomponents/invoice/views/edi-parsing.html',
+                    controller: 'ediCtrl'
+                })
                 .state('list-invoice', {
                     url: '/invoice',
                     templateUrl: '/src/components/invoice/views/list-invoice.html',
