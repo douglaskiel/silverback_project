@@ -3,7 +3,7 @@
 		.service('carrierSvc', ['$http', '$q', '$state', function($http, $q, $state) {
 			var vm = this;
 
-			var allAccessorial = [];
+			var allCarriers = [];
 
 			vm.getCarriers = function(config, callback) {
 					var deferred = $q.defer();

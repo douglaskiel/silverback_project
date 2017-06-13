@@ -1,13 +1,23 @@
 (function(window, angular, undefined) {
 	angular.module('app')
-		.controller('companyCtrl', ['$scope', '$state', '$http', 'userSvc', function($scope, $state, $http, userSvc) {
-			$scope.allCompanies = [];
-
+		.controller('companyCtrl', ['$scope', '$state', '$http', 'userSvc', 'clientSvc', function($scope, $state, $http, userSvc, clientSvc) {
+			
 			var config = {
 				headers: {
 					'auth-token': userSvc.token
 				}
 			};
+
+			$scope.allCompanies = [];
+
+			$scope.getClients = function(config) {
+				clientSvc
+					.getClients(config)
+					.then(function(message) {
+						$scope.allCompanies = message;
+					});
+			};
+			$scope.getClients(config);
 
 			$scope.submitCompany = function(submmitedCompany) {
 				if (!submmitedCompany.hasOwnProperty('client_address_2')) {
@@ -24,21 +34,9 @@
 				submmitedCompany.client_name = cleanEntry(submmitedCompany.client_name);
 
 				if (submmitedCompany.client_id) {
-					$http.put('/secure-api/company/update_company', submmitedCompany, config)
-						.then(function(response) {
-							console.log('Company Updated');
-							$state.reload();
-						}, function(err) {
-							console.log(err);
-						});
+					clientSvc.updateClients(submmitedCompany, config);
 				} else {
-					$http.post('/secure-api/company/insert_company', submmitedCompany, config)
-						.then(function(reponse) {
-							console.log('New Company Added');
-							$state.reload();
-						}, function(err) {
-							console.error(err);
-						});
+					clientSvc.sumbitClients(submmitedCompany, config);
 				}
 
 			};
@@ -47,32 +45,15 @@
 				var r = confirm("Are you sure you want to delete this Client?");
 				if (r === true) {
 					request = '/secure-api/company/company_delete/?' + clientID;
-					$http.delete(request, config)
-						.then(function(response) {
-							console.log('Company Removed');
-							$state.reload();
-						}, function(err) {
-							console.log(err);
-						});
+					clientSvc.deleteClients(request, config);
+					for (var i in $scope.allCompanies) {
+						if ($scope.allCompanies[i].client_id === clientID) {
+							$scope.allCompanies.splice(i, 1);
+						}
+					}
 				}
 
 			};
-
-			$http.get('/secure-api/company/get_companies', config).then(function(response) {
-				$scope.allCompanies = response.data.data;
-				for (var i in $scope.allCompanies) {
-					$scope.allCompanies[i].client_address_1 = undoCleanEntry($scope.allCompanies[i].client_address_1);
-					$scope.allCompanies[i].client_city = undoCleanEntry($scope.allCompanies[i].client_city);
-					$scope.allCompanies[i].client_name = undoCleanEntry($scope.allCompanies[i].client_name);
-					$scope.allCompanies[i].client_country = undoCleanEntry($scope.allCompanies[i].client_country);
-					if ($scope.allCompanies[i].client_address_2) {
-						$scope.allCompanies[i].client_address_2 = undoCleanEntry($scope.allCompanies[i].client_address_2);
-					}
-				}
-			}, function(err) {
-				console.log(err);
-				$state.go('login');
-			});
 
 		}]);
 })(window, window.angular);

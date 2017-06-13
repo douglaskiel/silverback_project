@@ -1,6 +1,6 @@
 (function(window, angular, undefined) {
 	angular.module('app')
-		.controller('invoiceFormCtrl', ['$scope', '$state', '$http', '$stateParams', 'userSvc', 'accessSvc', 'carrierSvc', function($scope, $state, $http, $stateParams, userSvc, accessSvc, carrierSvc) {
+		.controller('invoiceFormCtrl', ['$scope', '$state', '$http', '$stateParams', 'userSvc', 'accessSvc', 'carrierSvc', 'operationAreaSvc', 'fuelRateService', 'iotSvc', 'clientSvc', function($scope, $state, $http, $stateParams, userSvc, accessSvc, carrierSvc, operationAreaSvc, fuelRateService, iotSvc, clientSvc) {
 
 			var config = {
 				headers: {
@@ -41,12 +41,31 @@
 					.getAccess(config)
 					.then(function(message) {
 						$scope.allAccessorialBenchmark = message;
-						console.log(message);
 					});
 				carrierSvc
 					.getCarriers(config)
 					.then(function(message) {
 						$scope.allCarriers = message;
+					});
+				operationAreaSvc
+					.getOperationalArea(config)
+					.then(function(message){
+						$scope.allOperations = message;
+					});
+				fuelRateService
+					.getFuelRate(config)
+					.then(function(message){
+						$scope.allFuelRates = message;
+					});
+				iotSvc
+					.getIOT(config)
+					.then(function(message){
+						$scope.allIOT = message;
+					});
+				clientSvc
+					.getClients(config)
+					.then(function(message){
+						$scope.allCompanies = message;
 					});
 			};
 			$scope.getEverything(config);
@@ -683,42 +702,5 @@
 				}
 			};
 
-			$http.get('/secure-api/company/get_companies', config)
-				.then(function(response) {
-					$scope.allCompanies = response.data.data;
-				}, function(err) {
-					console.log(err);
-				});
-			$http.get('/secure-api/carrier/get_carriers', config)
-				.then(function(response) {
-					$scope.allCarriers = response.data.data;
-					for (var i in $scope.allCarriers) {
-						$scope.allCarriers[i].carrier_name = undoCleanEntry($scope.allCarriers[i].carrier_name);
-					}
-				}, function(err) {
-					console.log(err);
-				});
-			$http.get('/secure-api/iot/get_iot', config)
-				.then(function(response) {
-					$scope.allIOT = response.data.data;
-				}, function(err) {
-					console.log(err);
-				});
-			$http.get('/secure-api/fuel_rates/get_fuel_rates', config)
-				.then(function(response) {
-					$scope.allFuelRates = response.data.data;
-					for (var i in $scope.allFuelRates) {
-						$scope.allFuelRates[i].fuel_date = date_parse($scope.allFuelRates[i].fuel_date);
-						$scope.allFuelRates[i].fuel_date_display = moment($scope.allFuelRates[i].fuel_date).format('YYYY/MM/DD');
-					}
-				}, function(err) {
-					console.log(err);
-				});
-			$http.get('/secure-api/operational_area/get_operational_area', config)
-				.then(function(response) {
-					$scope.allOperations = response.data.data;
-				}, function(err) {
-					console.log(err);
-				});
 		}]);
 })(window, window.angular);

@@ -1,6 +1,6 @@
 (function(window, angular, undefined) {
 	angular.module('app')
-		.controller('profileCtrl', ['$scope', '$state', '$http', 'userSvc', function($scope, $state, $http, userSvc) {
+		.controller('profileCtrl', ['$scope', '$state', 'userSvc', function($scope, $state, userSvc) {
 
 			var config = {
 				headers: {
@@ -31,13 +31,7 @@
 			$scope.getProfile(userSvc.user, config);
 
 			$scope.submitProfile = function(user) {
-				$http.put('/secure-api/user/update_profile', user, config)
-					.then(function(response) {
-						console.log('User Updated');
-						$state.reload();
-					}, function(err) {
-						console.log(err);
-					});
+				userSvc.updateProfile(user, config);
 			};
 
 			$scope.deleteProfile = function(userID) {
@@ -101,17 +95,7 @@
 
 			$scope.changePassword = function(user) {
 				if ($scope.requirements === true) {
-					$http.put('/secure-api/user/change_password', user, config)
-						.then(function(response) {
-							console.log('User Updated');
-							$state.reload();
-						}, function(err) {
-							console.log(err);
-							$('#password_Error').empty();
-							for (var i = 0; i < err.data.length; i++) {
-								$('#password_Error').append('<p class="alert alert-danger">' + err.data[i] + "<p>");
-							}
-						});
+					userSvc.updatePassword(user,config);
 				} else {
 					console.log('Passwords Requirments Not Met');
 					$scope.errors = true;
