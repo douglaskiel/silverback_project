@@ -6,21 +6,28 @@
 			var allCarriers = [];
 
 			vm.getCarriers = function(config, callback) {
-					var deferred = $q.defer();
-					$http.get('/secure-api/carrier/get_carriers', config)
-						.then(function(response) {
-							allCarriers = response.data.data;
-							for (var i in allCarriers) {
-								allCarriers[i].carrier_name = undoCleanEntry(allCarriers[i].carrier_name);
+				var deferred = $q.defer();
+				$http.get('/secure-api/carrier/get_carriers', config)
+					.then(function(response) {
+						allCarriers = response.data.data;
+						for (var i in allCarriers) {
+							for (var j in allCarriers[i]) {
+								if (typeof allCarriers[i][j] === 'string') {
+									allCarriers[i][j] = undoCleanEntry(allCarriers[i][j]);
+								}
+								if (isNumber(allCarriers[i][j])) {
+									allCarriers[i][j] = parseFloat(allCarriers[i][j]);
+								}
 							}
-							deferred.resolve(allCarriers);
-						})
-						.catch(function(e) {
-							deferred.reject(e);
-							$state.go('login');
-						});
-					return deferred.promise;
-				};
+						}
+						deferred.resolve(allCarriers);
+					})
+					.catch(function(e) {
+						deferred.reject(e);
+						$state.go('login');
+					});
+				return deferred.promise;
+			};
 
 			vm.sumbitCarriers = function(carrier, config, callback) {
 				var deferred = $q.defer();
