@@ -34,7 +34,7 @@ router.get('/get_companies', function(req, res) {
 
 router.post('/insert_company', function(req, res) {
 	if (req.user_role === 'Admin' || req.user_role === "Editor") {
-		var query = "INSERT INTO client_information(client_name, client_address_1, client_address_2, client_city, client_zip, client_zip_4, client_country, client_state) VALUES ('" + req.body.client_name + "', '" + req.body.client_address_1 + "', '" + req.body.client_address_2 + "', '" + req.body.client_city + "', '" + req.body.client_zip + "', '" + req.body.client_zip_4 + "','" + req.body.client_country + "', '" + req.body.client_state + "')";
+		var query = "INSERT INTO client_information(client_name, client_address_1,  client_city, client_zip, client_zip_4, client_country, client_state) VALUES ('" + req.body.client_name + "', '" + req.body.client_address_1 + "', '" + req.body.client_city + "', '" + req.body.client_zip + "', '" + req.body.client_zip_4 + "','" + req.body.client_country + "', '" + req.body.client_state + "')";
 		db.query(query).spread(function(result, metadata) {
 			res.status(200).send('Company Added!');
 		}).catch(function(err) {
@@ -47,7 +47,7 @@ router.post('/insert_company', function(req, res) {
 
 router.put('/update_company', function(req, res) {
 	if (req.user_role === 'Admin' || req.user_role === "Editor") {
-		var query = "UPDATE client_information SET client_name = '" + req.body.client_name + "', client_address_1='" + req.body.client_address_1 + "', client_address_2='" + req.body.client_address_2 + "', client_city='" + req.body.client_city + "', client_zip='" + req.body.client_zip + "', client_zip_4='" + req.body.client_zip_4 + "', client_country='" + req.body.client_country + "', client_state='" + req.body.client_state + "' WHERE client_id=" + req.body.client_id;
+		var query = "UPDATE client_information SET client_name = '" + req.body.client_name + "', client_address_1='" + req.body.client_address_1 + "', client_city='" + req.body.client_city + "', client_zip='" + req.body.client_zip + "', client_zip_4='" + req.body.client_zip_4 + "', client_country='" + req.body.client_country + "', client_state='" + req.body.client_state + "' WHERE client_id=" + req.body.client_id;
 		db.query(query).spread(function(result, metadata) {
 			res.status(200).send('Company Updated!');
 		}).catch(function(err) {

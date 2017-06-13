@@ -1,20 +1,22 @@
 (function(window, angular, undefined) {
 	angular.module('app')
-		.service('fuelRateService', ['$http', '$q', '$state', function($http, $q, $state) {
+		.service('invoiceSvc', ['$http', '$q', '$state', function($http, $q, $state) {
 			var vm = this;
 
-			var allFuelRates = [];
+			var allInvoices = [];
 
-			vm.getFuelRate = function(config, callback) {
+			vm.getFscs = function(config, callback) {
 				var deferred = $q.defer();
-				$http.get('/secure-api/fuel_rates/get_fuel_rates', config)
+				$http.get('/secure-api/fuel_surcharge_rates/get_fsc', config)
 					.then(function(response) {
-						allFuelRates = response.data.data;
-						for (var i = 0; i < allFuelRates.length; i++) {
-							allFuelRates[i].fuel_date = date_parse(allFuelRates[i].fuel_date);
-							allFuelRates[i].fuel_date_display = moment(allFuelRates[i].fuel_date).format('YYYY/MM/DD');
+						allFscs = response.data.data;
+						for (var i in allFscs) {
+							allFscs[i].fuel_surcharge_percent = Math.round(allFscs[i].fuel_surcharge * 10000) / 100 + '%';
+							allFscs[i].start_rate = parseFloat(allFscs[i].start_rate);
+							allFscs[i].end_rate = parseFloat(allFscs[i].end_rate);
+							allFscs[i].fuel_surcharge = parseFloat(allFscs[i].fuel_surcharge);
 						}
-						deferred.resolve(allFuelRates);
+						deferred.resolve(allFscs);
 					})
 					.catch(function(e) {
 						deferred.reject(e);
@@ -23,9 +25,9 @@
 				return deferred.promise;
 			};
 
-			vm.sumbitFuelRate = function(fuel_rate, config, callback) {
+			vm.sumbitFscs = function(fscs, config, callback) {
 				var deferred = $q.defer();
-				$http.post('/secure-api/fuel_rates/insert_fuel_rate', fuel_rate, config)
+				$http.post('/secure-api/fuel_surcharge_rates/insert_fsc', fscs, config)
 					.then(function(response) {
 						console.log('Fuel Surcharge Submitted');
 						$state.reload();
@@ -35,9 +37,9 @@
 					});
 			};
 
-			vm.updateFuelRate = function(fuel_rate, config, callback) {
+			vm.updateFscs = function(fscs, config, callback) {
 				var deferred = $q.defer();
-				$http.put('/secure-api/fuel_rates/update_fuel_rate', fuel_rate, config)
+				$http.put('/secure-api/fuel_surcharge_rates/update_fsc', fscs, config)
 					.then(function(response) {
 						console.log('Fuel Surcharge Updated');
 					})
@@ -46,7 +48,7 @@
 					});
 			};
 
-			vm.deleteFuelRate = function(request, config, callback) {
+			vm.deleteFscs = function(request, config, callback) {
 				var deferred = $q.defer();
 				$http.delete(request, config)
 					.then(function(response) {

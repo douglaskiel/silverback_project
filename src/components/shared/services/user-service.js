@@ -6,52 +6,7 @@
 			var allUsers = [];
 			var allUnapprovedUsers = [];
 
-			vm.passwordRequest = function(user, callback) {
-				var deferred = $q.defer();
-				$http.post('api/user/password_request', user)
-					.then(function(response) {
-						console.log('Request Submitted');
-					})
-					.catch(function(e) {
-						console.log('Request Submitted');
-					});
-			};
-
-			vm.approveUser = function(user, config, callback) {
-				var deferred = $q.defer();
-				$http.post('/secure-api/user/approve_user', user, config)
-					.then(function(response) {
-						console.log('User Approved');
-						$state.reload();
-					})
-					.catch(function(e) {
-						deferred.reject(e);
-					});
-			};
-
-			vm.submitUser = function(user, config, callback) {
-				var deferred = $q.defer();
-				$http.put('/secure-api/user/update_user', user, config)
-					.then(function(response) {
-						console.log('User Updated');
-						$state.reload();
-					})
-					.catch(function(e) {
-						deferred.reject(e);
-					});
-			};
-
-			vm.deleteUser = function(request, config, callback){
-				var deferred = $q.defer();
-				$http.delete(request, config)
-					.then(function(response) {
-						console.log('User Removed');
-						deferred.resolve(response);
-					})
-					.catch(function(e) {
-						deferred.reject(e);
-					});
-			};
+			//get calls
 
 			vm.getUsers = function(config, callback) {
 				var deferred = $q.defer();
@@ -81,7 +36,7 @@
 				return deferred.promise;
 			};
 
-			vm.getProfile = function(userId, config,callback){
+			vm.getProfile = function(userId, config, callback) {
 				var deferred = $q.defer();
 				$http.get('/secure-api/user/get_user?' + userId, config)
 					.then(function(response) {
@@ -93,6 +48,83 @@
 						$state.go('login');
 					});
 				return deferred.promise;
+			};
+
+			//post calls
+
+			vm.passwordRequest = function(user, callback) {
+				var deferred = $q.defer();
+				$http.post('api/user/password_request', user)
+					.then(function(response) {
+						console.log('Request Submitted');
+					})
+					.catch(function(e) {
+						console.log('Request Submitted');
+					});
+			};
+
+			vm.approveUser = function(user, config, callback) {
+				var deferred = $q.defer();
+				$http.post('/secure-api/user/approve_user', user, config)
+					.then(function(response) {
+						console.log('User Approved');
+						$state.reload();
+					})
+					.catch(function(e) {
+						deferred.reject(e);
+					});
+			};
+
+			//update calls
+
+			vm.submitUser = function(user, config, callback) {
+				var deferred = $q.defer();
+				$http.put('/secure-api/user/update_user', user, config)
+					.then(function(response) {
+						console.log('User Updated');
+						$state.reload();
+					})
+					.catch(function(e) {
+						deferred.reject(e);
+					});
+			};
+
+			vm.updateProfile = function(user, config, callback) {
+				var deferred = $q.defer();
+				$http.put('/secure-api/user/update_profile', user, config)
+					.then(function(response) {
+						console.log('User Updated');
+						$state.reload();
+					})
+					.catch(function(e) {
+						deferred.reject(e);
+					});
+			};
+
+			vm.updatePassword = function(user, config, callback) {
+				var deferred = $q.defer();
+				$http.put('/secure-api/user/change_password', user, config)
+					.then(function(response) {
+						console.log('User Updated');
+						$state.reload();
+					})
+					.catch(function(e) {
+						deferred.reject(e);
+					});
+			};
+
+			//delete calls
+
+			vm.deleteUser = function(request, config, callback) {
+				var deferred = $q.defer();
+				$http.delete(request, config)
+					.then(function(response) {
+						console.log('User Removed');
+						deferred.resolve(response);
+					})
+					.catch(function(e) {
+						deferred.reject(e);
+					});
 			};
 
 			vm.token = undefined;
