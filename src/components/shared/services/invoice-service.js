@@ -4,60 +4,34 @@
 			var vm = this;
 
 			var allInvoices = [];
+			var specificInvoice = [];
 
-			vm.getFscs = function(config, callback) {
+			vm.getSpecificInvoice = function(invoiceID, config, callback) {
 				var deferred = $q.defer();
-				$http.get('/secure-api/fuel_surcharge_rates/get_fsc', config)
+				$http.get('/secure-api/invoice/get_invoice?' + invoiceID, config)
 					.then(function(response) {
-						allFscs = response.data.data;
-						for (var i in allFscs) {
-							allFscs[i].fuel_surcharge_percent = Math.round(allFscs[i].fuel_surcharge * 10000) / 100 + '%';
-							allFscs[i].start_rate = parseFloat(allFscs[i].start_rate);
-							allFscs[i].end_rate = parseFloat(allFscs[i].end_rate);
-							allFscs[i].fuel_surcharge = parseFloat(allFscs[i].fuel_surcharge);
+						specificInvoice = response.data.data;
+						for (var i in specificInvoice) {
+							for(var j in specificInvoice[i]){
+								if(typeof specificInvoice[i][j] === 'string'){
+									specificInvoice[i][j] = undoCleanEntry(specificInvoice[i][j]);
+								}
+								if(isNumber(specificInvoice[i][j])){
+									specificInvoice[i][j] = parseFloat(specificInvoice[i][j]);
+
+								}
+							}
+							specificInvoice[i].process_date = date_parse(specificInvoice[i].process_date);
+							specificInvoice[i].ship_date = date_parse(specificInvoice[i].ship_date);
+							specificInvoice[i].delivery_date = date_parse(specificInvoice[i].delivery_date);
 						}
-						deferred.resolve(allFscs);
+						deferred.resolve(specificInvoice);
 					})
 					.catch(function(e) {
 						deferred.reject(e);
 						$state.go('login');
 					});
 				return deferred.promise;
-			};
-
-			vm.sumbitFscs = function(fscs, config, callback) {
-				var deferred = $q.defer();
-				$http.post('/secure-api/fuel_surcharge_rates/insert_fsc', fscs, config)
-					.then(function(response) {
-						console.log('Fuel Surcharge Submitted');
-						$state.reload();
-					})
-					.catch(function(e) {
-						deferred.reject(e);
-					});
-			};
-
-			vm.updateFscs = function(fscs, config, callback) {
-				var deferred = $q.defer();
-				$http.put('/secure-api/fuel_surcharge_rates/update_fsc', fscs, config)
-					.then(function(response) {
-						console.log('Fuel Surcharge Updated');
-					})
-					.catch(function(e) {
-						deferred.reject(e);
-					});
-			};
-
-			vm.deleteFscs = function(request, config, callback) {
-				var deferred = $q.defer();
-				$http.delete(request, config)
-					.then(function(response) {
-						console.log('Fuel Surcharge Removed');
-						deferred.resolve(response);
-					})
-					.catch(function(e) {
-						deferred.reject(e);
-					});
 			};
 
 		}]);

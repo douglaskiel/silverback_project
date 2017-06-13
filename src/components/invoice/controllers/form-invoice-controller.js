@@ -1,6 +1,6 @@
 (function(window, angular, undefined) {
 	angular.module('app')
-		.controller('invoiceFormCtrl', ['$scope', '$state', '$http', '$stateParams', 'userSvc', 'accessSvc', 'carrierSvc', 'operationAreaSvc', 'fuelRateService', 'iotSvc', 'clientSvc', function($scope, $state, $http, $stateParams, userSvc, accessSvc, carrierSvc, operationAreaSvc, fuelRateService, iotSvc, clientSvc) {
+		.controller('invoiceFormCtrl', ['$scope', '$state', '$http', '$stateParams', 'userSvc', 'accessSvc', 'carrierSvc', 'operationAreaSvc', 'fuelRateService', 'iotSvc', 'clientSvc', 'invoiceSvc', function($scope, $state, $http, $stateParams, userSvc, accessSvc, carrierSvc, operationAreaSvc, fuelRateService, iotSvc, clientSvc, invoiceSvc) {
 
 			var config = {
 				headers: {
@@ -11,10 +11,10 @@
 			$scope.allInvoices = [];
 			$scope.specificInvoice = [];
 			$scope.allCompanies = [];
-			
+
 			$scope.allFuelRates = [];
 			$scope.allIOT = [];
-	
+
 			$scope.items = [];
 			$scope.totalWeight = 0;
 			$scope.totalAccessorialCharges = 0;
@@ -49,42 +49,36 @@
 					});
 				operationAreaSvc
 					.getOperationalArea(config)
-					.then(function(message){
+					.then(function(message) {
 						$scope.allOperations = message;
 					});
 				fuelRateService
 					.getFuelRate(config)
-					.then(function(message){
+					.then(function(message) {
 						$scope.allFuelRates = message;
 					});
 				iotSvc
 					.getIOT(config)
-					.then(function(message){
+					.then(function(message) {
 						$scope.allIOT = message;
 					});
 				clientSvc
 					.getClients(config)
-					.then(function(message){
+					.then(function(message) {
 						$scope.allCompanies = message;
 					});
 			};
 			$scope.getEverything(config);
 
+
+
 			if ($scope.params.invoiceID) {
-				$http.get('/secure-api/invoice/get_invoice?' + $scope.params.invoiceID, config)
-					.then(function(response) {
-						$scope.specificInvoice = response.data.data;
-						for (var i = 0; i < $scope.specificInvoice.length; i++) {
-							$scope.specificInvoice[i].process_date = date_parse($scope.specificInvoice[i].process_date);
-							$scope.specificInvoice[i].ship_date = date_parse($scope.specificInvoice[i].ship_date);
-							$scope.specificInvoice[i].delivery_date = date_parse($scope.specificInvoice[i].delivery_date);
-							$scope.specificInvoice[i].billed_weight = parseFloat($scope.specificInvoice[i].billed_weight);
-							$scope.specificInvoice[i].total_associated_costs = parseFloat($scope.specificInvoice[i].total_associated_costs);
-							$scope.specificInvoice[i].classification = parseFloat($scope.specificInvoice[i].classification);
-							$scope.specificInvoice[i].weight = parseFloat($scope.specificInvoice[i].weight);
-							$scope.specificInvoice[i].gross_charge = parseFloat($scope.specificInvoice[i].gross_charge);
-							$scope.specificInvoice[i].absolute_min_charge = parseFloat($scope.specificInvoice[i].absolute_min_charge);
-							$scope.specificInvoice[i].carrier_discount = parseFloat($scope.specificInvoice[i].carrier_discount);
+				invoiceSvc.getSpecificInvoice($scope.params.invoiceID, config)
+					.then(function(message) {
+						$scope.specificInvoice = message;
+						$scope.invoice = message[0];
+						$scope.items = message;
+						for (var i in $scope.specificInvoice) {
 							$scope.shippingClasses.push({
 								'weight': $scope.specificInvoice[i].weight,
 								'classification': $scope.specificInvoice[i].classification,
@@ -94,28 +88,7 @@
 								'item_id': $scope.specificInvoice[i].item_id
 							});
 							$scope.PD = {};
-
-							$scope.specificInvoice[i].carrier_name = undoCleanEntry($scope.specificInvoice[i].carrier_name);
-							$scope.specificInvoice[i].invoice_number = undoCleanEntry($scope.specificInvoice[i].invoice_number);
-							$scope.specificInvoice[i].sender_name = undoCleanEntry($scope.specificInvoice[i].sender_name);
-							$scope.specificInvoice[i].sender_address_1 = undoCleanEntry($scope.specificInvoice[i].sender_address_1);
-							$scope.specificInvoice[i].sender_city = undoCleanEntry($scope.specificInvoice[i].sender_city);
-							$scope.specificInvoice[i].sender_country = undoCleanEntry($scope.specificInvoice[i].sender_country);
-							$scope.specificInvoice[i].receiver_name = undoCleanEntry($scope.specificInvoice[i].receiver_name);
-							$scope.specificInvoice[i].receiver_address_1 = undoCleanEntry($scope.specificInvoice[i].receiver_address_1);
-							$scope.specificInvoice[i].receiver_city = undoCleanEntry($scope.specificInvoice[i].receiver_city);
-							$scope.specificInvoice[i].receiver_country = undoCleanEntry($scope.specificInvoice[i].receiver_country);
-							$scope.specificInvoice[i].transportation_mode = undoCleanEntry($scope.specificInvoice[i].transportation_mode);
-							$scope.specificInvoice[i].package_type = undoCleanEntry($scope.specificInvoice[i].package_type);
-							$scope.specificInvoice[i].receiver_zip_4 = undoCleanEntry($scope.specificInvoice[i].receiver_zip_4);
-							$scope.specificInvoice[i].receiver_zip = undoCleanEntry($scope.specificInvoice[i].receiver_zip);
-							$scope.specificInvoice[i].sender_zip = undoCleanEntry($scope.specificInvoice[i].sender_zip);
-							$scope.specificInvoice[i].sender_zip_4 = undoCleanEntry($scope.specificInvoice[i].sender_zip_4);
-							$scope.specificInvoice[i].deficit = parseFloat($scope.specificInvoice[i].deficit);
-							$scope.specificInvoice[i].deficit_rate = parseFloat($scope.specificInvoice[i].deficit_rate);
 						}
-						$scope.invoice = $scope.specificInvoice[0];
-						$scope.items = $scope.specificInvoice;
 						$http.get('/secure-api/accessorial_cost_invoice/get_associated_costs_invoice?' + $scope.specificInvoice[0].invoice_number, config)
 							.then(function(response) {
 								$scope.associatedCosts = response.data.data;
@@ -132,9 +105,6 @@
 							}, function(err) {
 								console.log(err);
 							});
-					}, function(err) {
-						console.log(err);
-						$state.go('login');
 					});
 			} else if ($scope.params.xpoID) {
 				$http.get('/secure-api/xpo/get_xpo_invoice?' + $scope.params.xpoID, config)
@@ -365,7 +335,7 @@
 
 						}
 
-						if(!accessorialCharges){
+						if (!accessorialCharges) {
 							accessorialCharges = [];
 						}
 						invoice.total_associated_costs = $scope.totalAccessorialCharges;
@@ -561,8 +531,8 @@
 			};
 
 			$scope.addRowCharge = function(accessorialCharges) {
-				if(!accessorialCharges){
-						accessorialCharges = [];
+				if (!accessorialCharges) {
+					accessorialCharges = [];
 				}
 				if (accessorialCharges.length < 12 || accessorialCharges.length === undefined) {
 					$scope.accessorialCharges.push({
