@@ -11,6 +11,7 @@
 			$scope.allInvoices = [];
 			$scope.specificInvoice = [];
 			$scope.allCompanies = [];
+			$scope.incomingEdi = [];
 			
 			$scope.allFuelRates = [];
 			$scope.allIOT = [];
