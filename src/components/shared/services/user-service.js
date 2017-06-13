@@ -176,6 +176,10 @@
 				return s;
 			};
 
+			isNumber = function(n){
+				return !isNaN(parseFloat(n)) && isFinite(n);
+			};
+
 			cleanEntry = function(text) {
 				return text
 					.replace(/~/g, "&tilde;")
@@ -202,7 +206,6 @@
 					.replace(/"/g, "&quot;")
 					.replace(/,/g, "&comma;")
 					.replace(/</g, "&lt;")
-					.replace(/\./g, "&period;")
 					.replace(/>/g, "&gt;")
 					.replace(/\?/g, "&quest;")
 					.replace(/\//g, "&sol;")
@@ -235,7 +238,6 @@
 					.replace(/&quot;/g, '"')
 					.replace(/&comma;/g, ",")
 					.replace(/&lt;/g, "<")
-					.replace(/&period;/g, ".")
 					.replace(/&gt;/g, ">")
 					.replace(/&quest;/g, "?")
 					.replace(/&sol;/g, "/")
