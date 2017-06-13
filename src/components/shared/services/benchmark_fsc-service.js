@@ -11,9 +11,15 @@
 					.then(function(response) {
 						allBenchmarkFSC = response.data.data;
 						for (var i in allBenchmarkFSC) {
-							allBenchmarkFSC[i].benchmark_fuel_surcharge_percent = Math.round(allBenchmarkFSC[i].benchmark_fuel_surcharge * 10000) / 100 + '%';
-							allBenchmarkFSC[i].fuel_index = parseFloat(allBenchmarkFSC[i].fuel_index);
-							allBenchmarkFSC[i].benchmark_fuel_surcharge = parseFloat(allBenchmarkFSC[i].benchmark_fuel_surcharge);
+							for (var j in allBenchmarkFSC[i]) {
+								allBenchmarkFSC[i].benchmark_fuel_surcharge_percent = Math.round(allBenchmarkFSC[i].benchmark_fuel_surcharge * 10000) / 100 + '%';
+								if (typeof allBenchmarkFSC[i][j] === 'string') {
+									allBenchmarkFSC[i][j] = undoCleanEntry(allBenchmarkFSC[i][j]);
+								}
+								if (isNumber(allBenchmarkFSC[i][j])) {
+									allBenchmarkFSC[i][j] = parseFloat(allBenchmarkFSC[i][j]);
+								}
+							}
 						}
 						deferred.resolve(allBenchmarkFSC);
 					})
