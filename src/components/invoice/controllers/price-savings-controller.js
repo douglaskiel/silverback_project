@@ -64,7 +64,7 @@
 							$scope.savingsInvoices[i].savings_total_charge = Math.round(($scope.savingsInvoices[i].savings_fuel_surcharge + $scope.savingsInvoices[i].savings_frieght_charge + $scope.savingsInvoices[i].assess_charge) * 100) / 100;
 						}
 					}
-
+					
 					$scope.totalFuelBenchmark += $scope.savingsInvoices[i].benchmark_fuel_charge;
 					$scope.totalBenchmarkAccessorial += parseFloat($scope.savingsInvoices[i].total_benchmark);
 					$scope.totalBenchmarkFrieghtCharge += $scope.savingsInvoices[i].freight_charge;
