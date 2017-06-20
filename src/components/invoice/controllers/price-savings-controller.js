@@ -53,14 +53,8 @@
 					if ($scope.savingsInvoices[i].invoice_id === invoice.invoice_id) {
 						$scope.savingsInvoices[i] = invoice;
 						if (text === 'simple') {
-							if ($scope.savingsInvoices[i].total_benchmark !== invoice.benchamrk_access && $scope.savingsInvoices[i].benchamrk_access !== null) {
-								$scope.savingsInvoices[i].benchmark_charge += (parseFloat(invoice.benchamrk_access) - parseFloat($scope.savingsInvoices[i].total_benchmark));
-								$scope.savingsInvoices[i].total_benchmark = invoice.benchamrk_access;
-							}
-							if ($scope.savingsInvoices[i].assess_charge !== invoice.total_associated_costs && $scope.savingsInvoices[i].assess_charge !== null) {
-								$scope.savingsInvoices[i].savings_total_charge += (parseFloat(invoice.assess_charge) - parseFloat($scope.savingsInvoices[i].total_associated_costs));
-								$scope.savingsInvoices[i].total_associated_costs = invoice.assess_charge;
-							}
+							$scope.savingsInvoices[i].benchmark_charge = $scope.savingsInvoices[i].benchmark_fuel_charge + $scope.savingsInvoices[i].freight_charge + $scope.savingsInvoices[i].benchamrk_access;
+							$scope.savingsInvoices[i].savings_total_charge = $scope.savingsInvoices[i].savings_fuel_surcharge + $scope.savingsInvoices[i].savings_frieght_charge + $scope.savingsInvoices[i].assess_charge;
 						} else if (text === 'complex') {
 							//benchmark recalculation
 							$scope.savingsInvoices[i].benchmark_fuel_charge = (invoice.freight_charge * (invoice.benchmark_fuel_surcharge / 100) * invoice.fsc_factor / 100);
@@ -70,7 +64,7 @@
 							$scope.savingsInvoices[i].savings_total_charge = Math.round(($scope.savingsInvoices[i].savings_fuel_surcharge + $scope.savingsInvoices[i].savings_frieght_charge + $scope.savingsInvoices[i].assess_charge) * 100) / 100;
 						}
 					}
-
+					
 					$scope.totalFuelBenchmark += $scope.savingsInvoices[i].benchmark_fuel_charge;
 					$scope.totalBenchmarkAccessorial += parseFloat($scope.savingsInvoices[i].total_benchmark);
 					$scope.totalBenchmarkFrieghtCharge += $scope.savingsInvoices[i].freight_charge;
@@ -176,12 +170,12 @@
 					math = $scope.savingsInvoices[i].freight_charge + $scope.savingsInvoices[i].savings_accelerated_charge;
 
 					$scope.savingsInvoices[i].savings_fuel_surcharge = Math.round((($scope.savingsInvoices[i].savings_frieght_charge + $scope.savingsInvoices[i].savings_accelerated_charge) * ($scope.savingsInvoices[i].fuel_surcharge / 100)) * 100) / 100;
-
 					$scope.savingsInvoices[i].benchmark_fuel_charge = Math.round((($scope.savingsInvoices[i].benchmark_fuel_surcharge / 100 * $scope.savingsInvoices[i].fsc_factor / 100) * math) * 100) / 100;
 
 
-					$scope.savingsInvoices[i].savings_total_charge = Math.round((parseFloat($scope.savingsInvoices[i].savings_frieght_charge) + parseFloat($scope.savingsInvoices[i].savings_fuel_surcharge) + parseFloat($scope.savingsInvoices[i].total_associated_costs)) * 100) / 100;
 
+
+					$scope.savingsInvoices[i].savings_total_charge = Math.round((parseFloat($scope.savingsInvoices[i].savings_frieght_charge) + parseFloat($scope.savingsInvoices[i].savings_fuel_surcharge) + parseFloat($scope.savingsInvoices[i].total_associated_costs)) * 100) / 100;
 					$scope.savingsInvoices[i].benchmark_charge = $scope.savingsInvoices[i].benchmark_fuel_charge + $scope.savingsInvoices[i].freight_charge + $scope.savingsInvoices[i].total_benchmark;
 
 					//totals

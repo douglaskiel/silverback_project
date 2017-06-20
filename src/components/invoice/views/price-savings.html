@@ -75,7 +75,7 @@
 							</div>
 							<div ng-if="!export">
 								<a href="" ng-click="editTS = true" ng-hide="editTS"> {{invoice.benchmark_charge | currency}} </a>
-								<input ng-if="editTS" type="number" step="0.01" ng-model="invoice.benchmark_charge" class="form-control" ng-change="recalculation(invoice, 'simple')">
+								<input ng-if="editTS" type="number" step="0.01" ng-model="invoice.benchmark_charge" class="form-control">
 							</div>
 						</td>
 						<td style="background-color: lightyellow; border-left: 1px solid black; vertical-align: middle; text-align: center;"> {{invoice.savings_discount}} </td>
@@ -88,7 +88,7 @@
 								<input ng-if="editTS" type="number" step="0.01" ng-model="invoice.savings_frieght_charge" class="form-control" ng-change="recalculation(invoice, 'complex')">
 							</div>
 						</td>
-						<td style="background-color: lightyellow; vertical-align: middle; text-align: right;"> 
+						<td style="background-color: lightyellow; vertical-align: middle; text-align: right;" > 
 							<div ng-if="export" ng-init="export = false">
 								{{invoice.savings_fuel_surcharge | currency}}
 							</div>
@@ -112,7 +112,7 @@
 							</div>
 							<div ng-if="!export">
 								<a href="" ng-click="editTS = true" ng-hide="editTS"> {{invoice.savings_total_charge | currency}} </a>
-								<input ng-if="editTS" type="number" step="0.01" ng-model="invoice.savings_total_charge" class="form-control" ng-change="recalculation(invoice, 'simple')">
+								<input ng-if="editTS" type="number" step="0.01" ng-model="invoice.savings_total_charge" class="form-control" >
 							</div>
 						</td>
 						<td style="background-color: lightgreen; border-left: 1px solid black; vertical-align: middle; text-align: right;"> {{invoice.benchmark_charge - invoice.savings_total_charge | currency}} </td>
