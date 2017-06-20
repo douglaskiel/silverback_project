@@ -1,6 +1,6 @@
 (function(window, angular, undefined) {
 	angular.module('app')
-		.controller('priceSavingsCtrl', ['$scope', '$state', '$http', '$stateParams', 'userSvc', function($scope, $state, $http, $stateParams, userSvc) {
+		.controller('priceSavingsCtrl', ['$scope', '$state', '$http', '$stateParams', 'userSvc', 'invoiceSvc', 'invoiceXPOSvc', function($scope, $state, $http, $stateParams, userSvc, invoiceSvc, invoiceXPOSvc) {
 
 			var config = {
 				headers: {
@@ -200,60 +200,37 @@
 			};
 
 			if ($scope.params.invoiceIDs) {
-				$http.get('/secure-api/invoice/get_invoices_price_savings?' + $scope.params.invoiceIDs, config)
-					.then(function(response) {
-						$scope.savingsInvoices = response.data.data;
+				invoiceSvc
+					.getPriceSavingsInvoices($scope.params.invoiceIDs, config)
+					.then(function(message) {
+						$scope.savingsInvoices = message;
 						for (var i in $scope.savingsInvoices) {
-							$scope.savingsInvoices[i].carrier_name = undoCleanEntry($scope.savingsInvoices[i].carrier_name);
-							$scope.savingsInvoices[i].invoice_number = undoCleanEntry($scope.savingsInvoices[i].invoice_number);
-							$scope.savingsInvoices[i].receiver_name = undoCleanEntry($scope.savingsInvoices[i].receiver_name);
-							$scope.savingsInvoices[i].receiver_zip = undoCleanEntry($scope.savingsInvoices[i].receiver_zip);
-							$scope.savingsInvoices[i].process_date = date_parse($scope.savingsInvoices[i].process_date);
-							$scope.savingsInvoices[i].ship_date = date_parse($scope.savingsInvoices[i].ship_date);
-							$scope.savingsInvoices[i].delivery_date = date_parse($scope.savingsInvoices[i].delivery_date);
 							$scope.savingsInvoices[i].ACCSCosts = [];
 							$scope.savingsInvoices[i].shipped_Item = [];
 						}
 						$scope.process_date = $scope.savingsInvoices[0].process_date;
 						$scope.client_name = $scope.savingsInvoices[0].client_name;
 						if ($scope.params.xpoIDs) {
-							$http.get('/secure-api/xpo/get_xpo_invoices_price_savings?' + $scope.params.xpoIDs, config)
-								.then(function(response) {
-									$scope.savingsXPOInvoices = response.data.data;
-									for (i in $scope.savingsXPOInvoices) {
-										$scope.savingsXPOInvoices[i].ship_date = date_parse($scope.savingsXPOInvoices[i].ship_date);
-										$scope.savingsXPOInvoices[i].process_date = date_parse($scope.savingsXPOInvoices[i].process_date);
-										$scope.savingsXPOInvoices[i].invoice_number = $scope.savingsXPOInvoices[i].pro_number;
-										$scope.savingsXPOInvoices[i].discount_percent = Math.round($scope.savingsXPOInvoices[i].discount_percent * 10000) / 100;
-									}
+							invoiceXPOSvc
+								.getPriceSavingsInvoicesXPO($scope.params.xpoIDs, config)
+								.then(function(message) {
+									$scope.savingsXPOInvoices = message;
 									$scope.getAssoccClass();
 									$scope.calculation();
-								}, function(err) {
-									console.log(err);
 								});
 						} else {
 							$scope.getAssoccClass();
 							$scope.calculation();
 						}
-					}, function(err) {
-						console.log(err);
 					});
 			} else {
-				$http.get('/secure-api/xpo/get_xpo_invoices_price_savings?' + $scope.params.xpoIDs, config)
-					.then(function(response) {
-						$scope.savingsXPOInvoices = response.data.data;
-						console.log(response.data.data);
-						for (var i in $scope.savingsXPOInvoices) {
-							$scope.savingsXPOInvoices[i].ship_date = date_parse($scope.savingsXPOInvoices[i].ship_date);
-							$scope.savingsXPOInvoices[i].process_date = date_parse($scope.savingsXPOInvoices[i].process_date);
-							$scope.savingsXPOInvoices[i].invoice_number = $scope.savingsXPOInvoices[i].pro_number;
-							$scope.savingsXPOInvoices[i].discount_percent = Math.round($scope.savingsXPOInvoices[i].discount_percent * 10000) / 100;
-						}
+				invoiceXPOSvc
+					.getPriceSavingsInvoicesXPO($scope.params.xpoIDs, config)
+					.then(function(message) {
+						$scope.savingsXPOInvoices = message;
 						$scope.process_date = $scope.savingsXPOInvoices[0].process_date;
 						$scope.client_name = $scope.savingsXPOInvoices[0].client_name;
 						$scope.calculation();
-					}, function(err) {
-						console.log(err);
 					});
 			}
 
