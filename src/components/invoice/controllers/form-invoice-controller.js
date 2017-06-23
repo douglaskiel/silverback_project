@@ -301,21 +301,15 @@
 						if (!invoice.hasOwnProperty('receiver_zip_4')) {
 							invoice.receiver_zip_4 = '';
 						}
-						invoice.invoice_number = cleanEntry(invoice.invoice_number);
-						invoice.sender_name = cleanEntry(invoice.sender_name);
-						invoice.sender_address_1 = cleanEntry(invoice.sender_address_1);
-						invoice.sender_city = cleanEntry(invoice.sender_city);
-						invoice.sender_country = cleanEntry(invoice.sender_country);
-						invoice.receiver_name = cleanEntry(invoice.receiver_name);
-						invoice.receiver_address_1 = cleanEntry(invoice.receiver_address_1);
-						invoice.receiver_city = cleanEntry(invoice.receiver_city);
-						invoice.receiver_country = cleanEntry(invoice.receiver_country);
-						invoice.transportation_mode = cleanEntry(invoice.transportation_mode);
-						invoice.package_type = cleanEntry(invoice.package_type);
-						invoice.receiver_zip_4 = cleanEntry(invoice.receiver_zip_4);
-						invoice.receiver_zip = cleanEntry(invoice.receiver_zip);
-						invoice.sender_zip = cleanEntry(invoice.sender_zip);
-						invoice.sender_zip_4 = cleanEntry(invoice.sender_zip_4);
+						for (i in invoice) {
+							if (typeof invoice[i] === 'string') {
+								invoice[i] = cleanEntry(invoice[i]);
+							}
+							if (isNumber(invoice[i])) {
+								invoice[i] = parseFloat(invoice[i]);
+
+							}
+						}
 						invoice.carrier_discount = Math.round(sanatizePercent(invoice.carrier_discount) * 100) / 100;
 						if (!invoice.accelerated_service) {
 							invoice.accelerated_service = false;
@@ -325,7 +319,6 @@
 							$scope.totalWeight += parseFloat(items[i].weight);
 						}
 						invoice.billed_weight = $scope.totalWeight;
-
 						var benchmark = 0;
 						for (i in accessorialCharges) {
 							accessorialCharges[i].invoice_number = invoice.invoice_number;
@@ -339,7 +332,6 @@
 						}
 						invoice.total_associated_costs = $scope.totalAccessorialCharges;
 						invoice.total_benchmark = $scope.totalBenchmarkCost;
-
 						$scope.rateShipment(invoice, function() {
 							if ($scope.params.invoiceID === "") {
 								$http.post('/secure-api/invoice/insert_invoice', {
