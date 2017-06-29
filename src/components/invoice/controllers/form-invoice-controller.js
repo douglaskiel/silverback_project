@@ -306,7 +306,7 @@
 								invoice[i] = cleanEntry(invoice[i]);
 							}
 							if (isNumber(invoice[i])) {
-								invoice[i] = parseFloat(invoice[i]);
+								invoice[i] = invoice[i];
 
 							}
 						}
