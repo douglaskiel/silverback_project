@@ -136,6 +136,24 @@
 						<td style="background-color: lightgreen; border-left: 1px solid black; vertical-align: middle; text-align: right;"> {{xpoInvoice.savings | currency}} </td>
 						<td style="border-left: 1px solid black; vertical-align: middle; text-align: right;"> {{xpoInvoice.savings/2 | currency}} </td>
 					</tr>
+					<tr ng-repeat="saiaInvoice in savingsSaiaInvoices | orderBy:'ship_date'" style="text-align: left;  font-size: 11px;">
+						<td style="vertical-align: middle;"> {{saiaInvoice.carrier_name}} </td>
+						<td style="vertical-align: middle;"> {{saiaInvoice.pro_number}} </td>
+						<td style="vertical-align: middle;"> {{saiaInvoice.receiver}} </td>
+						<td style="vertical-align: middle;"> {{saiaInvoice.receiver_zip}} </td>
+						<td style="background-color: lightblue; border-left: 1px solid black; vertical-align: middle; text-align: center;"> 82.9% </td>
+						<td style="background-color: lightblue; vertical-align: middle; text-align: right;"> {{saiaInvoice.old_cost | currency}}</td>
+						<td style="background-color: lightblue; vertical-align: middle; text-align: right;"> {{saiaInvoice.old_fsc | currency}} </td>
+						<td style="background-color: lightblue; vertical-align: middle; text-align: right;"></td>
+						<td style="background-color: lightblue; vertical-align: middle; text-align: right;"> {{saiaInvoice.old_total_cost | currency}}</td>
+						<td style="background-color: lightyellow; border-left: 1px solid black; vertical-align: middle; text-align: center;"> {{saiaInvoice.discount_percent}}% </td>
+						<td style="background-color: lightyellow; vertical-align: middle; text-align: right;"> {{ saiaInvoice.new_cost | currency}} </td>
+						<td style="background-color: lightyellow; vertical-align: middle; text-align: right;"> {{ saiaInvoice.new_fsc | currency}} </td>
+						<td style="background-color: lightyellow; vertical-align: middle; text-align: right;" ></td>
+						<td style="background-color: lightyellow;  vertical-align: middle; text-align: right;">							{{saiaInvoice.new_total_cost | currency}} </td>
+						<td style="background-color: lightgreen; border-left: 1px solid black; vertical-align: middle; text-align: right;"> {{saiaInvoice.savings | currency}} </td>
+						<td style="border-left: 1px solid black; vertical-align: middle; text-align: right;"> {{saiaInvoice.savings/2 | currency}} </td>
+					</tr>
 					<tr style="font-weight: bold; text-align: left; vertical-align: middle;  font-size: 11px;">
 						<td style="border-top: 1px solid black; vertical-align: middle;" colspan="4"> </td>
 						<td style="border-top: 1px solid black; border-bottom: 5px double black; vertical-align: middle;"> Totals: </td>
@@ -212,6 +230,60 @@
 						<td style="background-color: lightyellow; vertical-align: middle; text-align: right;"> {{xpoInvoice.new_total_cost | currency}}
 						</td>
 						<td style="background-color: lightgreen; border-left: 1px solid black; vertical-align: middle; text-align: right;"> {{xpoInvoice.savings | currency}} </td>
+					</tr>
+				</table>
+			</div>
+		</div>
+		<div class="table-responsive">
+			<div id="saia_data">
+				<table class="table table-condensed table-striped" style="font-family: 'Arial Narrow', Arial, sans-serif; font-size: 11px;">
+					
+					<tr style="text-align: center; font-weight: bold;  font-size: 11px;">
+						<td colspan="11"> </td>
+						<td style="background-color: lightblue; border-left: 1px solid black;" colspan="3"> Benchmark </td>
+						<td style="background-color: lightyellow; border-left: 1px solid black;" colspan="3"> New Charges </td>
+						<td style="background-color: lightgreen; border-bottom: 1px solid black; border-left: 1px solid black;" rowspan="2"> Savings </td>
+					</tr>
+					<tr style="font-weight: bold; text-align: left; font-size: 11px;">
+						<td style="border-bottom: 1px solid black; vertical-align: middle;"> Carrier </td>
+						<td style="border-bottom: 1px solid black; vertical-align: middle;"> Ship Date </td>
+						<td style="border-bottom: 1px solid black; vertical-align: middle;"> Pro </td>
+						<td style="border-bottom: 1px solid black; vertical-align: middle;"> Shipper Name</td>
+						<td style="border-bottom: 1px solid black; vertical-align: middle;"> Zip Code </td>
+						<td style="border-bottom: 1px solid black; vertical-align: middle;"> Cosignee </td>
+						<td style="border-bottom: 1px solid black; vertical-align: middle;"> Zip Code </td>
+						<td style="border-bottom: 1px solid black; vertical-align: middle;"> FSC % </td>
+						<td style="border-bottom: 1px solid black; vertical-align: middle;"> Base Charge </td>
+						<td style="border-bottom: 1px solid black; vertical-align: middle;"> Discount $ </td>
+						<td style="border-bottom: 1px solid black; vertical-align: middle;"> Discount % </td>
+						<td style="background-color: lightblue; border-bottom: 1px solid black; border-left: 1px solid black; vertical-align: middle;"> Frt Charge</td>
+						<td style="background-color: lightblue; border-bottom: 1px solid black; vertical-align: middle;"> FSC </td>
+						<td style="background-color: lightblue; border-bottom: 1px solid black; vertical-align: middle;"> TTL Charge </td>
+						<td style="background-color: lightyellow; border-bottom: 1px solid black; border-left: 1px solid black; vertical-align: middle;"> Frt Charges </td>
+						<td style="background-color: lightyellow; border-bottom: 1px solid black; vertical-align: middle;"> FSC </td>
+						<td style="background-color: lightyellow; border-bottom: 1px solid black; vertical-align: middle;"> TTL Charges </td>
+					</tr>
+					<tr ng-repeat="saiaInvoice in savingsSaiaInvoices | orderBy:'ship_date'" style="text-align: left;  font-size: 11px;">
+						<td style="vertical-align: middle;"> {{saiaInvoice.carrier_name}}</td>
+						<td style="vertical-align: middle;"> {{saiaInvoice.ship_date | date:'yyyy-MM-dd'}} </td>
+						<td style="vertical-align: middle;"> {{saiaInvoice.pro_number}} </td>
+						<td style="vertical-align: middle;"> {{saiaInvoice.sender}} </td>
+						<td style="vertical-align: middle;"> {{saiaInvoice.sender_zip}} </td>
+						<td style="vertical-align: middle;"> {{saiaInvoice.receiver}} </td>
+						<td style="vertical-align: middle;"> {{saiaInvoice.receiver_zip}} </td>
+						<td style="vertical-align: middle;"> {{saiaInvoice.fsc_percent * 100}}% </td>
+						<td style="vertical-align: middle;"> {{saiaInvoice.base_charge}} </td>
+						<td style="vertical-align: middle;"> {{saiaInvoice.discount_ammount}} </td>
+						<td style="vertical-align: middle;"> {{saiaInvoice.discount_percent}}% </td>
+						<td style="background-color: lightblue; vertical-align: middle; text-align: right; border-left: 1px solid black;"> {{saiaInvoice.old_cost | currency}}</td>
+						<td style="background-color: lightblue; vertical-align: middle; text-align: right;"> {{saiaInvoice.old_fsc | currency}} </td>
+						<td style="background-color: lightblue; vertical-align: middle; text-align: right;"> {{saiaInvoice.old_total_cost | currency}}
+						</td>
+						<td style="background-color: lightyellow; vertical-align: middle; text-align: right; border-left: 1px solid black;"> {{saiaInvoice.new_cost | currency}} </td>
+						<td style="background-color: lightyellow; vertical-align: middle; text-align: right;"> {{saiaInvoice.new_fsc | currency}} </td>
+						<td style="background-color: lightyellow; vertical-align: middle; text-align: right;"> {{saiaInvoice.new_total_cost | currency}}
+						</td>
+						<td style="background-color: lightgreen; border-left: 1px solid black; vertical-align: middle; text-align: right;"> {{saiaInvoice.savings | currency}} </td>
 					</tr>
 				</table>
 			</div>

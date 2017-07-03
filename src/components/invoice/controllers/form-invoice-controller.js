@@ -128,6 +128,30 @@
 						console.log(err);
 						$state.go('login');
 					});
+			} else if ($scope.params.saiaID) {
+				$http.get('/secure-api/saia/get_saia_invoice?' + $scope.params.saiaID, config)
+					.then(function(response) {
+						$scope.saiaInvoice = response.data.data;
+						$scope.saiaInvoice[0].old_cost = (Math.round(parseFloat($scope.saiaInvoice[0].old_cost) * 100)) / 100;
+						$scope.saiaInvoice[0].old_fsc = (Math.round(parseFloat($scope.saiaInvoice[0].old_fsc) * 100)) / 100;
+						$scope.saiaInvoice[0].old_total_cost = (Math.round(parseFloat($scope.saiaInvoice[0].old_total_cost) * 100)) / 100;
+						$scope.saiaInvoice[0].new_cost = (Math.round(parseFloat($scope.saiaInvoice[0].new_cost) * 100)) / 100;
+						$scope.saiaInvoice[0].new_fsc = (Math.round(parseFloat($scope.saiaInvoice[0].new_fsc) * 100)) / 100;
+						$scope.saiaInvoice[0].new_total_cost = (Math.round(parseFloat($scope.saiaInvoice[0].new_total_cost) * 100)) / 100;
+						$scope.saiaInvoice[0].fsc_dollar = (Math.round(parseFloat($scope.saiaInvoice[0].fsc_dollar) * 100)) / 100;
+						$scope.saiaInvoice[0].discount_percent = sanatizePercent($scope.saiaInvoice[0].discount_percent);
+						$scope.saiaInvoice[0].savings = (Math.round(parseFloat($scope.saiaInvoice[0].savings) * 100) / 100);
+						$scope.saiaInvoice[0].base_charge = (Math.round(parseFloat($scope.saiaInvoice[0].base_charge) * 100) / 100);
+						$scope.saiaInvoice[0].ship_date = date_parse($scope.saiaInvoice[0].ship_date);
+						$scope.saiaInvoice[0].process_date = date_parse($scope.saiaInvoice[0].process_date);
+						$scope.saiaInvoice[0].discount_ammount = (Math.round(parseFloat($scope.saiaInvoice[0].discount_ammount) * 100) / 100);
+
+						console.log($scope.saiaInvoice[0]);
+						$scope.invoice = $scope.saiaInvoice[0];
+					}, function(err) {
+						console.log(err);
+						$state.go('login');
+					});
 			} else {
 				$scope.invoice = {};
 				var today = new Date();
@@ -144,15 +168,84 @@
 				$scope.PD = {};
 			}
 
+			$scope.post = ('/test_parse', function(req, res) {
+
+				var text = req;
+
+				var textIgnore = text.replace(':','');
+				var textSplit = text.split('~');			
+				
+				var size = Object.keys(textSplit).length;				
+
+				var ISA = textSplit[0].split('*');
+				var GS = textSplit[1].split('*');
+				var ST = textSplit[2].split('*');
+				var B3 = textSplit[3].split('*');
+				var N9 = textSplit[4].split('*');
+				var G62 = textSplit[5].split('*');
+				var SE = textSplit[size - 4].split('*');
+				var GE = textSplit[size - 3].split('*');
+				var IEA = textSplit[size - 2].split('*');
+
+				var textSecondSplit = textSplit.splice(6, (size - 10));
+
+				var Narray = [];
+				var Larray = [];
+								
+				for(var i in textSecondSplit){
+					// console.log(textSecondSplit[i].charAt(1));
+					if ((textSecondSplit[i].charAt(1)) == 'N') {
+						Narray.push(textSecondSplit[i]);
+					}
+					if ((textSecondSplit[i].charAt(1)) == 'L') {
+						Larray.push(textSecondSplit[i]);
+					}
+				}
+
+				var N1Shipper = Narray[0].split('*');
+				var N3Shipper = Narray[1].split('*');
+				var N4Shipper = Narray[2].split('*');
+				var N1Consignee = Narray[3].split('*');
+				var N3Consignee = Narray[4].split('*');
+				var N4Consignee = Narray[5].split('*');
+
+				// BillTo likely wont be needed
+				// var N1BillTo = Narray[6].split('*');
+				// var N3BillTo = Narray[7].split('*');
+				// var N4BillTo = Narray[8].split('*');
+				// console.log(N1BillTo);
+				// console.log(N3BillTo);
+				// console.log(N4BillTo);
+				
+				console.log(B3);
+				console.log(Narray);				
+				console.log(N1Shipper);	
+				console.log(N3Shipper);
+				console.log(N4Shipper);
+				console.log(N1Consignee);
+				console.log(N3Consignee);
+				console.log(N4Consignee);
+
+				console.log(Larray);
+
+				return;
+			});
+
 			$scope.setOldCost = function(oldCharge) {
 				$scope.invoice.old_cost = (oldCharge * (1 - 0.829));
 				$scope.invoice.discount_percent = sanatizePercent($scope.invoice.discount_ammount / oldCharge);
 				$scope.invoice.new_cost = (oldCharge * (1 - sanatizePercent($scope.invoice.discount_percent)));
 				$scope.invoice.old_fsc = ($scope.invoice.old_cost * sanatizePercent($scope.invoice.fsc_percent));
 				$scope.invoice.new_fsc = ($scope.invoice.new_cost * sanatizePercent($scope.invoice.fsc_percent));
+				$scope.invoice.fsc_from_dollar = ($scope.invoice.fsc_dollar / $scope.invoice.new_cost);
+				$scope.invoice.old_fsc_dollar = ($scope.invoice.old_cost * sanatizePercent($scope.invoice.fsc_from_dollar));
+				$scope.invoice.new_fsc_dollar = ($scope.invoice.new_cost * sanatizePercent($scope.invoice.fsc_from_dollar));
 				$scope.invoice.old_total_cost = $scope.invoice.old_cost + $scope.invoice.old_fsc;
 				$scope.invoice.new_total_cost = $scope.invoice.new_cost + $scope.invoice.new_fsc;
+				$scope.invoice.old_total_cost_dollar = $scope.invoice.old_cost + $scope.invoice.old_fsc_dollar;
+				$scope.invoice.new_total_cost_dollar = $scope.invoice.new_cost + $scope.invoice.new_fsc_dollar;
 				$scope.invoice.savings = $scope.invoice.old_total_cost - $scope.invoice.new_total_cost;
+				$scope.invoice.savings_dollar = $scope.invoice.old_total_cost_dollar - $scope.invoice.new_total_cost_dollar;
 			};
 
 			$scope.submitXPOInvoice = function(invoice) {
@@ -184,6 +277,44 @@
 						});
 				} else {
 					$http.put('/secure-api/xpo/update_xpo_invoice', invoice, config)
+						.then(function(response) {
+							console.log('Invoice Updated');
+							$state.reload();
+						}, function(err) {
+							console.log(err);
+						});
+				}
+			};
+
+			$scope.submitSaiaInvoice = function(invoice) {
+				invoice.old_cost = (Math.round(parseFloat(invoice.old_cost) * 100)) / 100;
+				invoice.old_fsc = (Math.round(parseFloat(invoice.old_fsc) * 100)) / 100;
+				invoice.old_total_cost = (Math.round(parseFloat(invoice.old_total_cost) * 100)) / 100;
+				invoice.new_cost = (Math.round(parseFloat(invoice.new_cost) * 100)) / 100;
+				invoice.new_fsc = (Math.round(parseFloat(invoice.new_fsc) * 100)) / 100;
+				invoice.new_total_cost = (Math.round(parseFloat(invoice.new_total_cost) * 100)) / 100;
+				invoice.discount_percent = sanatizePercent(invoice.discount_percent);
+				invoice.savings = (Math.round(parseFloat(invoice.savings) * 100) / 100);
+				invoice.discount_ammount = (Math.round(parseFloat(invoice.discount_ammount) * 100) / 100);
+				console.log(invoice);
+				for (var i in $scope.allCompanies) {
+					if ($scope.allCompanies[i].client_id === invoice.client_id) {
+						invoice.client_name = $scope.allCompanies[i].client_name;
+					}
+				}
+				if (!invoice.accelerated_charge) {
+					invoice.accelerated_charge = 0;
+				}
+				if (!$scope.params.saiaID) {
+					$http.post('/secure-api/saia/insert_saia_invoice', invoice, config)
+						.then(function(reponse) {
+							console.log('New Invoice Added');
+							$state.reload();
+						}, function(err) {
+							console.error(err);
+						});
+				} else {
+					$http.put('/secure-api/saia/update_saia_invoice', invoice, config)
 						.then(function(response) {
 							console.log('Invoice Updated');
 							$state.reload();

@@ -36,7 +36,7 @@
 			<input type="button" ng-click="selectedAll()" ng-model="selectAll" value="Select All">
 		</div>
 		<div class="col-sm-2">
-			<input type="button" ng-click="exportToSavings(visibleInvoices, visibleXPOInvoices)" value="Calculate Savings">
+			<input type="button" ng-click="exportToSavings(visibleInvoices, visibleXPOInvoices, visibleSaiaInvoices)" value="Calculate Savings">
 		</div>
 	</div> <br>
 	<div class="row">
@@ -113,8 +113,19 @@
 				<td> {{xpoInvoice.sender}} </td>
 				<td> {{xpoInvoice.receiver}} </td>
 				<td> {{xpoInvoice.process_date | date:'yyyy-MM-dd'}} </td>
-				<td> {{xpoInvoice.ship_date | date:'yyyy-MM-dd'}} </td>
+				<td> {{xpoInvoice.visibleSaiaInvoices_date | date:'yyyy-MM-dd'}} </td>
 				<td> <a ui-sref="view-xpo-invoice({invoiceID:{{xpoInvoice.xpo_id}}})"> Open </a> </td>
+			</tr>
+			<tr ng-repeat="saiaInvoice in visibleSaiaInvoices = (allSaiaInvoices | dateRange: 'process_date' : from : to | filter:searchText | orderBy:sortType:sortReverse)">
+				<td> <input type="checkbox" ng-model="saiaInvoice.selected"> </td>
+				<td> {{saiaInvoice.carrier_name}} </td>
+				<td> {{saiaInvoice.client_name}} </td>
+				<td> {{saiaInvoice.invoice_number}} </td>
+				<td> {{saiaInvoice.sender}} </td>
+				<td> {{saiaInvoice.receiver}} </td>
+				<td> {{saiaInvoice.process_date | date:'yyyy-MM-dd'}} </td>
+				<td> {{saiaInvoice.ship_date | date:'yyyy-MM-dd'}} </td>
+				<td> <a ui-sref="view-saia-invoice({invoiceID:{{saiaInvoice.saia_id}}})"> Open </a> </td>
 			</tr>
 		</table>
 	</div>
@@ -123,7 +134,7 @@
 			<input type="button" ng-click="selectedAll()" ng-model="selectAll" value="Select All">
 		</div>
 		<div class="col-sm-1">
-			<input type="button" ng-click="exportToSavings(visibleInvoices, visibleXPOInvoices)" value="Calculate Savings">
+			<input type="button" ng-click="exportToSavings(visibleInvoices, visibleXPOInvoices, visibleSaiaInvoices)" value="Calculate Savings">
 		</div>
 	</div>
 </div>

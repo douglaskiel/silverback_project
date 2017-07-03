@@ -111,7 +111,7 @@
                     controller: 'invoiceViewCtrl'
                 })
                 .state('price-savings', {
-                    url: '/invoice/price-savings/:invoiceIDs/:xpoIDs',
+                    url: '/invoice/price-savings/:invoiceIDs/:xpoIDs/:saiaIDs',
                     templateUrl: '/src/components/invoice/views/price-savings.html',
                     controller: 'priceSavingsCtrl'
                 })
@@ -122,6 +122,16 @@
                 })
                 .state('form-xpo-invoice', {
                     url: '/invoice/form-xpo-invoice/:xpoID',
+                    templateUrl: '/src/components/invoice/views/form-invoice.html',
+                    controller: 'invoiceFormCtrl'
+                })
+                .state('view-saia-invoice', {
+                    url:'/invoice/view-saia-invoice/:invoiceID',
+                    templateUrl: '/src/components/invoice/views/view-saia-invoice.html',
+                    controller:'viewSaiaInvoice'
+                })
+                .state('form-saia-invoice', {
+                    url: '/invoice/form-saia-invoice/:saiaID',
                     templateUrl: '/src/components/invoice/views/form-invoice.html',
                     controller: 'invoiceFormCtrl'
                 });
