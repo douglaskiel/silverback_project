@@ -34,6 +34,7 @@ var secureState = require('./routes/states');
 var secureUser = require('./routes/user');
 var secureAudit = require('./routes/audit');
 var secureXPO = require('./routes/xpo_invoice');
+var secureSaia = require('./routes/saia_invoice');
 
 app.use('/secure-api/company', secureCompanyRouter);
 app.use('/secure-api/iot', secureIOTRouter);
@@ -51,6 +52,7 @@ app.use('/secure-api/states', secureState);
 app.use('/secure-api/user', secureUser);
 app.use('/secure-api/audit', secureAudit);
 app.use('/secure-api/xpo', secureXPO);
+app.use('/secure-api/saia', secureSaia);
 
 //routes
 app.get('/', function(req, res) {

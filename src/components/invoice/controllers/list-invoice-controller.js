@@ -15,9 +15,10 @@
 			$scope.errors = false;
 			$scope.errorsArry = [];
 
-			$scope.exportToSavings = function(invoices, xpoInvoices) {
+			$scope.exportToSavings = function(invoices, xpoInvoices, saiaInvoices) {
 				var submittedInvoices = [];
 				var submittedXPOInvoices =[];
+				var submittedSaiaInvoices =[];
 				for (var i in invoices) {
 					if (invoices[i].selected) {
 						submittedInvoices.push(invoices[i].invoice_id);
@@ -28,10 +29,16 @@
 						submittedXPOInvoices.push(xpoInvoices[i].xpo_id);
 					}
 				}
-				if ((submittedInvoices.length + submittedXPOInvoices.length )> 0) {
+				for(i in saiaInvoices) {
+					if(saiaInvoices[i].selected){
+						submittedSaiaInvoices.push(saiaInvoices[i].saia_id);
+					}
+				}
+				if ((submittedInvoices.length + submittedXPOInvoices.length + submittedSaiaInvoices.length)> 0) {
 					$state.go('price-savings', {
 						invoiceIDs: submittedInvoices,
-						xpoIDs: submittedXPOInvoices
+						xpoIDs: submittedXPOInvoices,
+						saiaIDs: submittedSaiaInvoices
 					});
 				} else {
 					console.log('Please select at least 1 invoice.');
@@ -53,6 +60,9 @@
 				});
 				angular.forEach($scope.allXPOInvoices, function(xpoInvoice){
 					xpoInvoice.selected = $scope.selectAll;
+				});
+				angular.forEach($scope.allSaiaInvoices, function(saiaInvoice){
+					saiaInvoice.selected = $scope.selectAll;
 				});
 			};
 
@@ -114,6 +124,18 @@
 				}, function(err) {
 					console.log(err);
 					$state.go('login');
+				});
+			$http.get('/secure-api/saia/get_Saia_invoices_once', config)
+				.then(function(response) {
+					$scope.allSaiaInvoices = response.data.data;
+					for (var i in $scope.allSaiaInvoices) {
+						$scope.allSaiaInvoices[i].invoice_number = $scope.allSaiaInvoices[i].pro_number;
+						$scope.allSaiaInvoices[i].ship_date = date_parse($scope.allSaiaInvoices[i].ship_date);
+						$scope.allSaiaInvoices[i].process_date = date_parse($scope.allSaiaInvoices[i].process_date);
+					}
+				}, function(err) {
+					console.log(err);
+					// $state.go('login');
 				});
 		}]);
 })(window, window.angular);

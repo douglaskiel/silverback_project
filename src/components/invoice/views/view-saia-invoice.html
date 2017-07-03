@@ -1,0 +1,83 @@
+<div class="row">
+	<h2> Invoice {{saiaInvoice[0].pro_number}} </h2>
+	<a ui-sref="form-saia-invoice({saiaID:{{params.invoiceID}}})" > Edit </a>
+	<div class="table-responsive row">
+		<div class="col-sm-6">
+			<table class="table">
+				<tr>
+					<th> Sender </th>
+				</tr>
+				<tr>
+					<td> {{saiaInvoice[0].sender}} </td>
+				</tr>
+				<tr>
+					<td> {{saiaInvoice[0].sender_zip}} </td>
+				</tr>
+			</table>
+		</div>
+		<div class="col-sm-6">
+			<table class="table">
+				<tr>
+					<th> Receiver </th>
+				</tr>
+				<tr>
+					<td> {{saiaInvoice[0].receiver}} </td>
+				</tr>
+				<tr>
+					<td> {{saiaInvoice[0].receiver_zip}}	</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-4">
+			<h4> <b>Carrier Name:</b> {{saiaInvoice[0].carrier_name}} </h4>
+		</div>
+		<div class="col-md-4">
+			<h4> <b>Ship Date:</b> {{saiaInvoice[0].ship_date | date:'yyyy-MM-dd'}} </h4>
+		</div>
+		<div class="col-md-4">
+			<h4> <b>Process Date:</b> {{saiaInvoice[0].process_date | date:'yyyy-MM-dd'}} </h4>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-4">
+			<h4> <b>Gross Charge:</b> {{saiaInvoice[0].base_charge | currency}} </h4>
+		</div>
+		<div class="col-md-4">
+			<h4> <b>Carrier Discount:</b> %{{saiaInvoice[0].discount_percent * 100}} </h4>
+		</div>
+		<div class="col-md-4">
+			<h4> <b>Fuel Surcharge:</b> % {{saiaInvoice[0].fsc_percent * 100}} </h4>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-4">
+			<h4> <b>Old Cost:</b> {{saiaInvoice[0].old_cost | currency}} </h4>
+		</div>
+		<div class="col-md-4">
+			<h4> <b>Old Fuel Surcharge:</b> {{saiaInvoice[0].old_fsc | currency}} </h4>
+		</div>
+		<div class="col-md-4">
+			<h4> <b>Old Total Charge:</b> {{saiaInvoice[0].old_total_cost | currency}} </h4>
+		</div>
+	</div>
+	
+	<div class="row">
+		<div class="col-md-4">
+			<h4> <b>New Cost:</b> {{saiaInvoice[0].new_cost | currency}} </h4>
+		</div>
+		<div class="col-md-4">
+			<h4> <b>New Fuel Surcharge:</b> {{saiaInvoice[0].new_fsc | currency}} </h4>
+		</div>
+		<div class="col-md-4">
+			<h4> <b>New Total Charge:</b> {{saiaInvoice[0].new_total_cost | currency}} </h4>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-4">
+			<h4> <b>Savings:</b> {{saiaInvoice[0].savings | currency}} </h4>
+		</div>
+	</div>
+	<button type="btn" class="btn" ng-click="deleteSaiaInvoice(saiaInvoice[0].saia_id)"> Delete Invoice </button>
+</div>

@@ -1,6 +1,6 @@
 (function(window, angular, undefined) {
 	angular.module('app')
-		.controller('priceSavingsCtrl', ['$scope', '$state', '$http', '$stateParams', 'userSvc', 'invoiceSvc', 'invoiceXPOSvc', function($scope, $state, $http, $stateParams, userSvc, invoiceSvc, invoiceXPOSvc) {
+		.controller('priceSavingsCtrl', ['$scope', '$state', '$http', '$stateParams', 'userSvc', 'invoiceSvc', 'invoiceXPOSvc', 'invoiceSaiaSvc', function($scope, $state, $http, $stateParams, userSvc, invoiceSvc, invoiceXPOSvc, invoiceSaiaSvc) {
 
 			var config = {
 				headers: {
@@ -16,7 +16,10 @@
 					var blob2 = new Blob([document.getElementById('xpo_data').innerHTML], {
 						type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8"
 					});
-					var blob3 = new Blob([document.getElementById('all_data').innerHTML], {
+					var blob3 = new Blob([document.getElementById('saia_data').innerHTML], {
+						type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8"
+					});
+					var blob4 = new Blob([document.getElementById('all_data').innerHTML], {
 						type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8"
 					});
 					saveAs(blob, "Savings-Report-" + $scope.client_name + '-' + moment().format('YYYY/DD/MM') + ".xls");
@@ -84,6 +87,14 @@
 					$scope.totalFreightCharge += parseFloat($scope.savingsXPOInvoices[i].new_cost);
 					$scope.totalFuelCharge += parseFloat($scope.savingsXPOInvoices[i].new_fsc);
 					$scope.totalCharged += parseFloat($scope.savingsXPOInvoices[i].new_total_cost);
+				}
+				for (i in $scope.savingsSaiaInvoices) {
+					$scope.totalBenchmarkFrieghtCharge += parseFloat($scope.savingsSaiaInvoices[i].old_cost);
+					$scope.totalFuelBenchmark += parseFloat($scope.savingsSaiaInvoices[i].old_fsc);
+					$scope.totalBenchmarkCharge += parseFloat($scope.savingsSaiaInvoices[i].old_total_cost);
+					$scope.totalFreightCharge += parseFloat($scope.savingsSaiaInvoices[i].new_cost);
+					$scope.totalFuelCharge += parseFloat($scope.savingsSaiaInvoices[i].new_fsc);
+					$scope.totalCharged += parseFloat($scope.savingsSaiaInvoices[i].new_total_cost);
 				}
 			};
 
@@ -200,6 +211,14 @@
 					$scope.totalFuelCharge += parseFloat($scope.savingsXPOInvoices[i].new_fsc);
 					$scope.totalCharged += parseFloat($scope.savingsXPOInvoices[i].new_total_cost);
 				}
+				for (i in $scope.savingsaiaInvoices) {
+					$scope.totalBenchmarkFrieghtCharge += parseFloat($scope.savingsaiaInvoices[i].old_cost);
+					$scope.totalFuelBenchmark += parseFloat($scope.savingsaiaInvoices[i].old_fsc);
+					$scope.totalBenchmarkCharge += parseFloat($scope.savingsaiaInvoices[i].old_total_cost);
+					$scope.totalFreightCharge += parseFloat($scope.savingsaiaInvoices[i].new_cost);
+					$scope.totalFuelCharge += parseFloat($scope.savingsaiaInvoices[i].new_fsc);
+					$scope.totalCharged += parseFloat($scope.savingsaiaInvoices[i].new_total_cost);
+				}
 			};
 
 			if ($scope.params.invoiceIDs) {
@@ -221,18 +240,35 @@
 									$scope.getAssoccClass();
 									$scope.calculation();
 								});
+						} else if ($scope.params.saiaIDs) {
+							invoiceSaiaSvc
+								.getPriceSavingsInvoicesSaia($scope.params.saiaIDs, config)
+								.then(function(message) {
+									$scope.savingsSaiaInvoices = message;
+									$scope.getAssoccClass();
+									$scope.calculation();
+								});
 						} else {
 							$scope.getAssoccClass();
 							$scope.calculation();
 						}
 					});
-			} else {
+			} else if ($scope.params.XPOinvoiceIDs) {
 				invoiceXPOSvc
 					.getPriceSavingsInvoicesXPO($scope.params.xpoIDs, config)
 					.then(function(message) {
 						$scope.savingsXPOInvoices = message;
 						$scope.process_date = $scope.savingsXPOInvoices[0].process_date;
 						$scope.client_name = $scope.savingsXPOInvoices[0].client_name;
+						$scope.calculation();
+					});
+			} else {
+				invoiceSaiaSvc
+					.getPriceSavingsInvoicesSaia($scope.params.saiaIDs, config)
+					.then(function(message) {
+						$scope.savingsSaiaInvoices = message;
+						$scope.process_date = $scope.savingsSaiaInvoices[0].process_date;
+						$scope.client_name = $scope.savingsSaiaInvoices[0].client_name;
 						$scope.calculation();
 					});
 			}
