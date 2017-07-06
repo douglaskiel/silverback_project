@@ -16,7 +16,7 @@
 		<div class="row">
 			<div class="col-sm-3">
 				<label>Invoice Number:</label>
-				<input type="text" ng-model="invoice.invoice_number" class="form-control" maxlength="16" placeholder="Invoice Number" required>
+				<input type="text" ng-model="invoice.invoice_number" ng-mouseover="invoice.invoice_number=invoiceNumber" class="form-control" maxlength="16" placeholder="Invoice Number" required>
 			</div>
 		</div>
 		<div class="row" ng-if="errors === true">
@@ -44,25 +44,25 @@
 						<th> Sender</th>
 					</tr>
 					<tr>
-						<td><input class="form-control" type="text" placeholder="Sender Name" ng-model="invoice.sender_name" maxlength="50" required></td>
+						<td><input class="form-control" type="text" placeholder="Sender Name" ng-model="invoice.sender_name" ng-mouseover="invoice.sender_name=senderName" maxlength="50" required></td>
 					</tr>
 					<tr>
-						<td><input class="form-control" type="text" placeholder="Sender Address" ng-model="invoice.sender_address_1" maxlength="255"  required></td>
+						<td><input class="form-control" type="text" placeholder="Sender Address" ng-model="invoice.sender_address_1" ng-mouseover="invoice.sender_address_1=senderShipAddress" maxlength="255"  required></td>
 					</tr>
 					<tr>
-						<td><input class="form-control" type="text" placeholder="Sender City" maxlength="50" ng-model="invoice.sender_city" required></td>
+						<td><input class="form-control" type="text" placeholder="Sender City" maxlength="50" ng-model="invoice.sender_city" ng-mouseover="invoice.sender_city=senderShipCity" required></td>
 					</tr>
 					<tr>
-						<td><input class="form-control" type="text" placeholder="Sender State" ng-model="invoice.sender_state" minlength="2" maxlength="2" ng-change="carrierCheck()" required></td>
+						<td><input class="form-control" type="text" placeholder="Sender State" ng-model="invoice.sender_state" ng-mouseover="invoice.sender_state=senderShipState" minlength="2" maxlength="2" ng-change="carrierCheck()" required></td>
 					</tr>
 					<tr>
-						<td><input class="form-control" type="text" placeholder="Sender Zip" ng-change="carrierCheck()" ng-model="invoice.sender_zip" minlength="5" maxlength="6" required></td>
+						<td><input class="form-control" type="text" placeholder="Sender Zip" ng-change="carrierCheck()" ng-model="invoice.sender_zip" ng-mouseover="invoice.sender_zip=senderShipZip" minlength="5" maxlength="6" required></td>
 					</tr>
 					<tr>
 						<td><input class="form-control" type="text" placeholder="Sender Zip +4" ng-model="invoice.sender_zip_4" minlength="4" maxlength="4"></td>
 					</tr>
 					<tr>
-						<td><input class="form-control" type="text" placeholder="Sender Country" maxlength="24" ng-model="invoice.sender_country" required></td>
+						<td><input class="form-control" type="text" placeholder="Sender Country" maxlength="24" ng-model="invoice.sender_country" ng-mouseover="invoice.sender_country=senderShipCountry" required></td>
 					</tr>
 				</table>
 			</div>
@@ -72,25 +72,25 @@
 						<th> Receiver </th>
 					</tr>
 					<tr>
-						<td><input class="form-control" type="text" placeholder="Receiver Name" maxlength="50" ng-model="invoice.receiver_name" required></td>
+						<td><input class="form-control" type="text" placeholder="Receiver Name" maxlength="50" ng-model="invoice.receiver_name" ng-mouseover="invoice.receiver_name=receiverName" required></td>
 					</tr>
 					<tr>
-						<td> <input class="form-control" type="text" placeholder="Receiver Address" maxlength="255" ng-model="invoice.receiver_address_1" required></td>
+						<td> <input class="form-control" type="text" placeholder="Receiver Address" maxlength="255" ng-model="invoice.receiver_address_1" ng-mouseover="invoice.receiver_address_1=receiverShipAddress" required></td>
 					</tr>
 					<tr>
-						<td><input class="form-control" type="text" placeholder="Receiver City" maxlength="50" ng-model="invoice.receiver_city" required></td>
+						<td><input class="form-control" type="text" placeholder="Receiver City" maxlength="50" ng-model="invoice.receiver_city" ng-mouseover="invoice.receiver_city=receiverShipCity" required></td>
 					</tr>
 					<tr>
-						<td><input class="form-control" type="text" placeholder="Receiver State" ng-model="invoice.receiver_state" minlength="2" maxlength="2" ng-change="carrierCheck()" required></td>
+						<td><input class="form-control" type="text" placeholder="Receiver State" ng-model="invoice.receiver_state" ng-mouseover="invoice.receiver_state=receiverShipState" minlength="2" maxlength="2" ng-change="carrierCheck()" required></td>
 					</tr>
 					<tr>
-						<td><input class="form-control" type="text" placeholder="Receiver Zip" ng-change="carrierCheck()" ng-model="invoice.receiver_zip" minlength="5" maxlength="6" required></td>
+						<td><input class="form-control" type="text" placeholder="Receiver Zip" ng-change="carrierCheck()" ng-model="invoice.receiver_zip" ng-mouseover="invoice.receiver_zip=receiverShipZip" minlength="5" maxlength="6" required></td>
 					</tr>
 					<tr>
 						<td><input class="form-control" type="text" placeholder="Receiver Zip +4" ng-model="invoice.receiver_zip_4" minlength="4" maxlength="4"></td>
 					</tr>
 					<tr>
-						<td><input class="form-control" type="text" placeholder="Receiver Country" maxlength="24" ng-model="invoice.receiver_country" ng-init="invoice.receiver_country ='USA'" required></td>
+						<td><input class="form-control" type="text" placeholder="Receiver Country" maxlength="24" ng-model="invoice.receiver_country" ng-mouseover="invoice.receiver_country=receiverShipCountry" ng-init="invoice.receiver_country ='USA'" required></td>
 					</tr>
 				</table>
 			</div>
@@ -103,7 +103,7 @@
 			</div>
 			<div class="col-sm-3">
 				<label>Carrier:</label>
-				<select ng-model="invoice.carrier_id" ng-change="carrierCheck()" class="form-control" required ng-options = "carrier.carrier_id as carrier.carrier_name for carrier in allCarriers">
+				<select ng-model="invoice.carrier_id" ng-mouseover="invoice.carrier_id=carrierFromEDI" ng-change="carrierCheck()" class="form-control" required ng-options = "carrier.carrier_id as carrier.carrier_name for carrier in allCarriers">
 				</select>
 			</div>
 			<div class="col-sm-3">
@@ -202,7 +202,7 @@
 						</select>
 					</td>
 					<td class="col-sm-4">
-						<input type="number" min="0" max="99999" step="1" class="form-control" ng-model="shippingClass.weight" required/>
+						<input type="number" min="0" max="99999" step="1" class="form-control" ng-model="shippingClass.weight" ng-mouseover="" required/>
 					</td>
 					<td class="col-sm-1">
 						<p> {{shippingClass.rate | currency}} </p>
@@ -460,7 +460,7 @@
 	<div class="row">
 		<div class="col-sm-3">
 			<label> Old Cost: </label>
-			{{invoice.old_cost | currency}}
+			{{invoice.old_cost_saia | currency}}
 		</div>
 		<div class="col-sm-3">
 			<label> Old Fuel Surcharge: </label>
