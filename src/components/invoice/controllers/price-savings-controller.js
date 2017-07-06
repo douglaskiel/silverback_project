@@ -24,7 +24,8 @@
 					});
 					saveAs(blob, "Savings-Report-" + $scope.client_name + '-' + moment().format('YYYY/DD/MM') + ".xls");
 					saveAs(blob2, "XPO-Data-" + $scope.client_name + '-' + moment().format('YYYY/DD/MM') + ".xls");
-					saveAs(blob3, "All-Data-" + $scope.client_name + '-' + moment().format('YYYY/DD/MM') + ".xls");
+					saveAs(blob3, "Saia-Data-" + $scope.client_name + '-' + moment().format('YYYY/DD/MM') + ".xls");
+					saveAs(blob4, "All-Data-" + $scope.client_name + '-' + moment().format('YYYY/DD/MM') + ".xls");
 				}, 500);
 			};
 
@@ -89,7 +90,7 @@
 					$scope.totalCharged += parseFloat($scope.savingsXPOInvoices[i].new_total_cost);
 				}
 				for (i in $scope.savingsSaiaInvoices) {
-					$scope.totalBenchmarkFrieghtCharge += parseFloat($scope.savingsSaiaInvoices[i].old_cost);
+					$scope.totalBenchmarkFrieghtCharge += parseFloat($scope.savingsSaiaInvoices[i].old_cost_saia);
 					$scope.totalFuelBenchmark += parseFloat($scope.savingsSaiaInvoices[i].old_fsc);
 					$scope.totalBenchmarkCharge += parseFloat($scope.savingsSaiaInvoices[i].old_total_cost);
 					$scope.totalFreightCharge += parseFloat($scope.savingsSaiaInvoices[i].new_cost);
@@ -212,7 +213,7 @@
 					$scope.totalCharged += parseFloat($scope.savingsXPOInvoices[i].new_total_cost);
 				}
 				for (i in $scope.savingsaiaInvoices) {
-					$scope.totalBenchmarkFrieghtCharge += parseFloat($scope.savingsaiaInvoices[i].old_cost);
+					$scope.totalBenchmarkFrieghtCharge += parseFloat($scope.savingsaiaInvoices[i].old_cost_saia);
 					$scope.totalFuelBenchmark += parseFloat($scope.savingsaiaInvoices[i].old_fsc);
 					$scope.totalBenchmarkCharge += parseFloat($scope.savingsaiaInvoices[i].old_total_cost);
 					$scope.totalFreightCharge += parseFloat($scope.savingsaiaInvoices[i].new_cost);

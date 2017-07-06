@@ -132,7 +132,7 @@
 				$http.get('/secure-api/saia/get_saia_invoice?' + $scope.params.saiaID, config)
 					.then(function(response) {
 						$scope.saiaInvoice = response.data.data;
-						$scope.saiaInvoice[0].old_cost = (Math.round(parseFloat($scope.saiaInvoice[0].old_cost) * 100)) / 100;
+						$scope.saiaInvoice[0].old_cost_saia = (Math.round(parseFloat($scope.saiaInvoice[0].old_cost_saia) * 100)) / 100;
 						$scope.saiaInvoice[0].old_fsc = (Math.round(parseFloat($scope.saiaInvoice[0].old_fsc) * 100)) / 100;
 						$scope.saiaInvoice[0].old_total_cost = (Math.round(parseFloat($scope.saiaInvoice[0].old_total_cost) * 100)) / 100;
 						$scope.saiaInvoice[0].new_cost = (Math.round(parseFloat($scope.saiaInvoice[0].new_cost) * 100)) / 100;
@@ -168,7 +168,7 @@
 				$scope.PD = {};
 			}
 
-			$scope.post = ('/test_parse', function(req, res) {
+			$scope.post = ('edi_parser', function(req, res) {
 
 				var text = req;
 
@@ -209,6 +209,30 @@
 				var N3Consignee = Narray[4].split('*');
 				var N4Consignee = Narray[5].split('*');
 
+				var LarrayItems = [];
+				var LarrayDiscount = [];
+				var LarrayFuelSurcharge = [];
+
+				for(var b in Larray){
+					// console.log(textSecondSplit[i].charAt(1));
+					if ((Larray[b].charAt(4)) == '1') {
+						LarrayItems.push(Larray[b]);
+					}
+					if ((Larray[b].charAt(4)) == '2') {
+						LarrayDiscount.push(Larray[b]);
+					}
+					if ((Larray[b].charAt(4)) == '3') {
+						LarrayFuelSurcharge.push(Larray[b]);
+					}
+				}
+
+				var L0 = LarrayItems[2].split('*');
+
+
+				console.log(LarrayItems);
+				console.log(LarrayDiscount);
+				console.log(LarrayFuelSurcharge);
+
 				// BillTo likely wont be needed
 				// var N1BillTo = Narray[6].split('*');
 				// var N3BillTo = Narray[7].split('*');
@@ -217,32 +241,49 @@
 				// console.log(N3BillTo);
 				// console.log(N4BillTo);
 				
-				console.log(B3);
-				console.log(Narray);				
-				console.log(N1Shipper);	
-				console.log(N3Shipper);
-				console.log(N4Shipper);
-				console.log(N1Consignee);
-				console.log(N3Consignee);
-				console.log(N4Consignee);
+
+				// var deliveryDateEDI = B3[9];
+				// var deliveryDateYear = deliveryDateEDI.split(0);
+				// var deliveryDateYear = B3[9].splice(3);
+				// console.log(deliveryDateEDI);
+				// console.log(deliveryDateYear);
 
 				console.log(Larray);
+
+				$scope.invoiceNumber = B3[2];
+				$scope.deliveryDate = B3[9];
+				$scope.senderName = N1Shipper[2];
+				$scope.senderShipAddress = N3Shipper[1];
+				$scope.senderShipCity = N4Shipper[1];
+				$scope.senderShipState = N4Shipper[2];
+				$scope.senderShipZip = N4Shipper[3];
+				$scope.senderShipCountry = N4Shipper[4];
+				$scope.receiverName = N1Consignee[2];
+				$scope.receiverShipAddress = N3Consignee[1];
+				$scope.receiverShipCity = N4Consignee[1];
+				$scope.receiverShipState = N4Consignee[2];
+				$scope.receiverShipZip = N4Consignee[3];
+				$scope.receiverShipCountry = N4Consignee[4];
+				$scope.itemweight = L0[4];
+
+
 
 				return;
 			});
 
 			$scope.setOldCost = function(oldCharge) {
 				$scope.invoice.old_cost = (oldCharge * (1 - 0.829));
+				$scope.invoice.old_cost_saia = (oldCharge * (1 - 0.89));
 				$scope.invoice.discount_percent = sanatizePercent($scope.invoice.discount_ammount / oldCharge);
 				$scope.invoice.new_cost = (oldCharge * (1 - sanatizePercent($scope.invoice.discount_percent)));
 				$scope.invoice.old_fsc = ($scope.invoice.old_cost * sanatizePercent($scope.invoice.fsc_percent));
 				$scope.invoice.new_fsc = ($scope.invoice.new_cost * sanatizePercent($scope.invoice.fsc_percent));
 				$scope.invoice.fsc_from_dollar = ($scope.invoice.fsc_dollar / $scope.invoice.new_cost);
-				$scope.invoice.old_fsc_dollar = ($scope.invoice.old_cost * sanatizePercent($scope.invoice.fsc_from_dollar));
+				$scope.invoice.old_fsc_dollar = ($scope.invoice.old_cost_saia * sanatizePercent($scope.invoice.fsc_from_dollar));
 				$scope.invoice.new_fsc_dollar = ($scope.invoice.new_cost * sanatizePercent($scope.invoice.fsc_from_dollar));
 				$scope.invoice.old_total_cost = $scope.invoice.old_cost + $scope.invoice.old_fsc;
 				$scope.invoice.new_total_cost = $scope.invoice.new_cost + $scope.invoice.new_fsc;
-				$scope.invoice.old_total_cost_dollar = $scope.invoice.old_cost + $scope.invoice.old_fsc_dollar;
+				$scope.invoice.old_total_cost_dollar = $scope.invoice.old_cost_saia + $scope.invoice.old_fsc_dollar;
 				$scope.invoice.new_total_cost_dollar = $scope.invoice.new_cost + $scope.invoice.new_fsc_dollar;
 				$scope.invoice.savings = $scope.invoice.old_total_cost - $scope.invoice.new_total_cost;
 				$scope.invoice.savings_dollar = $scope.invoice.old_total_cost_dollar - $scope.invoice.new_total_cost_dollar;
@@ -287,7 +328,7 @@
 			};
 
 			$scope.submitSaiaInvoice = function(invoice) {
-				invoice.old_cost = (Math.round(parseFloat(invoice.old_cost) * 100)) / 100;
+				invoice.old_cost_saia = (Math.round(parseFloat(invoice.old_cost_saia) * 100)) / 100;
 				invoice.old_fsc = (Math.round(parseFloat(invoice.old_fsc) * 100)) / 100;
 				invoice.old_total_cost = (Math.round(parseFloat(invoice.old_total_cost) * 100)) / 100;
 				invoice.new_cost = (Math.round(parseFloat(invoice.new_cost) * 100)) / 100;
@@ -795,4 +836,4 @@
 			};
 
 		}]);
-})(window, window.angular);
+})(window, window.angular); 
