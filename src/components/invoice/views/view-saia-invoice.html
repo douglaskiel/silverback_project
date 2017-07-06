@@ -48,7 +48,7 @@
 			<h4> <b>Carrier Discount:</b> %{{saiaInvoice[0].discount_percent * 100}} </h4>
 		</div>
 		<div class="col-md-4">
-			<h4> <b>Fuel Surcharge:</b> % {{saiaInvoice[0].fsc_percent * 100}} </h4>
+			<h4> <b>Fuel Surcharge:</b> $ {{saiaInvoice[0].fsc_dollar}} </h4>
 		</div>
 	</div>
 	<div class="row">
@@ -56,10 +56,10 @@
 			<h4> <b>Old Cost:</b> {{saiaInvoice[0].old_cost_saia | currency}} </h4>
 		</div>
 		<div class="col-md-4">
-			<h4> <b>Old Fuel Surcharge:</b> {{saiaInvoice[0].old_fsc | currency}} </h4>
+			<h4> <b>Old Fuel Surcharge:</b> {{saiaInvoice[0].old_fsc_dollar | currency}} </h4>
 		</div>
 		<div class="col-md-4">
-			<h4> <b>Old Total Charge:</b> {{saiaInvoice[0].old_total_cost | currency}} </h4>
+			<h4> <b>Old Total Charge:</b> {{saiaInvoice[0].old_total_cost_dollar | currency}} </h4>
 		</div>
 	</div>
 	
@@ -68,15 +68,15 @@
 			<h4> <b>New Cost:</b> {{saiaInvoice[0].new_cost | currency}} </h4>
 		</div>
 		<div class="col-md-4">
-			<h4> <b>New Fuel Surcharge:</b> {{saiaInvoice[0].new_fsc | currency}} </h4>
+			<h4> <b>New Fuel Surcharge:</b> {{saiaInvoice[0].new_fsc_dollar | currency}} </h4>
 		</div>
 		<div class="col-md-4">
-			<h4> <b>New Total Charge:</b> {{saiaInvoice[0].new_total_cost | currency}} </h4>
+			<h4> <b>New Total Charge:</b> {{saiaInvoice[0].new_total_cost_dollar | currency}} </h4>
 		</div>
 	</div>
 	<div class="row">
 		<div class="col-md-4">
-			<h4> <b>Savings:</b> {{saiaInvoice[0].savings | currency}} </h4>
+			<h4> <b>Savings:</b> {{saiaInvoice[0].savings_dollar | currency}} </h4>
 		</div>
 	</div>
 	<button type="btn" class="btn" ng-click="deleteSaiaInvoice(saiaInvoice[0].saia_id)"> Delete Invoice </button>
