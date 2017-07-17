@@ -91,11 +91,11 @@
 				}
 				for (i in $scope.savingsSaiaInvoices) {
 					$scope.totalBenchmarkFrieghtCharge += parseFloat($scope.savingsSaiaInvoices[i].old_cost_saia);
-					$scope.totalFuelBenchmark += parseFloat($scope.savingsSaiaInvoices[i].old_fsc);
-					$scope.totalBenchmarkCharge += parseFloat($scope.savingsSaiaInvoices[i].old_total_cost);
+					$scope.totalFuelBenchmark += parseFloat($scope.savingsSaiaInvoices[i].old_fsc_dollar);
+					$scope.totalBenchmarkCharge += parseFloat($scope.savingsSaiaInvoices[i].old_total_cost_dollar);
 					$scope.totalFreightCharge += parseFloat($scope.savingsSaiaInvoices[i].new_cost);
-					$scope.totalFuelCharge += parseFloat($scope.savingsSaiaInvoices[i].new_fsc);
-					$scope.totalCharged += parseFloat($scope.savingsSaiaInvoices[i].new_total_cost);
+					$scope.totalFuelCharge += parseFloat($scope.savingsSaiaInvoices[i].new_fsc_dollar);
+					$scope.totalCharged += parseFloat($scope.savingsSaiaInvoices[i].new_total_cost_dollar);
 				}
 			};
 
@@ -212,13 +212,13 @@
 					$scope.totalFuelCharge += parseFloat($scope.savingsXPOInvoices[i].new_fsc);
 					$scope.totalCharged += parseFloat($scope.savingsXPOInvoices[i].new_total_cost);
 				}
-				for (i in $scope.savingsaiaInvoices) {
-					$scope.totalBenchmarkFrieghtCharge += parseFloat($scope.savingsaiaInvoices[i].old_cost_saia);
-					$scope.totalFuelBenchmark += parseFloat($scope.savingsaiaInvoices[i].old_fsc);
-					$scope.totalBenchmarkCharge += parseFloat($scope.savingsaiaInvoices[i].old_total_cost);
-					$scope.totalFreightCharge += parseFloat($scope.savingsaiaInvoices[i].new_cost);
-					$scope.totalFuelCharge += parseFloat($scope.savingsaiaInvoices[i].new_fsc);
-					$scope.totalCharged += parseFloat($scope.savingsaiaInvoices[i].new_total_cost);
+				for (i in $scope.savingsSaiaInvoices) {
+					$scope.totalBenchmarkFrieghtCharge += parseFloat($scope.savingsSaiaInvoices[i].old_cost_saia);
+					$scope.totalFuelBenchmark += parseFloat($scope.savingsSaiaInvoices[i].old_fsc_dollar);
+					$scope.totalBenchmarkCharge += parseFloat($scope.savingsSaiaInvoices[i].old_total_cost_dollar);
+					$scope.totalFreightCharge += parseFloat($scope.savingsSaiaInvoices[i].new_cost);
+					$scope.totalFuelCharge += parseFloat($scope.savingsSaiaInvoices[i].new_fsc_dollar);
+					$scope.totalCharged += parseFloat($scope.savingsSaiaInvoices[i].new_total_cost_dollar);
 				}
 			};
 
