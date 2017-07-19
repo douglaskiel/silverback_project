@@ -142,6 +142,7 @@
 						$scope.saiaInvoice[0].discount_percent = sanatizePercent($scope.saiaInvoice[0].discount_percent);
 						$scope.saiaInvoice[0].savings = (Math.round(parseFloat($scope.saiaInvoice[0].savings) * 100) / 100);
 						$scope.saiaInvoice[0].base_charge = (Math.round(parseFloat($scope.saiaInvoice[0].base_charge) * 100) / 100);
+						$scope.saiaInvoice[0].outbound_Inbound = (Math.round(parseFloat($scope.saiaInvoice[0].outbound_Inbound) * 100) / 100);
 						$scope.saiaInvoice[0].ship_date = date_parse($scope.saiaInvoice[0].ship_date);
 						$scope.saiaInvoice[0].process_date = date_parse($scope.saiaInvoice[0].process_date);
 						$scope.saiaInvoice[0].discount_ammount = (Math.round(parseFloat($scope.saiaInvoice[0].discount_ammount) * 100) / 100);
@@ -189,6 +190,8 @@
 
 				var textSecondSplit = textSplit.splice(6, (size - 10));
 
+				console.log(textSecondSplit);
+
 				var Narray = [];
 				var Larray = [];
 								
@@ -202,6 +205,14 @@
 					}
 				}
 
+				var shipDate = G62[2];
+				var shipDateSplit = shipDate.split('');
+				var shipDateFormatted = shipDateSplit[4] + shipDateSplit[5] + "/" + shipDateSplit[6] + shipDateSplit[7] + "/" + shipDateSplit[0] + shipDateSplit[1] + shipDateSplit[2] + shipDateSplit[3];
+
+				var deliveryDate = B3[9];
+				var deliveryDateSplit = deliveryDate.split('');
+				var deliveryDateFormatted = deliveryDateSplit[4] + deliveryDateSplit[5] + "/" + deliveryDateSplit[6] + deliveryDateSplit[7] + "/" + deliveryDateSplit[0] + deliveryDateSplit[1] + deliveryDateSplit[2] + deliveryDateSplit[3];			
+
 				var N1Shipper = Narray[0].split('*');
 				var N3Shipper = Narray[1].split('*');
 				var N4Shipper = Narray[2].split('*');
@@ -209,12 +220,22 @@
 				var N3Consignee = Narray[4].split('*');
 				var N4Consignee = Narray[5].split('*');
 
+				for(var q in N1Shipper && N1Consignee){
+					if ((N1Shipper[1]) == 'Alpha Systems') {
+						$scope.deliveryType = 1;
+					}
+					else if ((N1Consignee[1]) == 'Alpha Systems') {
+						$scope.deliveryType = 2;
+					} else {
+						$scope.deliveryType = 3;
+					}
+				}
+
 				var LarrayItems = [];
 				var LarrayDiscount = [];
 				var LarrayFuelSurcharge = [];
 
 				for(var b in Larray){
-					// console.log(textSecondSplit[i].charAt(1));
 					if ((Larray[b].charAt(4)) == '1') {
 						LarrayItems.push(Larray[b]);
 					}
@@ -227,7 +248,14 @@
 				}
 
 				var L0 = LarrayItems[2].split('*');
+				var L3 = LarrayFuelSurcharge[4].split('*');
+				var L7 = LarrayItems[4].split('*');
 
+				for(var e in GS){
+					if (GS[2] == "DAFG"){
+						$scope.carrierEDI = 1;
+					}
+				}
 
 				console.log(LarrayItems);
 				console.log(LarrayDiscount);
@@ -240,18 +268,8 @@
 				// console.log(N1BillTo);
 				// console.log(N3BillTo);
 				// console.log(N4BillTo);
-				
-
-				// var deliveryDateEDI = B3[9];
-				// var deliveryDateYear = deliveryDateEDI.split(0);
-				// var deliveryDateYear = B3[9].splice(3);
-				// console.log(deliveryDateEDI);
-				// console.log(deliveryDateYear);
-
-				console.log(Larray);
 
 				$scope.invoiceNumber = B3[2];
-				$scope.deliveryDate = B3[9];
 				$scope.senderName = N1Shipper[2];
 				$scope.senderShipAddress = N3Shipper[1];
 				$scope.senderShipCity = N4Shipper[1];
@@ -264,16 +282,19 @@
 				$scope.receiverShipState = N4Consignee[2];
 				$scope.receiverShipZip = N4Consignee[3];
 				$scope.receiverShipCountry = N4Consignee[4];
-				$scope.itemweight = L0[4];
-
-
+				$scope.itemWeight = L0[4];
+				$scope.itemClasss = L7[7];
+				$scope.grossChargeEDI = L3[5]/100;
+				$scope.deliveryDateEDI = date_parse(deliveryDateFormatted);
+				$scope.shipDateEDI = date_parse(shipDateFormatted);
+				$scope.clientEDI = 1;
 
 				return;
 			});
 
 			$scope.setOldCost = function(oldCharge) {
 				$scope.invoice.old_cost = (oldCharge * (1 - 0.829));
-				$scope.invoice.old_cost_saia = (oldCharge * (1 - 0.89));
+				$scope.invoice.old_cost_saia = (oldCharge * (1 - $scope.invoice.outbound_Inbound));
 				$scope.invoice.discount_percent = sanatizePercent($scope.invoice.discount_ammount / oldCharge);
 				$scope.invoice.new_cost = (oldCharge * (1 - sanatizePercent($scope.invoice.discount_percent)));
 				$scope.invoice.old_fsc = ($scope.invoice.old_cost * sanatizePercent($scope.invoice.fsc_percent));
