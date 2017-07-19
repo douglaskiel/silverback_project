@@ -141,7 +141,7 @@
 						<td style="vertical-align: middle;"> {{saiaInvoice.pro_number}} </td>
 						<td style="vertical-align: middle;"> {{saiaInvoice.receiver}} </td>
 						<td style="vertical-align: middle;"> {{saiaInvoice.receiver_zip}} </td>
-						<td style="background-color: lightblue; border-left: 1px solid black; vertical-align: middle; text-align: center;"> {{(saiaInvoice.base_charge - saiaInvoice.old_cost_saia) / 10}}% </td>
+						<td style="background-color: lightblue; border-left: 1px solid black; vertical-align: middle; text-align: center;"> {{(1 - (saiaInvoice.old_cost_saia / saiaInvoice.base_charge)) * 100}}% </td>
 						<td style="background-color: lightblue; vertical-align: middle; text-align: right;"> {{saiaInvoice.old_cost_saia | currency}}</td>
 						<td style="background-color: lightblue; vertical-align: middle; text-align: right;"> {{saiaInvoice.old_fsc_dollar | currency}} </td>
 						<td style="background-color: lightblue; vertical-align: middle; text-align: right;"></td>
